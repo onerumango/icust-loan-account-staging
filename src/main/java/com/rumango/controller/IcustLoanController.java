@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ import com.rumango.model.IcustLoanInfoModel;
 import com.rumango.service.IcustLoanService;
 
 @RestController
-@RequestMapping("/loan-account")
+@RequestMapping("/loan-api")
 public class IcustLoanController {
 	private static final Logger logger = LogManager.getLogger(IcustLoanController.class);
 

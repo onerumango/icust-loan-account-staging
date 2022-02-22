@@ -17,12 +17,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ICUST_ASSET_INFO")
+@Table(name = "ICUST_ASSET_DETAILS")
 @Data
 @XmlRootElement
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @NoArgsConstructor
-public class IcustAssetInfo implements Serializable{
+public class IcustAssetDetails implements Serializable{
 	/**
 	 * 
 	 */
@@ -47,7 +47,4 @@ public class IcustAssetInfo implements Serializable{
 	private String state;
 	private String country;
 	private String zipCode;
-	
-	
-
 }

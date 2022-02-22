@@ -3,7 +3,7 @@ package com.rumango.model;
 import lombok.Data;
 
 @Data
-public class IcustAssetInfoModel {
+public class IcustAssetDetailsModel {
 	private Long assetId;
 	private Long loanId;
 	private String mortgagedBranch;
