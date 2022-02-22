@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
-import com.rumango.entity.IcustAssetDetails;
 import com.rumango.entity.IcustLoanInterestDetails;
 import com.rumango.model.IcustLoanInterestModel;
 import com.rumango.repository.IcustLoanInterestRepo;
