@@ -33,8 +33,11 @@ public class IcustLoanDisbursementServiceImpl implements IcustLoanDisbursementSe
 	public ResponseEntity<?> upsertLoanDisbursementDetails(IcustLoanDisbursementModel icustLoanDisbursementModel) {
 		// TODO Auto-generated method stub
 		try {
+			if (icustLoanDisbursementModel.getLoanId()==null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
+			else {
 			Optional<IcustLoanDisbursementDetails> obj = icustLoanDisbursementRepo
-					.findById(icustLoanDisbursementModel.getLoanDisbursementId());
+					.findById(icustLoanDisbursementModel.getLoanId());
 			IcustLoanDisbursementDetails data = new Gson().fromJson(new Gson().toJson(icustLoanDisbursementModel),
 					IcustLoanDisbursementDetails.class);
 			if (obj.isPresent()) {
@@ -43,6 +46,7 @@ public class IcustLoanDisbursementServiceImpl implements IcustLoanDisbursementSe
 			} else {
 				return ResponseEntity.status(HttpStatus.OK).body(icustLoanDisbursementRepo.save(data));
 			}
+			}
 		} catch (Exception e) {
 			logger.error(MessageFormat.format("Exception occoured while upsertFinancialDetails", e.getMessage()), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -50,8 +54,10 @@ public class IcustLoanDisbursementServiceImpl implements IcustLoanDisbursementSe
 	}
 	
 	private void validateLoanDetails(IcustLoanDisbursementDetails oldLoanDisb, IcustLoanDisbursementDetails newLoanDisb) {
-		if(newLoanDisb.getMutipleDisbursementRequired()!= null)
-			oldLoanDisb.setMutipleDisbursementRequired(newLoanDisb.getMutipleDisbursementRequired());
+//		if(newLoanDisb.getMutipleDisbursementRequired()!= null )
+//			oldLoanDisb.setMutipleDisbursementRequired(newLoanDisb.getMutipleDisbursementRequired());
+		if(newLoanDisb.getLoanId()!= null)
+			oldLoanDisb.setLoanId(newLoanDisb.getLoanId());
 		if(newLoanDisb.getLoanAmount()!=null)
 			oldLoanDisb.setLoanAmount(newLoanDisb.getLoanAmount());
 		if(newLoanDisb.getNumberOfDisbursement()!=null)
@@ -87,13 +93,13 @@ public class IcustLoanDisbursementServiceImpl implements IcustLoanDisbursementSe
 	}
 
 	@Override
-	public ResponseEntity<?> fetchLoanDisbursementById(Long loanDisbursementId) {
+	public ResponseEntity<?> fetchLoanDisbursementById(Long loanId) {
 		// TODO Auto-generated method stub
 		try {
-			if (loanDisbursementId == null)
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("loanDisbursementId is Mandatory");
+			if (loanId == null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("loanId is Mandatory");
 			
-			Optional<IcustLoanDisbursementDetails> loanDisbObj = icustLoanDisbursementRepo.findByLoanDisbursementId(loanDisbursementId);
+			Optional<IcustLoanDisbursementDetails> loanDisbObj = icustLoanDisbursementRepo.findByLoanId(loanId);
 			if (loanDisbObj.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(loanDisbObj.get());
 			} else {

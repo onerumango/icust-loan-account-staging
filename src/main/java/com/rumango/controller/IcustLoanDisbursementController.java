@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rumango.model.IcustAssetDetailsModel;
 import com.rumango.model.IcustLoanDisbursementModel;
 import com.rumango.service.IcustLoanDisbursementService;
 
@@ -54,10 +53,10 @@ public class IcustLoanDisbursementController {
 	}
 
 	@GetMapping(value = "/fetchLoanDisbursementById")
-	public ResponseEntity<?> fetchLoanDisbursementById(@RequestParam(value="loanDisbursementId" , required=false) Long loanDisbursementId){
-		logger.info(MessageFormat.format("Execution Started for fetchLoanDisbursementById loanId:{0}", loanDisbursementId));
+	public ResponseEntity<?> fetchLoanDisbursementById(@RequestParam(value="loanId" , required=false) Long loanId){
+		logger.info(MessageFormat.format("Execution Started for fetchLoanDisbursementById loanId:{0}", loanId));
 		try {
-			return service.fetchLoanDisbursementById(loanDisbursementId);
+			return service.fetchLoanDisbursementById(loanId);
 		}catch (Exception e) {
 			logger.error("Execption occoured while executing fetchLoanDisbursementById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
