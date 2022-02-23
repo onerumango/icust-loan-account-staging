@@ -14,7 +14,7 @@ public class IcustLoanDisbursementModel {
 	private Boolean mutipleDisbursementRequired;
 	private Double loanAmount;
 	private Long numberOfDisbursement;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd HH:mm:ss", timezone = "IST")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd", timezone = "IST")
 	private Date firstDisbursementDate;
 	private Long totalDisbursement;
 	private String disbursementMode;

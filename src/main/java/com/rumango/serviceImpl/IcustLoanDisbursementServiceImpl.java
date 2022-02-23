@@ -54,8 +54,8 @@ public class IcustLoanDisbursementServiceImpl implements IcustLoanDisbursementSe
 	}
 	
 	private void validateLoanDetails(IcustLoanDisbursementDetails oldLoanDisb, IcustLoanDisbursementDetails newLoanDisb) {
-//		if(newLoanDisb.getMutipleDisbursementRequired()!= null )
-//			oldLoanDisb.setMutipleDisbursementRequired(newLoanDisb.getMutipleDisbursementRequired());
+		if(newLoanDisb.getMutipleDisbursementRequired()!= null )
+			oldLoanDisb.setMutipleDisbursementRequired(newLoanDisb.getMutipleDisbursementRequired());
 		if(newLoanDisb.getLoanId()!= null)
 			oldLoanDisb.setLoanId(newLoanDisb.getLoanId());
 		if(newLoanDisb.getLoanAmount()!=null)
