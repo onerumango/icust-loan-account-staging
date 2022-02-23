@@ -12,6 +12,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -37,6 +38,7 @@ public class IcustLoanDisbursementDetails implements Serializable{
 	private Boolean mutipleDisbursementRequired;
 	private Double loanAmount;
 	private Long numberOfDisbursement;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd HH:mm:ss", timezone = "IST")
 	private Date firstDisbursementDate;
 	private Long totalDisbursement;
 	private String disbursementMode;
