@@ -35,6 +35,7 @@ public class IcustLoanInfo implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_id_Sequence")
 	@SequenceGenerator(name = "loan_id_Sequence", sequenceName = "LOAN_ID_SEQ")
 	private Long loanId;
+	private Long customerId;
 	private String businessProductName;
 	private String accountBranch;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd HH:mm:ss", timezone = "IST")
