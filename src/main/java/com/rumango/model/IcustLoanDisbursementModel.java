@@ -10,7 +10,7 @@ import lombok.Data;
 public class IcustLoanDisbursementModel {
 	
 	private Long loanDisbursementId;
-	private Long loanId;
+	private Long loanAccountId;
 	private Boolean mutipleDisbursementRequired;
 	private Double loanAmount;
 	private Long numberOfDisbursement;

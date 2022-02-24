@@ -53,10 +53,10 @@ public class IcustLoanDisbursementController {
 	}
 
 	@GetMapping(value = "/fetchLoanDisbursementById")
-	public ResponseEntity<?> fetchLoanDisbursementById(@RequestParam(value="loanId" , required=false) Long loanId){
-		logger.info(MessageFormat.format("Execution Started for fetchLoanDisbursementById loanId:{0}", loanId));
+	public ResponseEntity<?> fetchLoanDisbursementById(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchLoanDisbursementById loanId:{0}", loanAccountId));
 		try {
-			return service.fetchLoanDisbursementById(loanId);
+			return service.fetchLoanDisbursementById(loanAccountId);
 		}catch (Exception e) {
 			logger.error("Execption occoured while executing fetchLoanDisbursementById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

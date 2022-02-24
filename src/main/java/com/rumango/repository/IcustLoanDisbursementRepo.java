@@ -12,6 +12,6 @@ public interface IcustLoanDisbursementRepo extends JpaRepository<IcustLoanDisbur
 
 	Optional<IcustLoanDisbursementDetails> findByLoanDisbursementId(Long loanDisbursementId);
 
-	Optional<IcustLoanDisbursementDetails> findByLoanId(Long loanId);
+	Optional<IcustLoanDisbursementDetails> findByLoanAccountId(Long loanAccountId);
 
 }

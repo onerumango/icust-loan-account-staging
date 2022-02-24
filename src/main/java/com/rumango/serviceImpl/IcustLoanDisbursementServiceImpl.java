@@ -33,11 +33,11 @@ public class IcustLoanDisbursementServiceImpl implements IcustLoanDisbursementSe
 	public ResponseEntity<?> upsertLoanDisbursementDetails(IcustLoanDisbursementModel icustLoanDisbursementModel) {
 		// TODO Auto-generated method stub
 		try {
-			if (icustLoanDisbursementModel.getLoanId()==null)
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
+			if (icustLoanDisbursementModel.getLoanAccountId()==null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
 			else {
 			Optional<IcustLoanDisbursementDetails> obj = icustLoanDisbursementRepo
-					.findById(icustLoanDisbursementModel.getLoanId());
+					.findByLoanAccountId(icustLoanDisbursementModel.getLoanAccountId());
 			IcustLoanDisbursementDetails data = new Gson().fromJson(new Gson().toJson(icustLoanDisbursementModel),
 					IcustLoanDisbursementDetails.class);
 			if (obj.isPresent()) {
@@ -56,8 +56,8 @@ public class IcustLoanDisbursementServiceImpl implements IcustLoanDisbursementSe
 	private void validateLoanDetails(IcustLoanDisbursementDetails oldLoanDisb, IcustLoanDisbursementDetails newLoanDisb) {
 		if(newLoanDisb.getMutipleDisbursementRequired()!= null )
 			oldLoanDisb.setMutipleDisbursementRequired(newLoanDisb.getMutipleDisbursementRequired());
-		if(newLoanDisb.getLoanId()!= null)
-			oldLoanDisb.setLoanId(newLoanDisb.getLoanId());
+		if(newLoanDisb.getLoanAccountId()!= null)
+			oldLoanDisb.setLoanAccountId(newLoanDisb.getLoanAccountId());
 		if(newLoanDisb.getLoanAmount()!=null)
 			oldLoanDisb.setLoanAmount(newLoanDisb.getLoanAmount());
 		if(newLoanDisb.getNumberOfDisbursement()!=null)
@@ -93,13 +93,13 @@ public class IcustLoanDisbursementServiceImpl implements IcustLoanDisbursementSe
 	}
 
 	@Override
-	public ResponseEntity<?> fetchLoanDisbursementById(Long loanId) {
+	public ResponseEntity<?> fetchLoanDisbursementById(Long loanAccountId) {
 		// TODO Auto-generated method stub
 		try {
-			if (loanId == null)
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("loanId is Mandatory");
+			if (loanAccountId == null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("loanAccountId is Mandatory");
 			
-			Optional<IcustLoanDisbursementDetails> loanDisbObj = icustLoanDisbursementRepo.findByLoanId(loanId);
+			Optional<IcustLoanDisbursementDetails> loanDisbObj = icustLoanDisbursementRepo.findByLoanAccountId(loanAccountId);
 			if (loanDisbObj.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(loanDisbObj.get());
 			} else {
