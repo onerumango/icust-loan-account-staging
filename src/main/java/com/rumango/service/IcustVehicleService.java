@@ -8,7 +8,7 @@ public interface IcustVehicleService {
 
 	ResponseEntity<?> upsertVehicleDetails(IcustVehicleDetailsModel icustVehicleDetailsModel);
 
-	ResponseEntity<?> fetchVehicleDetails(Long loanId);
+	ResponseEntity<?> fetchVehicleDetails(Long loanAccountId);
 
 	ResponseEntity<?> fetchVehicleInfo();
 

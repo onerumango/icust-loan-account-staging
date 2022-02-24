@@ -10,6 +10,6 @@ public interface IcustLoanInterestService {
 
 	ResponseEntity<?> fetchLoanInterestDetails();
 
-	ResponseEntity<?> fetchLoanInterestById(Long loanId);
+	ResponseEntity<?> fetchLoanInterestById(Long loanAccountId);
 
 }

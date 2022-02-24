@@ -32,11 +32,11 @@ public class IcustLoanInterestServiceImpl implements IcustLoanInterestService {
 	@Override
 	public ResponseEntity<?> upsertDetails(IcustLoanInterestModel loanInterestModel) {
 		try {
-			if (loanInterestModel.getLoanId() == null)
+			if (loanInterestModel.getLoanAccountId() == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
 			else {
 				Optional<IcustLoanInterestDetails> interestObj = loanInterestRepo
-						.findByLoanId(loanInterestModel.getLoanId());
+						.findByLoanAccountId(loanInterestModel.getLoanAccountId());
 				IcustLoanInterestDetails interestData = new Gson().fromJson(new Gson().toJson(loanInterestModel),
 						IcustLoanInterestDetails.class);
 				if (interestObj.isPresent()) {
@@ -54,8 +54,8 @@ public class IcustLoanInterestServiceImpl implements IcustLoanInterestService {
 
 	private void validateEntityDetails(IcustLoanInterestDetails oldInterestDetail,
 			IcustLoanInterestDetails newInterestDetail) {
-		if (newInterestDetail.getLoanId() != null)
-			oldInterestDetail.setLoanId(newInterestDetail.getLoanId());
+		if (newInterestDetail.getLoanAccountId() != null)
+			oldInterestDetail.setLoanAccountId(newInterestDetail.getLoanAccountId());
 		if (!Strings.isNullOrEmpty(newInterestDetail.getInterestType()))
 			oldInterestDetail.setInterestType(newInterestDetail.getInterestType());
 		if (newInterestDetail.getInterestRateApplicable() != null)

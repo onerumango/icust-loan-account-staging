@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class IcustLoanInfoModel {
-	private Long loanId;
+	private Long loanAccountId;
 	private String businessProductName;
 	private String accountBranch;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd HH:mm:ss", timezone = "IST")

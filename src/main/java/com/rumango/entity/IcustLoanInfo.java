@@ -31,10 +31,10 @@ public class IcustLoanInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name = "LOAN_ID")
+	@Column(name = "LOAN_ACCOUNT_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_id_Sequence")
 	@SequenceGenerator(name = "loan_id_Sequence", sequenceName = "LOAN_ID_SEQ")
-	private Long loanId;
+	private Long loanAccountId;
 	private Long customerId;
 	private String businessProductName;
 	private String accountBranch;

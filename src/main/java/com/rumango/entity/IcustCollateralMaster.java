@@ -1,12 +1,17 @@
 package com.rumango.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,29 +22,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ICUST_ASSET_DETAILS")
+@Table(name = "ICUST_COLLATERAL_MASTER")
 @Data
 @XmlRootElement
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @NoArgsConstructor
-public class IcustAssetDetails implements Serializable{
+public class IcustCollateralMaster implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-
 	@Id
-	@Column(name = "ASSET_ID")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "asset_id_Sequence")
-	@SequenceGenerator(name = "asset_id_Sequence", sequenceName = "ASSET_ID_SEQ")
-	private Long assetId;
+	@Column(name = "COLLATERAL_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "collateral_id_Sequence")
+	@SequenceGenerator(name = "collateral_id_Sequence", sequenceName = "COLLATERAL_ID_SEQ")
+	private Long collateralId;
 	private Long loanAccountId;
-	private String mortgagedBranch;
-	private String homeType;
+	private String collateralType;
+	private String collateralCurrency;
+	private Double collateralValue;
+	private String attributes;
 	private String dimensions;
-	private Double marketValue;
-	private String assetStatus;
+	private Boolean thirdPartyCollateral;	
 	private String building;
 	private String street;
 	private String locality;
@@ -47,4 +52,7 @@ public class IcustAssetDetails implements Serializable{
 	private String state;
 	private String country;
 	private String zipCode;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "collateralId")
+	private List<IcustCollateralDetails> collateralDetails;
 }

@@ -10,6 +10,6 @@ import com.rumango.entity.IcustAssetDetails;
 @Repository
 public interface IcustAssetDetailsRepo extends JpaRepository<IcustAssetDetails, Long>{
 
-	Optional<IcustAssetDetails> findByLoanId(Long loanId);
+	Optional<IcustAssetDetails> findByLoanAccountId(Long loanAccountId);
 
 }

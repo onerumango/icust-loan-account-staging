@@ -17,34 +17,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ICUST_ASSET_DETAILS")
+@Table(name = "ICUST_COLLATERAL_DETAILS")
 @Data
 @XmlRootElement
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @NoArgsConstructor
-public class IcustAssetDetails implements Serializable{
+public class IcustCollateralDetails implements Serializable{
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-
 	@Id
-	@Column(name = "ASSET_ID")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "asset_id_Sequence")
-	@SequenceGenerator(name = "asset_id_Sequence", sequenceName = "ASSET_ID_SEQ")
-	private Long assetId;
-	private Long loanAccountId;
-	private String mortgagedBranch;
-	private String homeType;
-	private String dimensions;
-	private Double marketValue;
-	private String assetStatus;
-	private String building;
-	private String street;
-	private String locality;
-	private String city;
-	private String state;
-	private String country;
-	private String zipCode;
+	@Column(name = "COLLATERAL_DETAILS_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "collateral_details_id_Sequence")
+	@SequenceGenerator(name = "collateral_details_id_Sequence", sequenceName = "COLLATERAL_DETAILS_ID_SEQ")
+	private Long collateralDetailsId;
+	private Long collateralId;
+	private Long noOfCollateral;
+	private Double totalCollateralValue;
+	private String utilizedPreviously;
+	private String coverAvailable;
+	private Boolean secondaryChargeAllowed;
 }

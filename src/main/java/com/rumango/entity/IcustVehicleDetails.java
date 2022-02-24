@@ -35,7 +35,7 @@ public class IcustVehicleDetails implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_id_Sequence")
 	@SequenceGenerator(name = "vehicle_id_Sequence", sequenceName = "VEHICLE_ID_SEQ")
 	private Long vehicleId;
-	private Long loanId;
+	private Long loanAccountId;
 	private String productName;
 	private String hypothecatedBranch;
 	private String vehicleClass;

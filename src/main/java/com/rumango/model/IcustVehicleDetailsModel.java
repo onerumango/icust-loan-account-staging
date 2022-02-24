@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class IcustVehicleDetailsModel {
 	private Long vehicleId;
-	private Long loanId;
+	private Long loanAccountId;
 	private String productName;
 	private String hypothecatedBranch;
 	private String vehicleClass;

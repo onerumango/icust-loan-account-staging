@@ -30,7 +30,7 @@ public class IcustLoanInterestDetails {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_interest_details_id_sequence")
 	@SequenceGenerator(name = "loan_interest_details_id_sequence", sequenceName = "LOAN_INTEREST_DETAILS_SEQ")
 	private Long loanInterestId;
-	private Long loanId;
+	private Long loanAccountId;
 	private String interestType;
 	private Long interestRateApplicable;
 	private Long margin;

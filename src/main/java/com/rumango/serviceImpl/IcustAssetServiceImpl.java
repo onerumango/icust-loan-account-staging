@@ -29,11 +29,11 @@ public class IcustAssetServiceImpl implements IcustAssetService{
 	@Override
 	public ResponseEntity<?> upsertAssetDetails(IcustAssetDetailsModel icustAssetDetailsModel) {
 		try {
-			if (icustAssetDetailsModel.getLoanId()==null)
+			if (icustAssetDetailsModel.getLoanAccountId()==null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
 			else {
 				Optional<IcustAssetDetails> assetObj = icustAssetDetailsRepo
-						.findByLoanId(icustAssetDetailsModel.getLoanId());
+						.findByLoanAccountId(icustAssetDetailsModel.getLoanAccountId());
 				IcustAssetDetails assetData = new Gson().fromJson(new Gson().toJson(icustAssetDetailsModel),
 						IcustAssetDetails.class);
 				if (assetObj.isPresent()) {
@@ -51,8 +51,8 @@ public class IcustAssetServiceImpl implements IcustAssetService{
 
 
 	private void validateAssetDetails(IcustAssetDetails oldAssetDetails, IcustAssetDetails newAssetDetails) {
-		if(newAssetDetails.getLoanId()!=null)
-			oldAssetDetails.setLoanId(newAssetDetails.getLoanId());
+		if(newAssetDetails.getLoanAccountId()!=null)
+			oldAssetDetails.setLoanAccountId(newAssetDetails.getLoanAccountId());
 		if(!Strings.isNullOrEmpty(newAssetDetails.getMortgagedBranch()))
 			oldAssetDetails.setMortgagedBranch(newAssetDetails.getMortgagedBranch());
 		if(!Strings.isNullOrEmpty(newAssetDetails.getHomeType()))
@@ -81,12 +81,12 @@ public class IcustAssetServiceImpl implements IcustAssetService{
 
 
 	@Override
-	public ResponseEntity<?> fetchAssetDetails(Long loanId) {
+	public ResponseEntity<?> fetchAssetDetails(Long loanAccountId) {
 		try {
-			if (loanId == null)
+			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
 			
-			Optional<IcustAssetDetails> assetObj = icustAssetDetailsRepo.findByLoanId(loanId);
+			Optional<IcustAssetDetails> assetObj = icustAssetDetailsRepo.findByLoanAccountId(loanAccountId);
 			if (assetObj.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(assetObj.get());
 			} else {
