@@ -30,11 +30,11 @@ public class IcustVehicleServiceImpl implements IcustVehicleService {
 	@Override
 	public ResponseEntity<?> upsertVehicleDetails(IcustVehicleDetailsModel icustVehicleDetailsModel) {
 		try {
-			if (icustVehicleDetailsModel.getLoanId()==null)
+			if (icustVehicleDetailsModel.getLoanAccountId()==null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
 			else {
 				Optional<IcustVehicleDetails> vehicleObj = icustVehicleDetailsRepo
-						.findByLoanId(icustVehicleDetailsModel.getLoanId());
+						.findByLoanAccountId(icustVehicleDetailsModel.getLoanAccountId());
 				IcustVehicleDetails vehicleData = new Gson().fromJson(new Gson().toJson(icustVehicleDetailsModel),
 						IcustVehicleDetails.class);
 				if (vehicleObj.isPresent()) {
@@ -51,8 +51,8 @@ public class IcustVehicleServiceImpl implements IcustVehicleService {
 	}
 
 	private void validateVehicleDetails(IcustVehicleDetails oldVehicleDetails, IcustVehicleDetails newVehicleDetails) {
-		if(newVehicleDetails.getLoanId()!=null)
-			oldVehicleDetails.setLoanId(newVehicleDetails.getLoanId());
+		if(newVehicleDetails.getLoanAccountId()!=null)
+			oldVehicleDetails.setLoanAccountId(newVehicleDetails.getLoanAccountId());
 		if(!Strings.isNullOrEmpty(newVehicleDetails.getProductName()))
 			oldVehicleDetails.setProductName(newVehicleDetails.getProductName());
 		if(!Strings.isNullOrEmpty(newVehicleDetails.getHypothecatedBranch()))
@@ -96,11 +96,11 @@ public class IcustVehicleServiceImpl implements IcustVehicleService {
 	}
 
 	@Override
-	public ResponseEntity<?> fetchVehicleDetails(Long loanId) {
+	public ResponseEntity<?> fetchVehicleDetails(Long loanAccountId) {
 		try {
-			if (loanId == null)
+			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
-			Optional<IcustVehicleDetails> vehicleObj = icustVehicleDetailsRepo.findByLoanId(loanId);
+			Optional<IcustVehicleDetails> vehicleObj = icustVehicleDetailsRepo.findByLoanAccountId(loanAccountId);
 			
 			if (vehicleObj.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(vehicleObj.get());

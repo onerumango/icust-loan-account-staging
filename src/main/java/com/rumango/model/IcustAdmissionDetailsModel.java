@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class IcustAdmissionDetailsModel {
 	private Long admissionId;
-	private Long loanId;
+	private Long loanAccountId;
 	private String loanRequestedFor;
 	private String admissionStatus;
 	private String modeOfStudy;

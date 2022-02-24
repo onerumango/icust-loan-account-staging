@@ -33,7 +33,7 @@ public class IcustAdmissionDetails implements Serializable{/**
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "admission_id_Sequence")
 	@SequenceGenerator(name = "admission_id_Sequence", sequenceName = "ADMISSION_ID_SEQ")
 	private Long admissionId;
-	private Long loanId;
+	private Long loanAccountId;
 	private String loanRequestedFor;
 	private String admissionStatus;
 	private String modeOfStudy;

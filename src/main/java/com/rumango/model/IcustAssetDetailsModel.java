@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class IcustAssetDetailsModel {
 	private Long assetId;
-	private Long loanId;
+	private Long loanAccountId;
 	private String mortgagedBranch;
 	private String homeType;
 	private String dimensions;

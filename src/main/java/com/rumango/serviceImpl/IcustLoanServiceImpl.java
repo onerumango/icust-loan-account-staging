@@ -30,7 +30,7 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 	public ResponseEntity<?> upsertLoanDetails(IcustLoanInfoModel icustLoanInfoModel) {
 		try {
 			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo
-					.findById(icustLoanInfoModel.getLoanId());
+					.findById(icustLoanInfoModel.getLoanAccountId());
 			IcustLoanInfo loanData = new Gson().fromJson(new Gson().toJson(icustLoanInfoModel),
 					IcustLoanInfo.class);
 			if (loanObj.isPresent()) {

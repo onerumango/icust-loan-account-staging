@@ -56,10 +56,10 @@ public class IcustLoanInterestController {
 	}
 	
 	@GetMapping(value = "/fetchLoanInterestById", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> fetchLoanInterestById (@RequestParam(value = "loanId") Long loanId){
+	public ResponseEntity<?> fetchLoanInterestById (@RequestParam(value = "loanAccountId") Long loanAccountId){
 		logger.info("Exectution started for fetchLoanInterestById");
 		try {
-			return service.fetchLoanInterestById(loanId);
+			return service.fetchLoanInterestById(loanAccountId);
 		} catch (Exception e) {
 			logger.error("Execption occoured while executing fetchLoanInterestById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

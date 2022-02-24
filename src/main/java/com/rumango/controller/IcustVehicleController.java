@@ -40,10 +40,10 @@ public class IcustVehicleController {
 	}
 	
 	@GetMapping(value = "/fetchVehicleDetails")
-	public ResponseEntity<?> fetchAssetDetails(@RequestParam(value="loanId" , required=false) Long loanId){
-		logger.info(MessageFormat.format("Execution Started for fetchVehicleDetails loanId:{0}", loanId));
+	public ResponseEntity<?> fetchAssetDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchVehicleDetails loanAccountId:{0}", loanAccountId));
 		try {
-			return icustVehicleService.fetchVehicleDetails(loanId);
+			return icustVehicleService.fetchVehicleDetails(loanAccountId);
 		}catch (Exception e) {
 			logger.error("Execption occoured while executing fetchVehicleDetails", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

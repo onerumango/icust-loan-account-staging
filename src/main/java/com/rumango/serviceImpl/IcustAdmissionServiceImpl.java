@@ -1,6 +1,5 @@
 package com.rumango.serviceImpl;
 
-import java.sql.Date;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
@@ -32,11 +31,11 @@ public class IcustAdmissionServiceImpl implements IcustAdmissionService{
 	@Override
 	public ResponseEntity<?> upsertAdmissionDetails(IcustAdmissionDetailsModel icustAdmissionDetailsModel) {
 		try {
-			if (icustAdmissionDetailsModel.getLoanId()==null)
+			if (icustAdmissionDetailsModel.getLoanAccountId()==null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
 			else {
 				Optional<IcustAdmissionDetails> admissionObj = icustAdmissionDetailsRepo
-						.findByLoanId(icustAdmissionDetailsModel.getLoanId());
+						.findByLoanAccountId(icustAdmissionDetailsModel.getLoanAccountId());
 				IcustAdmissionDetails admissionData = new Gson().fromJson(new Gson().toJson(icustAdmissionDetailsModel),
 						IcustAdmissionDetails.class);
 				if (admissionObj.isPresent()) {
@@ -57,8 +56,8 @@ public class IcustAdmissionServiceImpl implements IcustAdmissionService{
 	private void validateAdmissionDetails(IcustAdmissionDetails oldAdmissionDetails,
 			IcustAdmissionDetails newAdmissionDetails) {
 
-		if(newAdmissionDetails.getLoanId()!=null)
-			oldAdmissionDetails.setLoanId(newAdmissionDetails.getLoanId());
+		if(newAdmissionDetails.getLoanAccountId()!=null)
+			oldAdmissionDetails.setLoanAccountId(newAdmissionDetails.getLoanAccountId());
 		if(!Strings.isNullOrEmpty(newAdmissionDetails.getLoanRequestedFor()))
 			oldAdmissionDetails.setLoanRequestedFor(newAdmissionDetails.getLoanRequestedFor());
 		if(!Strings.isNullOrEmpty(newAdmissionDetails.getAdmissionStatus()))
@@ -94,12 +93,12 @@ public class IcustAdmissionServiceImpl implements IcustAdmissionService{
 
 
 	@Override
-	public ResponseEntity<?> fetchAdmissionDetails(Long loanId) {
+	public ResponseEntity<?> fetchAdmissionDetails(Long loanAccountId) {
 		try {
-			if (loanId == null)
+			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
 			
-			Optional<IcustAdmissionDetails> admissionObj = icustAdmissionDetailsRepo.findByLoanId(loanId);
+			Optional<IcustAdmissionDetails> admissionObj = icustAdmissionDetailsRepo.findByLoanAccountId(loanAccountId);
 			if (admissionObj.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(admissionObj.get());
 			} else {

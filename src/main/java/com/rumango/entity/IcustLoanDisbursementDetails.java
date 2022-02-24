@@ -34,7 +34,7 @@ public class IcustLoanDisbursementDetails implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_disbursement_id_Sequence")
 	@SequenceGenerator(name = "loan_disbursement_id_Sequence", sequenceName = "LOAN_DISBURSEMENT_ID_SEQ")
 	private Long loanDisbursementId;
-	private Long loanId;
+	private Long loanAccountId;
 	private Boolean mutipleDisbursementRequired;
 	private Double loanAmount;
 	private Long numberOfDisbursement;
@@ -43,6 +43,4 @@ public class IcustLoanDisbursementDetails implements Serializable{
 	private String disbursementMode;
 	private Long customerAccount;
 	private String branchCode;
-	
-
 }

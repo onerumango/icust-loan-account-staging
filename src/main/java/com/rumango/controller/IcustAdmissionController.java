@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rumango.model.IcustAdmissionDetailsModel;
-import com.rumango.model.IcustAssetDetailsModel;
 import com.rumango.service.IcustAdmissionService;
 
 @RestController
@@ -42,10 +41,10 @@ public class IcustAdmissionController {
 	}
 	
 	@GetMapping(value = "/fetchAdmissionDetails")
-	public ResponseEntity<?> fetchAdmissionDetails(@RequestParam(value="loanId" , required=false) Long loanId){
-		logger.info(MessageFormat.format("Execution Started for fetchAdmissionDetails loanId:{0}", loanId));
+	public ResponseEntity<?> fetchAdmissionDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchAdmissionDetails loanId:{0}", loanAccountId));
 		try {
-			return icustAdmissionService.fetchAdmissionDetails(loanId);
+			return icustAdmissionService.fetchAdmissionDetails(loanAccountId);
 		}catch (Exception e) {
 			logger.error("Execption occoured while executing fetchAdmissionDetails", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
