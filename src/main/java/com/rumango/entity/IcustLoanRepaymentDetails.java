@@ -19,30 +19,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ICUST_LOAN_DISBURSEMENT_DETAILS")
+@Table(name="ICUST_LOAN_REPAYMENT_DETAILS")
 @Data
 @XmlRootElement
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @NoArgsConstructor
-public class IcustLoanDisbursementDetails implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
+public class IcustLoanRepaymentDetails implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@Column(name = "LOAN_DISBURSEMENT_ID")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_disbursement_id_Sequence")
-	@SequenceGenerator(name = "loan_disbursement_id_Sequence", sequenceName = "LOAN_DISBURSEMENT_ID_SEQ")
-	private Long loanDisbursementId;
+	@Column(name= "LOAN_REPAYMENT_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_repayment_id_Sequence")
+	@SequenceGenerator(name = "loan_repayment_id_Sequence", sequenceName = "LOAN_REPAYMENT_ID_SEQ")
+
+	private Long loanRepaymentId;
 	private Long loanAccountId;
-	private Boolean mutipleDisbursementRequired;
-	private Double loanAmount;
-	private Long numberOfDisbursement;
+	private String typeOfRepayment;
+	private String repaymentFrequency;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd", timezone = "IST")
-	private Date firstDisbursementDate;
-	private Long totalDisbursement;
-	private String disbursementMode;
-	private Long customerAccount;
+	private Date firstRepaymentDate;
+	private String loanTenure;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd", timezone = "IST")
+	private Date maturityDate;
+	private String repaymentMode;
+	private Long moraturioumPeriod;
+	private String customerAccount;
 	private String branchCode;
+	
+
 }
