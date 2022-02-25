@@ -18,6 +18,7 @@ import com.rumango.model.IcustAdmissionDetailsModel;
 import com.rumango.model.IcustAssetDetailsModel;
 import com.rumango.model.IcustCollateralMasterModel;
 import com.rumango.model.IcustFinancialDetailsModel;
+import com.rumango.model.IcustGuarantorDetailsModel;
 import com.rumango.model.IcustLoanInfoModel;
 import com.rumango.model.IcustMandateMasterModel;
 import com.rumango.model.IcustVehicleDetailsModel;
@@ -25,6 +26,7 @@ import com.rumango.service.IcustAdmissionService;
 import com.rumango.service.IcustAssetService;
 import com.rumango.service.IcustCollateralService;
 import com.rumango.service.IcustFinancialDetailsService;
+import com.rumango.service.IcustGuarantorService;
 import com.rumango.service.IcustLoanService;
 import com.rumango.service.IcustMandateService;
 import com.rumango.service.IcustVehicleService;
@@ -48,6 +50,8 @@ public class ApplicationEntryStageController {
 	IcustFinancialDetailsService financialDetailsService;
 	@Autowired
 	IcustCollateralService icustCollateralService;
+	@Autowired
+	IcustGuarantorService guarantorService;
 	
 	@PostMapping(value="/upsertLoanDetails", produces= MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> upsertLoanDetails(@RequestBody IcustLoanInfoModel icustLoanInfoModel){
@@ -295,6 +299,32 @@ public class ApplicationEntryStageController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
 			logger.info("Execution completed for fetchCollateralDetails");
+		}
+	}
+	
+	@PostMapping(value="/upsertGuarantorDetails", produces= MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> upsertGuarantorDetails(@RequestBody IcustGuarantorDetailsModel icustGuarantorDetailsModel){
+		logger.info(MessageFormat.format("Execution Started for upsertGuarantorDetails icustGuarantorDetailsModel:{0}", icustGuarantorDetailsModel));
+		try {
+			return guarantorService.upsertGuarantorDetails(icustGuarantorDetailsModel);
+		}catch (Exception e) {
+			logger.error("Execption occoured while executing upsertGuarantorDetails", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for upsertGuarantorDetails");
+		}
+	}
+	
+	@GetMapping(value = "/fetchGuarantorDetails")
+	public ResponseEntity<?> fetchGuarantorDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchGuarantorDetails loanAccountId:{0}", loanAccountId));
+		try {
+			return guarantorService.fetchGuarantorDetails(loanAccountId);
+		}catch (Exception e) {
+			logger.error("Execption occoured while executing fetchGuarantorDetails", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for fetchGuarantorDetails");
 		}
 	}
 }
