@@ -8,7 +8,7 @@ public interface IcustLoanCreditRatingService {
 	
 	 ResponseEntity<?> saveOrUpdateCreditRating(IcustLoanCreditRatingDetailsModel creditRatingModel);
 	 
-	 ResponseEntity<?> getAllCreditRatings();
+	 ResponseEntity<?> getCreditRatingsById(Long id);
 	 
 	 ResponseEntity<?> getCreditRatingsByLoanAccountId(Long loanAccId);
 

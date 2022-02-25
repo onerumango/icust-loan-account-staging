@@ -1,15 +1,8 @@
 package com.rumango.serviceImpl;
 
-import static org.springframework.data.jpa.domain.Specification.where;
-
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,7 +31,7 @@ public class IcustLoanCreditRatingServiceImpl implements IcustLoanCreditRatingSe
 		IcustLoanCreditRatingDetails creditRatingObj = null;
 		try {
 			if (creditRatingModel.getLoanAccountId() != null)
-				isCreditREntityPresent = creditRatingRepo.findById(creditRatingModel.getLoanAccountId());
+				isCreditREntityPresent = creditRatingRepo.findByLoanAccountId(creditRatingModel.getLoanAccountId());
 			else
 				throw new RuntimeException("Loan Id is Required");
 
@@ -74,27 +67,12 @@ public class IcustLoanCreditRatingServiceImpl implements IcustLoanCreditRatingSe
 	}
 
 	@Override
-	public ResponseEntity<?> getAllCreditRatings() {
-		List<IcustLoanCreditRatingDetails> creditRatingList = null;
-		try {
-			creditRatingList = creditRatingRepo.findAll();
-			if (creditRatingList != null && creditRatingList.isEmpty())
-				return ResponseEntity.status(HttpStatus.OK).body(creditRatingList);
-			else
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No records");
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-
-	@Override
 	public ResponseEntity<?> getCreditRatingsByLoanAccountId(Long loanAccId) {
 		Optional<IcustLoanCreditRatingDetails> isCreditREntityPresent = null;
 		IcustLoanCreditRatingDetails creditRatingObj = null;
 		try {
 			if (loanAccId != null)
-				isCreditREntityPresent = creditRatingRepo.findById(loanAccId);
+				isCreditREntityPresent = creditRatingRepo.findByLoanAccountId(loanAccId);
 			else
 				throw new RuntimeException("Loan Id is Required");
 
@@ -107,6 +85,31 @@ public class IcustLoanCreditRatingServiceImpl implements IcustLoanCreditRatingSe
 				log.error("No record exists for Loan Acc Id :: " + loanAccId);
 				return ResponseEntity.status(HttpStatus.NO_CONTENT)
 						.body("No record exists for Loan Acc Id :: " + loanAccId);
+			}
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> getCreditRatingsById(Long id) {
+		Optional<IcustLoanCreditRatingDetails> isCreditREntityPresent = null;
+		IcustLoanCreditRatingDetails creditRatingObj = null;
+		try {
+			if (id != null)
+				isCreditREntityPresent = creditRatingRepo.findById(id);
+			else
+				throw new RuntimeException("Id is Required");
+
+			if (isCreditREntityPresent != null && isCreditREntityPresent.isPresent()) {
+				creditRatingObj = new Gson().fromJson(new Gson().toJson(isCreditREntityPresent),
+						IcustLoanCreditRatingDetails.class);
+				log.info("creditRatingObj :: " + creditRatingObj);
+				return ResponseEntity.status(HttpStatus.OK).body(creditRatingObj);
+			} else {
+				log.error("No record exists for Id :: " + id);
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No record exists for Id :: " + id);
 			}
 		} catch (JsonSyntaxException e) {
 			e.printStackTrace();
