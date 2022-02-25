@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rumango.model.IcustLoanCreditRatingDetailsModel;
+import com.rumango.model.IcustLoanLegalOpinionModel;
 import com.rumango.model.IcustLoanValuationOfAssetModel;
 import com.rumango.service.IcustLoanCreditRatingService;
+import com.rumango.service.IcustLoanLegalOpinionService;
 import com.rumango.service.IcustLoanValuationOfAssetService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,9 @@ public class IcustLoanUnderWritingStageController {
 
 	@Autowired
 	private IcustLoanValuationOfAssetService loanValuationOfAssetService;
+
+	@Autowired
+	private IcustLoanLegalOpinionService legalOpinionService;
 
 	@PostMapping(value = "/saveOrUpdateCreditRating", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> saveOrUpdateCreditRating(
@@ -108,4 +113,44 @@ public class IcustLoanUnderWritingStageController {
 			log.info("Execution completed for getValuationOfAssetById");
 		}
 	}
+
+	@PostMapping(value = "/saveOrUpdateLegalOpinion", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> saveOrUpdateLegalOpinion(@RequestBody IcustLoanLegalOpinionModel legalOpinionModel) {
+		log.info(MessageFormat.format("Exectution started for saveOrUpdateLegalOpinion {1}", legalOpinionModel));
+		try {
+			return legalOpinionService.saveOrUpdateLegalOpinion(legalOpinionModel);
+		} catch (Exception e) {
+			log.error("Execption occoured while executing saveOrUpdateLegalOpinion", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			log.info("Execution completed for saveOrUpdateLegalOpinion");
+		}
+	}
+
+	@GetMapping(value = "/getLegalOpinionByLoanId/{loanAccId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getLegalOpinionByLoanAccountId(@PathVariable("loanAccId") Long loanAccId) {
+		log.info(MessageFormat.format("Exectution started for getLegalOpinionByLoanAccountId {1}", loanAccId));
+		try {
+			return legalOpinionService.getLegalOpinionByLoanAccountId(loanAccId);
+		} catch (Exception e) {
+			log.error("Execption occoured while executing getLegalOpinionByLoanAccountId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			log.info("Execution completed for getLegalOpinionByLoanAccountId");
+		}
+	}
+
+	@GetMapping(value = "/getLegalOpinionById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getLegalOpinionById(@PathVariable("id") Long id) {
+		log.info(MessageFormat.format("Exectution started for getLegalOpinionById {1}", id));
+		try {
+			return legalOpinionService.getLegalOpinionById(id);
+		} catch (Exception e) {
+			log.error("Execption occoured while executing getLegalOpinionById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			log.info("Execution completed for getLegalOpinionById");
+		}
+	}
+
 }
