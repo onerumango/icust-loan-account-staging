@@ -19,9 +19,9 @@ import com.rumango.service.IcustApprovalDetailsService;
 
 @RestController
 @RequestMapping("supervisor-apprstage-api")
-public class SupervisorApprovalStageController {
+public class IcustSupervisorApprovalStageController {
 
-	private static final Logger logger = Logger.getLogger(SupervisorApprovalStageController.class);
+	private static final Logger logger = Logger.getLogger(IcustSupervisorApprovalStageController.class);
 	
 	@Autowired
 	IcustApprovalDetailsService approvalDetailsService;

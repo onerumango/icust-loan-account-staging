@@ -80,7 +80,7 @@ public class IcustCollateralServiceImpl implements IcustCollateralService{
 	}
 
 	@Override
-	public ResponseEntity<?> fetchCollateralDetails(Long loanAccountId) {
+	public ResponseEntity<?> fetchCollateralByLoanAccountId(Long loanAccountId) {
 		try {
 			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
@@ -93,7 +93,26 @@ public class IcustCollateralServiceImpl implements IcustCollateralService{
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
 			}
 		} catch (Exception e) {
-			logger.error("Execption occoured while executing fetchCollateralDetails", e);
+			logger.error("Execption occoured while executing fetchCollateralByLoanAccountId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> fetchCollateralInfoById(Long id) {
+		try {
+			if (id == null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id is Mandatory");
+			
+			Optional<IcustCollateralMaster> collateralObj = collateralMasterRepo.findById(id);
+			if (collateralObj.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(collateralObj.get());
+			} else {
+				logger.error("No  record exist for given id");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
+			}
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing fetchCollateralInfoById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}

@@ -96,7 +96,7 @@ public class IcustVehicleServiceImpl implements IcustVehicleService {
 	}
 
 	@Override
-	public ResponseEntity<?> fetchVehicleDetails(Long loanAccountId) {
+	public ResponseEntity<?> fetchVehicleDetailsByLoanAccId(Long loanAccountId) {
 		try {
 			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
@@ -109,17 +109,20 @@ public class IcustVehicleServiceImpl implements IcustVehicleService {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
 			}
 		} catch (Exception e) {
-			logger.error("Execption occoured while executing fetchVehicleDetails", e);
+			logger.error("Execption occoured while executing fetchVehicleDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
 
 	@Override
-	public ResponseEntity<?> fetchVehicleInfo() {
+	public ResponseEntity<?> fetchVehicleInfoById(Long id) {
 		try {
-			List<IcustVehicleDetails> vehicleList = icustVehicleDetailsRepo.findAll();
-			if (!CollectionUtils.isEmpty(vehicleList)) {
-				return ResponseEntity.status(HttpStatus.OK).body(vehicleList);
+			if (id == null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id is Mandatory");
+			Optional<IcustVehicleDetails> vehicleObj = icustVehicleDetailsRepo.findById(id);
+			
+			if (vehicleObj.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(vehicleObj.get());
 			} else {
 				logger.error("No details found");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No details found");

@@ -8,8 +8,9 @@ public interface IcustLoanService {
 
 	ResponseEntity<?> upsertLoanDetails(IcustLoanInfoModel icustLoanInfoModel);
 
-	ResponseEntity<?> fetchLoanDetails(Long loanAccountId);
+	ResponseEntity<?> fetchLoanDetailsByLoanAccId(Long loanAccountId);
 
-	ResponseEntity<?> fetchLoanInfo();
+	ResponseEntity<?> fetchLoanDetailsById(Long id);
+
 
 }

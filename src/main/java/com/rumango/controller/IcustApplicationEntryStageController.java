@@ -33,8 +33,8 @@ import com.rumango.service.IcustVehicleService;
 
 @RestController
 @RequestMapping("application-entrystage-api")
-public class ApplicationEntryStageController {
-	private static final Logger logger = Logger.getLogger(ApplicationEntryStageController.class);
+public class IcustApplicationEntryStageController {
+	private static final Logger logger = Logger.getLogger(IcustApplicationEntryStageController.class);
 	
 	@Autowired
 	private IcustLoanService icustLoanService;
@@ -66,29 +66,29 @@ public class ApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping(value = "/fetchLoanDetails")
-	public ResponseEntity<?> fetchLoanDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+	@GetMapping(value = "/fetchLoanDetailsByLoanAccId")
+	public ResponseEntity<?> fetchLoanDetailsByLoanAccId(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
 		logger.info(MessageFormat.format("Execution Started for fetchLoanDetails loanAccountId:{0}", loanAccountId));
 		try {
-			return icustLoanService.fetchLoanDetails(loanAccountId);
+			return icustLoanService.fetchLoanDetailsByLoanAccId(loanAccountId);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchLoanDetails", e);
+			logger.error("Execption occoured while executing fetchLoanDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchLoanDetails");
+			logger.info("Execution completed for fetchLoanDetailsByLoanAccId");
 		}
 	}
 	
-	@GetMapping(value = "/fetchLoanInfo")
-	public ResponseEntity<?> fetchLoanInfo(){
-		logger.info("Execution Started for fetchLoanInfo");
+	@GetMapping(value = "/fetchLoanDetailsById")
+	public ResponseEntity<?> fetchLoanInfo(@RequestParam(value="id" , required=false) Long id){
+		logger.info("Execution Started for fetchLoanDetailsById");
 		try {
-			return icustLoanService.fetchLoanInfo();
+			return icustLoanService.fetchLoanDetailsById(id);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchLoanInfo", e);
+			logger.error("Execption occoured while executing fetchLoanDetailsById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchLoanInfo");
+			logger.info("Execution completed for fetchLoanDetailsById");
 		}
 	}
 	
@@ -105,29 +105,29 @@ public class ApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping(value = "/fetchAssetDetails")
-	public ResponseEntity<?> fetchAssetDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
-		logger.info(MessageFormat.format("Execution Started for fetchAssetDetails loanAccountId:{0}", loanAccountId));
+	@GetMapping(value = "/fetchAssetDetailsByLoanAccId")
+	public ResponseEntity<?> fetchAssetDetailsByLoanAccId(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchAssetDetailsByLoanAccId loanAccountId:{0}", loanAccountId));
 		try {
-			return icustAssetService.fetchAssetDetails(loanAccountId);
+			return icustAssetService.fetchAssetDetailsByLoanAccId(loanAccountId);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchAssetDetails", e);
+			logger.error("Execption occoured while executing fetchAssetDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchAssetDetails");
+			logger.info("Execution completed for fetchAssetDetailsByLoanAccId");
 		}
 	}
 	
-	@GetMapping(value = "/fetchAssetInfo")
-	public ResponseEntity<?> fetchAssetInfo(){
-		logger.info("Execution Started for fetchAssetInfo");
+	@GetMapping(value = "/fetchAssetInfoById")
+	public ResponseEntity<?> fetchAssetInfo(@RequestParam(value="id" , required=false) Long id){
+		logger.info("Execution Started for fetchAssetInfoById");
 		try {
-			return icustAssetService.fetchAssetInfo();
+			return icustAssetService.fetchAssetInfoById(id);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchAssetInfo", e);
+			logger.error("Execption occoured while executing fetchAssetInfoById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchAssetInfo");
+			logger.info("Execution completed for fetchAssetInfoById");
 		}
 	}
 	
@@ -145,29 +145,29 @@ public class ApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping(value = "/fetchVehicleDetails")
+	@GetMapping(value = "/fetchVehicleDetailsByLoanAccId")
 	public ResponseEntity<?> fetchVehicleDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
-		logger.info(MessageFormat.format("Execution Started for fetchVehicleDetails loanAccountId:{0}", loanAccountId));
+		logger.info(MessageFormat.format("Execution Started for fetchVehicleDetailsByLoanAccId loanAccountId:{0}", loanAccountId));
 		try {
-			return icustVehicleService.fetchVehicleDetails(loanAccountId);
+			return icustVehicleService.fetchVehicleDetailsByLoanAccId(loanAccountId);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchVehicleDetails", e);
+			logger.error("Execption occoured while executing fetchVehicleDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchVehicleDetails");
+			logger.info("Execution completed for fetchVehicleDetailsByLoanAccId");
 		}
 	}
 	
-	@GetMapping(value = "/fetchVehicleInfo")
-	public ResponseEntity<?> fetchVehicleInfo(){
-		logger.info("Execution Started for fetchVehicleInfo");
+	@GetMapping(value = "/fetchVehicleInfoById")
+	public ResponseEntity<?> fetchVehicleInfo(@RequestParam(value="id" , required=false) Long id){
+		logger.info("Execution Started for fetchVehicleInfoById");
 		try {
-			return icustVehicleService.fetchVehicleInfo();
+			return icustVehicleService.fetchVehicleInfoById(id);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchVehicleInfo", e);
+			logger.error("Execption occoured while executing fetchVehicleInfoById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchVehicleInfo");
+			logger.info("Execution completed for fetchVehicleInfoById");
 		}
 	}
 	
@@ -184,29 +184,29 @@ public class ApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping(value = "/fetchAdmissionDetails")
+	@GetMapping(value = "/fetchAdmissionDetailsByLoanAccId")
 	public ResponseEntity<?> fetchAdmissionDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
-		logger.info(MessageFormat.format("Execution Started for fetchAdmissionDetails loanId:{0}", loanAccountId));
+		logger.info(MessageFormat.format("Execution Started for fetchAdmissionDetailsByLoanAccId loanId:{0}", loanAccountId));
 		try {
-			return icustAdmissionService.fetchAdmissionDetails(loanAccountId);
+			return icustAdmissionService.fetchAdmissionDetailsByLoanAccId(loanAccountId);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchAdmissionDetails", e);
+			logger.error("Execption occoured while executing fetchAdmissionDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchAdmissionDetails");
+			logger.info("Execution completed for fetchAdmissionDetailsByLoanAccId");
 		}
 	}
 	
-	@GetMapping(value = "/fetchAdmissionInfo")
-	public ResponseEntity<?> fetchAdmissionInfo(){
-		logger.info("Execution Started for fetchAdmissionInfo");
+	@GetMapping(value = "/fetchAdmissionInfoById")
+	public ResponseEntity<?> fetchAdmissionInfo(@RequestParam(value="id" , required=false) Long id){
+		logger.info("Execution Started for fetchAdmissionInfoById");
 		try {
-			return icustAdmissionService.fetchAdmissionInfo();
+			return icustAdmissionService.fetchAdmissionInfoById(id);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchAdmissionInfo", e);
+			logger.error("Execption occoured while executing fetchAdmissionInfoById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchAdmissionInfo");
+			logger.info("Execution completed for fetchAdmissionInfoById");
 		}
 	}
 	
@@ -224,29 +224,29 @@ public class ApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping("/fetchMandateDetails")
-	public ResponseEntity<?> fetchMandateDetails(@RequestParam(value = "loanAccountId", required = true) Long loanAccountId){
-		logger.info(MessageFormat.format("Execution Started for fetchMandateDetails loanAccountId:{0}", loanAccountId));
+	@GetMapping("/fetchMandateDetailsByLoanAccId")
+	public ResponseEntity<?> fetchMandateDetailsByLoanAccId(@RequestParam(value = "loanAccountId", required = true) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchMandateDetailsByLoanAccId loanAccountId:{0}", loanAccountId));
 		try {
-			return icustMandateService.fetchMandateDetails(loanAccountId);
+			return icustMandateService.fetchMandateDetailsByLoanAccId(loanAccountId);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchMandateDetails", e);
+			logger.error("Execption occoured while executing fetchMandateDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchMandateDetails");
+			logger.info("Execution completed for fetchMandateDetailsByLoanAccId");
 		}
 	}
 	
-	@GetMapping(value = "/fetchMandateInfo")
-	public ResponseEntity<?> fetchMandateInfo(){
-		logger.info("Execution Started for fetchMandateInfo");
+	@GetMapping(value = "/fetchMandateInfoById")
+	public ResponseEntity<?> fetchMandateInfo(@RequestParam(value = "id", required = true) Long id){
+		logger.info("Execution Started for fetchMandateInfoById");
 		try {
-			return icustMandateService.fetchMandateInfo();
+			return icustMandateService.fetchMandateInfoById(id);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchMandateInfo", e);
+			logger.error("Execption occoured while executing fetchMandateInfoById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchMandateInfo");
+			logger.info("Execution completed for fetchMandateInfoById");
 		}
 	}
 	
@@ -263,16 +263,29 @@ public class ApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping(value = "/fetchFinancialDetails")
+	@GetMapping(value = "/fetchFinancialDetailsByLoanAccId")
 	public ResponseEntity<?> fetchFinancialDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
-		logger.info(MessageFormat.format("Execution Started for fetchFinancialDetails loanAccountId:{0}", loanAccountId));
+		logger.info(MessageFormat.format("Execution Started for fetchFinancialDetailsByLoanAccId loanAccountId:{0}", loanAccountId));
 		try {
-			return financialDetailsService.fetchFinancialDetails(loanAccountId);
+			return financialDetailsService.fetchFinancialDetailsByLoanAccId(loanAccountId);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchFinancialDetails", e);
+			logger.error("Execption occoured while executing fetchFinancialDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchFinancialDetails");
+			logger.info("Execution completed for fetchFinancialDetailsByLoanAccId");
+		}
+	}
+	
+	@GetMapping(value = "/fetchFinancialInfoById")
+	public ResponseEntity<?> fetchFinancialInfoById(@RequestParam(value="id" , required=false) Long id){
+		logger.info(MessageFormat.format("Execution Started for fetchFinancialInfoById id:{0}", id));
+		try {
+			return financialDetailsService.fetchFinancialInfoById(id);
+		}catch (Exception e) {
+			logger.error("Execption occoured while executing fetchFinancialInfoById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for fetchFinancialInfoById");
 		}
 	}
 	
@@ -289,16 +302,29 @@ public class ApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping(value = "/fetchCollateralDetails")
-	public ResponseEntity<?> fetchCollateralDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
-		logger.info(MessageFormat.format("Execution Started for fetchCollateralDetails loanAccountId:{0}", loanAccountId));
+	@GetMapping(value = "/fetchCollateralByLoanAccountId")
+	public ResponseEntity<?> fetchCollateralByLoanAccountId(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchCollateralByLoanAccountId loanAccountId:{0}", loanAccountId));
 		try {
-			return icustCollateralService.fetchCollateralDetails(loanAccountId);
+			return icustCollateralService.fetchCollateralByLoanAccountId(loanAccountId);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchCollateralDetails", e);
+			logger.error("Execption occoured while executing fetchCollateralByLoanAccountId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchCollateralDetails");
+			logger.info("Execution completed for fetchCollateralByLoanAccountId");
+		}
+	}
+	
+	@GetMapping(value = "/fetchCollateralInfoById")
+	public ResponseEntity<?> fetchCollateralInfoById(@RequestParam(value="id" , required=false) Long id){
+		logger.info(MessageFormat.format("Execution Started for fetchCollateralByLoanAccountId id:{0}", id));
+		try {
+			return icustCollateralService.fetchCollateralInfoById(id);
+		}catch (Exception e) {
+			logger.error("Execption occoured while executing fetchCollateralInfoById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for fetchCollateralInfoById");
 		}
 	}
 	
@@ -315,16 +341,16 @@ public class ApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping(value = "/fetchGuarantorDetails")
-	public ResponseEntity<?> fetchGuarantorDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
-		logger.info(MessageFormat.format("Execution Started for fetchGuarantorDetails loanAccountId:{0}", loanAccountId));
+	@GetMapping(value = "/fetchGuarantorByLoanAccId")
+	public ResponseEntity<?> fetchGuarantorByLoanAccId(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchGuarantorByLoanAccId loanAccountId:{0}", loanAccountId));
 		try {
-			return guarantorService.fetchGuarantorDetails(loanAccountId);
+			return guarantorService.fetchGuarantorByLoanAccId(loanAccountId);
 		}catch (Exception e) {
-			logger.error("Execption occoured while executing fetchGuarantorDetails", e);
+			logger.error("Execption occoured while executing fetchGuarantorByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchGuarantorDetails");
+			logger.info("Execution completed for fetchGuarantorByLoanAccId");
 		}
 	}
 }

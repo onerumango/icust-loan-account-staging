@@ -75,7 +75,7 @@ public class IcustGuarantorServiceImpl implements IcustGuarantorService {
 	}
 
 	@Override
-	public ResponseEntity<?> fetchGuarantorDetails(Long loanAccountId) {
+	public ResponseEntity<?> fetchGuarantorByLoanAccId(Long loanAccountId) {
 		try {
 			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
@@ -97,7 +97,7 @@ public class IcustGuarantorServiceImpl implements IcustGuarantorService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("Execption occoured while executing fetchGuarantorDetails", e);
+			logger.error("Execption occoured while executing fetchGuarantorByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 

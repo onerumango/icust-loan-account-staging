@@ -20,18 +20,16 @@ import com.rumango.repository.IcustAdmissionDetailsRepo;
 import com.rumango.service.IcustAdmissionService;
 
 @Service
-public class IcustAdmissionServiceImpl implements IcustAdmissionService{
+public class IcustAdmissionServiceImpl implements IcustAdmissionService {
 	private static final Logger logger = LogManager.getLogger(IcustAdmissionServiceImpl.class);
-
 
 	@Autowired
 	IcustAdmissionDetailsRepo icustAdmissionDetailsRepo;
 
-
 	@Override
 	public ResponseEntity<?> upsertAdmissionDetails(IcustAdmissionDetailsModel icustAdmissionDetailsModel) {
 		try {
-			if (icustAdmissionDetailsModel.getLoanAccountId()==null)
+			if (icustAdmissionDetailsModel.getLoanAccountId() == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
 			else {
 				Optional<IcustAdmissionDetails> admissionObj = icustAdmissionDetailsRepo
@@ -39,8 +37,9 @@ public class IcustAdmissionServiceImpl implements IcustAdmissionService{
 				IcustAdmissionDetails admissionData = new Gson().fromJson(new Gson().toJson(icustAdmissionDetailsModel),
 						IcustAdmissionDetails.class);
 				if (admissionObj.isPresent()) {
-					validateAdmissionDetails(admissionObj.get(),admissionData);
-					return ResponseEntity.status(HttpStatus.OK).body(icustAdmissionDetailsRepo.save(admissionObj.get()));
+					validateAdmissionDetails(admissionObj.get(), admissionData);
+					return ResponseEntity.status(HttpStatus.OK)
+							.body(icustAdmissionDetailsRepo.save(admissionObj.get()));
 				} else {
 					return ResponseEntity.status(HttpStatus.OK).body(icustAdmissionDetailsRepo.save(admissionData));
 				}
@@ -50,54 +49,50 @@ public class IcustAdmissionServiceImpl implements IcustAdmissionService{
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-	
-
 
 	private void validateAdmissionDetails(IcustAdmissionDetails oldAdmissionDetails,
 			IcustAdmissionDetails newAdmissionDetails) {
 
-		if(newAdmissionDetails.getLoanAccountId()!=null)
+		if (newAdmissionDetails.getLoanAccountId() != null)
 			oldAdmissionDetails.setLoanAccountId(newAdmissionDetails.getLoanAccountId());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getLoanRequestedFor()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getLoanRequestedFor()))
 			oldAdmissionDetails.setLoanRequestedFor(newAdmissionDetails.getLoanRequestedFor());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getAdmissionStatus()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getAdmissionStatus()))
 			oldAdmissionDetails.setAdmissionStatus(newAdmissionDetails.getAdmissionStatus());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getModeOfStudy()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getModeOfStudy()))
 			oldAdmissionDetails.setModeOfStudy(newAdmissionDetails.getModeOfStudy());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getProposedCourseOfStudy()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getProposedCourseOfStudy()))
 			oldAdmissionDetails.setProposedCourseOfStudy(newAdmissionDetails.getProposedCourseOfStudy());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getInstitution()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getInstitution()))
 			oldAdmissionDetails.setInstitution(newAdmissionDetails.getInstitution());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getUniversity()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getUniversity()))
 			oldAdmissionDetails.setUniversity(newAdmissionDetails.getUniversity());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getCountry()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getCountry()))
 			oldAdmissionDetails.setCountry(newAdmissionDetails.getCountry());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getInstitutionRanking()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getInstitutionRanking()))
 			oldAdmissionDetails.setInstitutionRanking(newAdmissionDetails.getInstitutionRanking());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getCourseDuration()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getCourseDuration()))
 			oldAdmissionDetails.setCourseDuration(newAdmissionDetails.getCourseDuration());
-		if(newAdmissionDetails.getCourseCommencementDate()!=null)
+		if (newAdmissionDetails.getCourseCommencementDate() != null)
 			oldAdmissionDetails.setCourseCommencementDate(newAdmissionDetails.getCourseCommencementDate());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getSpecialization()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getSpecialization()))
 			oldAdmissionDetails.setSpecialization(newAdmissionDetails.getSpecialization());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getProjectedEarning()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getProjectedEarning()))
 			oldAdmissionDetails.setProjectedEarning(newAdmissionDetails.getProjectedEarning());
-		if(!Strings.isNullOrEmpty(newAdmissionDetails.getEmploymentPotential()))
+		if (!Strings.isNullOrEmpty(newAdmissionDetails.getEmploymentPotential()))
 			oldAdmissionDetails.setEmploymentPotential(newAdmissionDetails.getEmploymentPotential());
-		if(newAdmissionDetails.getCostOfCourse()!=null)
+		if (newAdmissionDetails.getCostOfCourse() != null)
 			oldAdmissionDetails.setCostOfCourse(newAdmissionDetails.getCostOfCourse());
-		if(newAdmissionDetails.getSource()!=null)
+		if (newAdmissionDetails.getSource() != null)
 			oldAdmissionDetails.setSource(newAdmissionDetails.getSource());
 	}
 
-
-
 	@Override
-	public ResponseEntity<?> fetchAdmissionDetails(Long loanAccountId) {
+	public ResponseEntity<?> fetchAdmissionDetailsByLoanAccId(Long loanAccountId) {
 		try {
 			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
-			
+
 			Optional<IcustAdmissionDetails> admissionObj = icustAdmissionDetailsRepo.findByLoanAccountId(loanAccountId);
 			if (admissionObj.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(admissionObj.get());
@@ -111,19 +106,21 @@ public class IcustAdmissionServiceImpl implements IcustAdmissionService{
 		}
 	}
 
-
 	@Override
-	public ResponseEntity<?> fetchAdmissionInfo() {
+	public ResponseEntity<?> fetchAdmissionInfoById(Long id) {
 		try {
-			List<IcustAdmissionDetails> admissionList = icustAdmissionDetailsRepo.findAll();
-			if (!CollectionUtils.isEmpty(admissionList)) {
-				return ResponseEntity.status(HttpStatus.OK).body(admissionList);
+			if (id == null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id is Mandatory");
+
+			Optional<IcustAdmissionDetails> admissionObj = icustAdmissionDetailsRepo.findById(id);
+			if (admissionObj.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(admissionObj.get());
 			} else {
 				logger.error("No details found");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No details found");
 			}
 		} catch (Exception e) {
-			logger.error("Execption occoured while executing fetchAdmissionInfo", e);
+			logger.error("Execption occoured while executing fetchAdmissionInfoById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}

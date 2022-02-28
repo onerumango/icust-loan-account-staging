@@ -8,8 +8,8 @@ public interface IcustAssetService {
 
 	ResponseEntity<?> upsertAssetDetails(IcustAssetDetailsModel icustAssetDetailsModel);
 
-	ResponseEntity<?> fetchAssetDetails(Long loanAccountId);
+	ResponseEntity<?> fetchAssetDetailsByLoanAccId(Long loanAccountId);
 
-	ResponseEntity<?> fetchAssetInfo();
+	ResponseEntity<?> fetchAssetInfoById(Long id);
 
 }

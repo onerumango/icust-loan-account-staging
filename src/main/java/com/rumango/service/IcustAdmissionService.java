@@ -8,8 +8,8 @@ public interface IcustAdmissionService {
 
 	ResponseEntity<?> upsertAdmissionDetails(IcustAdmissionDetailsModel icustAdmissionDetailsModel);
 
-	ResponseEntity<?> fetchAdmissionDetails(Long loanAccountId);
+	ResponseEntity<?> fetchAdmissionDetailsByLoanAccId(Long loanAccountId);
 
-	ResponseEntity<?> fetchAdmissionInfo();
+	ResponseEntity<?> fetchAdmissionInfoById(Long id);
 
 }
