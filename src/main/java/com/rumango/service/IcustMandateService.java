@@ -8,8 +8,8 @@ public interface IcustMandateService {
 
 	ResponseEntity<?> upsertMandateDetails(IcustMandateMasterModel icustMandateMasterModel);
 
-	ResponseEntity<?> fetchMandateDetails(Long loanAccountId);
+	ResponseEntity<?> fetchMandateDetailsByLoanAccId(Long loanAccountId);
 
-	ResponseEntity<?> fetchMandateInfo();
+	ResponseEntity<?> fetchMandateInfoById(Long id);
 
 }

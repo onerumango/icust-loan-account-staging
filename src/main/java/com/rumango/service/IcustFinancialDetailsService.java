@@ -8,6 +8,8 @@ public interface IcustFinancialDetailsService {
 
 	ResponseEntity<?> upsertFinancialDetails(IcustFinancialDetailsModel icustFinancialDetailsModel);
 
-	ResponseEntity<?> fetchFinancialDetails(Long loanAccountId);
+	ResponseEntity<?> fetchFinancialDetailsByLoanAccId(Long loanAccountId);
+
+	ResponseEntity<?> fetchFinancialInfoById(Long id);
 
 }

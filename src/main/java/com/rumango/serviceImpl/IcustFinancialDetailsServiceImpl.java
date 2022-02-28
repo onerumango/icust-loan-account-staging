@@ -147,12 +147,31 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 	}
 
 	@Override
-	public ResponseEntity<?> fetchFinancialDetails(Long loanAccountId) {
+	public ResponseEntity<?> fetchFinancialDetailsByLoanAccId(Long loanAccountId) {
 		try {
 			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
 			
 			Optional<IcustFinancialDetails> financialObj = icustFinancialDetailsRepo.findByLoanAccountId(loanAccountId);
+			if (financialObj.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(financialObj.get());
+			} else {
+				logger.error("No  record exist for given id");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
+			}
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing fetchAssetDetails", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> fetchFinancialInfoById(Long id) {
+		try {
+			if (id == null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id is Mandatory");
+			
+			Optional<IcustFinancialDetails> financialObj = icustFinancialDetailsRepo.findById(id);
 			if (financialObj.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(financialObj.get());
 			} else {

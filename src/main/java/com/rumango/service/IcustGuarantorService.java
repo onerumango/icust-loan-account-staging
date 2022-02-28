@@ -8,6 +8,6 @@ public interface IcustGuarantorService {
 
 	ResponseEntity<?> upsertGuarantorDetails(IcustGuarantorDetailsModel icustGuarantorDetailsModel);
 
-	ResponseEntity<?> fetchGuarantorDetails(Long loanAccountId);
+	ResponseEntity<?> fetchGuarantorByLoanAccId(Long loanAccountId);
 
 }

@@ -81,7 +81,7 @@ public class IcustAssetServiceImpl implements IcustAssetService{
 
 
 	@Override
-	public ResponseEntity<?> fetchAssetDetails(Long loanAccountId) {
+	public ResponseEntity<?> fetchAssetDetailsByLoanAccId(Long loanAccountId) {
 		try {
 			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
@@ -101,7 +101,7 @@ public class IcustAssetServiceImpl implements IcustAssetService{
 
 
 	@Override
-	public ResponseEntity<?> fetchAssetInfo() {
+	public ResponseEntity<?> fetchAssetInfoById(Long id) {
 		try {
 			List<IcustAssetDetails> assetList = icustAssetDetailsRepo.findAll();
 			if (!CollectionUtils.isEmpty(assetList)) {

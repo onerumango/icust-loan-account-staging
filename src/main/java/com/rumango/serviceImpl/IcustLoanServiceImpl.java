@@ -29,12 +29,10 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 	@Override
 	public ResponseEntity<?> upsertLoanDetails(IcustLoanInfoModel icustLoanInfoModel) {
 		try {
-			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo
-					.findById(icustLoanInfoModel.getLoanAccountId());
-			IcustLoanInfo loanData = new Gson().fromJson(new Gson().toJson(icustLoanInfoModel),
-					IcustLoanInfo.class);
+			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(icustLoanInfoModel.getLoanAccountId());
+			IcustLoanInfo loanData = new Gson().fromJson(new Gson().toJson(icustLoanInfoModel), IcustLoanInfo.class);
 			if (loanObj.isPresent()) {
-				validateLoanDetails(loanObj.get(),loanData);
+				validateLoanDetails(loanObj.get(), loanData);
 				return ResponseEntity.status(HttpStatus.OK).body(icustLoanInfoRepo.save(loanObj.get()));
 			} else {
 				return ResponseEntity.status(HttpStatus.OK).body(icustLoanInfoRepo.save(loanData));
@@ -46,31 +44,31 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 	}
 
 	private void validateLoanDetails(IcustLoanInfo oldLoanInfo, IcustLoanInfo newLoanInfo) {
-		if(!Strings.isNullOrEmpty(newLoanInfo.getBusinessProductName()))
+		if (!Strings.isNullOrEmpty(newLoanInfo.getBusinessProductName()))
 			oldLoanInfo.setBusinessProductName(newLoanInfo.getBusinessProductName());
-		if(!Strings.isNullOrEmpty(newLoanInfo.getAccountBranch()))
+		if (!Strings.isNullOrEmpty(newLoanInfo.getAccountBranch()))
 			oldLoanInfo.setAccountBranch(newLoanInfo.getAccountBranch());
-		if(newLoanInfo.getApplicationDate()!=null)
+		if (newLoanInfo.getApplicationDate() != null)
 			oldLoanInfo.setApplicationDate(newLoanInfo.getApplicationDate());
-		if(!Strings.isNullOrEmpty(newLoanInfo.getAccountType()))
+		if (!Strings.isNullOrEmpty(newLoanInfo.getAccountType()))
 			oldLoanInfo.setAccountType(newLoanInfo.getAccountType());
-		if(newLoanInfo.getEstimatedCost()!=null)
+		if (newLoanInfo.getEstimatedCost() != null)
 			oldLoanInfo.setEstimatedCost(newLoanInfo.getEstimatedCost());
-		if(!Strings.isNullOrEmpty(newLoanInfo.getCustomerContribution()))
+		if (!Strings.isNullOrEmpty(newLoanInfo.getCustomerContribution()))
 			oldLoanInfo.setCustomerContribution(newLoanInfo.getCustomerContribution());
-		if(newLoanInfo.getLoanAmount()!=null)
+		if (newLoanInfo.getLoanAmount() != null)
 			oldLoanInfo.setLoanAmount(newLoanInfo.getLoanAmount());
-		if(!Strings.isNullOrEmpty(newLoanInfo.getLoanTenure()))
+		if (!Strings.isNullOrEmpty(newLoanInfo.getLoanTenure()))
 			oldLoanInfo.setLoanTenure(newLoanInfo.getLoanTenure());
-		if(!Strings.isNullOrEmpty(newLoanInfo.getPurposeOfLoan()))
+		if (!Strings.isNullOrEmpty(newLoanInfo.getPurposeOfLoan()))
 			oldLoanInfo.setPurposeOfLoan(newLoanInfo.getPurposeOfLoan());
-		
+
 	}
 
 	@Override
-	public ResponseEntity<?> fetchLoanDetails(Long loanId) {
+	public ResponseEntity<?> fetchLoanDetailsByLoanAccId(Long loanAccountId) {
 		try {
-			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(loanId);
+			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(loanAccountId);
 			if (loanObj.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(loanObj.get());
 			} else {
@@ -78,23 +76,23 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
 			}
 		} catch (Exception e) {
-			logger.error("Execption occoured while executing fetchLoanDetails", e);
+			logger.error("Execption occoured while executing fetchLoanDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
 
 	@Override
-	public ResponseEntity<?> fetchLoanInfo() {
+	public ResponseEntity<?> fetchLoanDetailsById(Long id) {
 		try {
-			List<IcustLoanInfo> loanList = icustLoanInfoRepo.findAll();
-			if (!CollectionUtils.isEmpty(loanList)) {
-				return ResponseEntity.status(HttpStatus.OK).body(loanList);
+			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(id);
+			if (loanObj.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(loanObj.get());
 			} else {
 				logger.error("No details found");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No details found");
 			}
 		} catch (Exception e) {
-			logger.error("Execption occoured while executing fetchLoanDetails", e);
+			logger.error("Execption occoured while executing fetchLoanDetailsById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}

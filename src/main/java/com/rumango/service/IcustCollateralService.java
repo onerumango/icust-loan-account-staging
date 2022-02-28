@@ -8,6 +8,8 @@ public interface IcustCollateralService {
 
 	ResponseEntity<?> upsertCollateralDetails(IcustCollateralMasterModel icustCollateralMasterModel);
 
-	ResponseEntity<?> fetchCollateralDetails(Long loanAccountId);
+	ResponseEntity<?> fetchCollateralByLoanAccountId(Long loanAccountId);
+
+	ResponseEntity<?> fetchCollateralInfoById(Long id);
 
 }
