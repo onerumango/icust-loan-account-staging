@@ -12,5 +12,7 @@ public interface IcustLoanService {
 
 	ResponseEntity<?> fetchLoanDetailsById(Long id);
 
+	ResponseEntity<?> updateStatusApproveOrReject(IcustLoanInfoModel icustLoanInfoModel);
+
 
 }

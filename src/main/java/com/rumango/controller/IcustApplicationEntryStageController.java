@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,6 +90,19 @@ public class IcustApplicationEntryStageController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
 			logger.info("Execution completed for fetchLoanDetailsById");
+		}
+	}
+	
+	@PutMapping("/updateStatus")
+	public ResponseEntity<?> updateStatusApproveOrReject(@RequestBody IcustLoanInfoModel icustLoanInfoModel) {
+		logger.info("Exectution started for updateStatusApproveOrReject: " + icustLoanInfoModel.getLoanAccountId());
+		try {
+			return icustLoanService.updateStatusApproveOrReject(icustLoanInfoModel);
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing updateStatusApproveOrReject", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for updateStatusApproveOrReject");
 		}
 	}
 	

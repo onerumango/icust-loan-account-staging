@@ -5,6 +5,8 @@ import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rumango.enums.LoanAccStatusEnum;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,4 +49,7 @@ public class IcustLoanInfo implements Serializable{
 	private Double loanAmount;
 	private String loanTenure;
 	private String purposeOfLoan;
+	@Column(name = "STATUS")
+	@Enumerated(EnumType.STRING)
+	private LoanAccStatusEnum status;
 }

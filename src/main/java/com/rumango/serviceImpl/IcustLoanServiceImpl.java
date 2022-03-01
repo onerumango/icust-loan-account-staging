@@ -97,4 +97,22 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 		}
 	}
 
+	@Override
+	public ResponseEntity<?> updateStatusApproveOrReject(IcustLoanInfoModel icustLoanInfoModel) {
+		Optional<IcustLoanInfo> loanInfo = null;
+		try {
+			loanInfo = icustLoanInfoRepo.findById(icustLoanInfoModel.getLoanAccountId());
+			if(loanInfo.isPresent()) {
+				IcustLoanInfo loanObj = new Gson().fromJson(new Gson().toJson(icustLoanInfoModel), IcustLoanInfo.class);
+				return ResponseEntity.status(HttpStatus.OK).body(icustLoanInfoRepo.save(loanObj));
+			}else {
+				logger.error("No record exists for accountId");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No record exists given LoanAccountId");
+			}
+		} catch (Exception e) {
+			logger.error(MessageFormat.format("Exception occoured while updateStatusApproveOrReject", e.getMessage()), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
 }
