@@ -1,6 +1,8 @@
 package com.rumango.serviceImpl;
 
 import java.text.MessageFormat;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustLoanInterestDetails;
+import com.rumango.model.IcustLoanInterestListModel;
 import com.rumango.model.IcustLoanInterestModel;
 import com.rumango.repository.IcustLoanInterestRepo;
 import com.rumango.service.IcustLoanInterestService;
@@ -30,22 +33,44 @@ public class IcustLoanInterestServiceImpl implements IcustLoanInterestService {
 	ModelMapper mapper = new ModelMapper();
 
 	@Override
-	public ResponseEntity<?> upsertDetails(IcustLoanInterestModel loanInterestModel) {
+	public ResponseEntity<?> upsertDetails(IcustLoanInterestListModel loanInterestModel) {
 		try {
-			if (loanInterestModel.getLoanAccountId() == null)
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
-			else {
-				Optional<IcustLoanInterestDetails> interestObj = loanInterestRepo
-						.findByLoanAccountId(loanInterestModel.getLoanAccountId());
-				IcustLoanInterestDetails interestData = new Gson().fromJson(new Gson().toJson(loanInterestModel),
+			List<IcustLoanInterestModel> loanModel = loanInterestModel.getInterestInfo();
+			List<IcustLoanInterestDetails> interestDetails = new LinkedList<>();
+			Iterator<IcustLoanInterestModel> iterator = loanModel.iterator();
+			while(iterator.hasNext()) {
+				IcustLoanInterestModel icLoanInterestModel = (IcustLoanInterestModel) iterator.next();
+				if (icLoanInterestModel.getLoanAccountId() == null)
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory"); 
+				else {
+				Optional<IcustLoanInterestDetails> updateInterestDetails = loanInterestRepo.findByLoanAccountId(icLoanInterestModel.getLoanAccountId());
+				IcustLoanInterestDetails interestData = new Gson().fromJson(new Gson().toJson(icLoanInterestModel),
 						IcustLoanInterestDetails.class);
-				if (interestObj.isPresent()) {
-					validateEntityDetails(interestObj.get(), interestData);
-					return ResponseEntity.status(HttpStatus.OK).body(loanInterestRepo.save(interestObj.get()));
+				if(updateInterestDetails.isPresent()) {
+					validateEntityDetails(updateInterestDetails.get(), interestData);
+					interestDetails.add(updateInterestDetails.get());
 				} else {
-					return ResponseEntity.status(HttpStatus.OK).body(loanInterestRepo.save(interestData));
+					interestDetails.add(mapper.map(icLoanInterestModel, IcustLoanInterestDetails.class));
+				}
 				}
 			}
+			logger.info("Saving loanInterest details "+interestDetails);
+			return ResponseEntity.status(HttpStatus.OK).body(loanInterestRepo.saveAll(interestDetails));
+			
+//			if (loanInterestModel.getLoanAccountId() == null)
+//				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
+//			else {
+//				Optional<IcustLoanInterestDetails> interestObj = loanInterestRepo
+//						.findByLoanAccountId(loanInterestModel.getLoanAccountId());
+//				IcustLoanInterestDetails interestData = new Gson().fromJson(new Gson().toJson(loanInterestModel),
+//						IcustLoanInterestDetails.class);
+//				if (interestObj.isPresent()) {
+//					validateEntityDetails(interestObj.get(), interestData);
+//					return ResponseEntity.status(HttpStatus.OK).body(loanInterestRepo.save(interestObj.get()));
+//				} else {
+//					return ResponseEntity.status(HttpStatus.OK).body(loanInterestRepo.save(interestData));
+//				}
+//			}
 		} catch (Exception e) {
 			logger.error(MessageFormat.format("Exception occoured while upsertDetails", e.getMessage()), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

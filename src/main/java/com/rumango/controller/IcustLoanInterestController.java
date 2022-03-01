@@ -1,6 +1,7 @@
 package com.rumango.controller;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rumango.model.IcustLoanInterestListModel;
 import com.rumango.model.IcustLoanInterestModel;
 import com.rumango.service.IcustLoanInterestService;
 
@@ -29,11 +31,11 @@ public class IcustLoanInterestController {
 	
 	@PostMapping(value = "/upsertDetails",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> upsertDetails(
-			@RequestBody IcustLoanInterestModel loanInterestModel) throws Exception {
+			@RequestBody IcustLoanInterestListModel icustLoanInterestListModel) throws Exception {
 		logger.info(MessageFormat.format("Exectution started for upsertLoanInterestDetails: {0}",
-				loanInterestModel));
+				icustLoanInterestListModel));
 		try {
-			return service.upsertDetails(loanInterestModel);
+			return service.upsertDetails(icustLoanInterestListModel);
 		} catch (Exception e) {
 			logger.error("Execption occoured while executing upsertLoanInterestDetails", e);
 			throw e;
