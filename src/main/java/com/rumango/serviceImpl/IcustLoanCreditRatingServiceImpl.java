@@ -69,18 +69,15 @@ public class IcustLoanCreditRatingServiceImpl implements IcustLoanCreditRatingSe
 	@Override
 	public ResponseEntity<?> getCreditRatingsByLoanAccountId(Long loanAccId) {
 		Optional<IcustLoanCreditRatingDetails> isCreditREntityPresent = null;
-		IcustLoanCreditRatingDetails creditRatingObj = null;
 		try {
 			if (loanAccId != null)
 				isCreditREntityPresent = creditRatingRepo.findByLoanAccountId(loanAccId);
 			else
 				throw new RuntimeException("Loan Id is Required");
 
+			log.info("isCreditREntityPresent::"+ isCreditREntityPresent);
 			if (isCreditREntityPresent != null && isCreditREntityPresent.isPresent()) {
-				creditRatingObj = new Gson().fromJson(new Gson().toJson(isCreditREntityPresent),
-						IcustLoanCreditRatingDetails.class);
-				log.info("creditRatingObj :: " + creditRatingObj);
-				return ResponseEntity.status(HttpStatus.OK).body(creditRatingObj);
+				return ResponseEntity.status(HttpStatus.OK).body(isCreditREntityPresent.get());
 			} else {
 				log.error("No record exists for Loan Acc Id :: " + loanAccId);
 				return ResponseEntity.status(HttpStatus.NO_CONTENT)
