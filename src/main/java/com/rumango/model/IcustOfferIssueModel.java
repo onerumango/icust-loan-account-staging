@@ -23,4 +23,9 @@ public class IcustOfferIssueModel {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd HH:mm:ss", timezone = "IST")
 	private Date offerIssueDate;
 	private String generateOffer;
+	private String customerResponse;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd HH:mm:ss", timezone = "IST")
+	private Date offerAcceptRejectDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd HH:mm:ss", timezone = "IST")
+	private Date offerExpiryDate;
 }

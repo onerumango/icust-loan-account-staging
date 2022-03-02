@@ -72,6 +72,12 @@ public class IcustOfferIssueServiceImpl implements IcustOfferIssueService{
 			oldOfferIssue.setOfferIssueDate(newOfferIssue.getOfferIssueDate());
 		if(!Strings.isNullOrEmpty(newOfferIssue.getGenerateOffer()))
 			oldOfferIssue.setGenerateOffer(newOfferIssue.getGenerateOffer());
+		if(newOfferIssue.getCustomerResponse()!=null)
+			oldOfferIssue.setCustomerResponse(newOfferIssue.getCustomerResponse());
+		if(newOfferIssue.getOfferAcceptRejectDate()!=null)
+			oldOfferIssue.setOfferAcceptRejectDate(newOfferIssue.getOfferAcceptRejectDate());
+		if(newOfferIssue.getOfferExpiryDate()!=null)
+			oldOfferIssue.setOfferExpiryDate(newOfferIssue.getOfferExpiryDate());
 	}
 
 	@Override
