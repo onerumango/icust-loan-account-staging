@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
@@ -98,12 +99,10 @@ public class IcustLoanInterestServiceImpl implements IcustLoanInterestService {
 	@Override
 	public ResponseEntity<?> fetchLoanInterestById(Long loanId) {
 		try {
-			Optional<IcustLoanInterestDetails> icState = loanInterestRepo.findByLoanAccountId(loanId);
-			IcustLoanInterestModel loanInterestModel = new IcustLoanInterestModel();
-			if (icState.isPresent()) {
-				mapper.map(icState.get(), loanInterestModel);
+			List<IcustLoanInterestDetails> loanInterestList = loanInterestRepo.findByLoanAccountId(loanId);
+			if (!CollectionUtils.isEmpty(loanInterestList)) {
 
-				return ResponseEntity.status(HttpStatus.OK).body(loanInterestModel);
+				return ResponseEntity.status(HttpStatus.OK).body(loanInterestList);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");

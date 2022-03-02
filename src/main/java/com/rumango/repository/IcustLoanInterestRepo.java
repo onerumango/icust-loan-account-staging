@@ -1,5 +1,6 @@
 package com.rumango.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,7 @@ import com.rumango.entity.IcustLoanInterestDetails;
 @Repository
 public interface IcustLoanInterestRepo extends JpaRepository<IcustLoanInterestDetails, Long>{
 
-	Optional<IcustLoanInterestDetails> findByLoanAccountId(Long loanAccountId);
+	List<IcustLoanInterestDetails> findByLoanAccountId(Long loanAccountId);
 
 
 }
