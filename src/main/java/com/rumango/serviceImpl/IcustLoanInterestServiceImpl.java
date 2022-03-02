@@ -98,7 +98,7 @@ public class IcustLoanInterestServiceImpl implements IcustLoanInterestService {
 	@Override
 	public ResponseEntity<?> fetchLoanInterestById(Long loanId) {
 		try {
-			Optional<IcustLoanInterestDetails> icState = loanInterestRepo.findById(loanId);
+			Optional<IcustLoanInterestDetails> icState = loanInterestRepo.findByLoanAccountId(loanId);
 			IcustLoanInterestModel loanInterestModel = new IcustLoanInterestModel();
 			if (icState.isPresent()) {
 				mapper.map(icState.get(), loanInterestModel);
