@@ -93,7 +93,7 @@ public class IcustLoanValuationOfAssetServiceImpl implements IcustLoanValuationO
 				throw new RuntimeException("Loan Id is Required");
 
 			if (isValuationOfAssetEntityPresent != null && isValuationOfAssetEntityPresent.isPresent()) {
-				valuationOfAssetObj = new Gson().fromJson(new Gson().toJson(isValuationOfAssetEntityPresent),
+				valuationOfAssetObj = new Gson().fromJson(new Gson().toJson(isValuationOfAssetEntityPresent.get()),
 						IcustLoanValuationOfAssetModel.class);
 				log.info("valuationOfAssetObj :: " + valuationOfAssetObj);
 				return ResponseEntity.status(HttpStatus.OK).body(valuationOfAssetObj);

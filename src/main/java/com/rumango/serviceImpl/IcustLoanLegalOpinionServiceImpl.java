@@ -93,7 +93,7 @@ public class IcustLoanLegalOpinionServiceImpl implements IcustLoanLegalOpinionSe
 				throw new RuntimeException("Loan Id is Required");
 
 			if (isLegalOpinionEntityPresent != null && isLegalOpinionEntityPresent.isPresent()) {
-				legalOpinionObj = new Gson().fromJson(new Gson().toJson(isLegalOpinionEntityPresent),
+				legalOpinionObj = new Gson().fromJson(new Gson().toJson(isLegalOpinionEntityPresent.get()),
 						IcustLoanLegalOpinionModel.class);
 				log.info("legalOpinionObj :: " + legalOpinionObj);
 				return ResponseEntity.status(HttpStatus.OK).body(legalOpinionObj);
