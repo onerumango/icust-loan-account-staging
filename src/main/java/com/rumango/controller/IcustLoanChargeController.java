@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rumango.model.IcustLoanChargeListModel;
 import com.rumango.model.IcustLoanChargeModel;
 import com.rumango.service.IcustLoanChargeService;
 
@@ -27,10 +28,10 @@ public class IcustLoanChargeController {
 	IcustLoanChargeService service;
 	
 	@PostMapping(value="/upsertLoanChargeDetails", produces= MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> upsertLoanChargeDetails(@RequestBody IcustLoanChargeModel icustLoanChargeModel){
+	public ResponseEntity<?> upsertLoanChargeDetails(@RequestBody IcustLoanChargeListModel icustLoanChargeListModel){
 		try {
 			logger.info("Execution starts for upsertLoanChargeDetails");
-			return service.upsertLoanChargeDetails(icustLoanChargeModel);
+			return service.upsertLoanChargeDetails(icustLoanChargeListModel);
 		}catch (Exception e) {
 			// TODO: handle exception
 			logger.error("Execption occure while upsertLoanChargeDetails",e);

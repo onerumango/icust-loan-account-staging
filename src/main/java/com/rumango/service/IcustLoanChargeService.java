@@ -2,11 +2,11 @@ package com.rumango.service;
 
 import org.springframework.http.ResponseEntity;
 
-import com.rumango.model.IcustLoanChargeModel;
+import com.rumango.model.IcustLoanChargeListModel;
 
 public interface IcustLoanChargeService {
 
-	ResponseEntity<?> upsertLoanChargeDetails(IcustLoanChargeModel icustLoanChargeModel);
+	ResponseEntity<?> upsertLoanChargeDetails(IcustLoanChargeListModel icustLoanChargeListModel);
 
 	ResponseEntity<?> fetchLoanChargeDetails();
 
