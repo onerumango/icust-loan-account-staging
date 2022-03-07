@@ -110,16 +110,18 @@ public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsServ
 				approvalModel.setApplicantName(customerInfo.get().getFirstName() + " "
 						+ customerInfo.get().getMiddleName() + " " + customerInfo.get().getLastName());
 				approvalModel.setProductName(loanObj.get().getBusinessProductName());
-				approvalModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable());
-				approvalModel.setMargin(loanInterestInfo.getMargin());
-				approvalModel.setEffectiveRate(loanInterestInfo.getEffectiveRate());
-
+				if(loanInterestInfo!=null) {
+					approvalModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable());
+					approvalModel.setMargin(loanInterestInfo.getMargin());
+					approvalModel.setEffectiveRate(loanInterestInfo.getEffectiveRate());
+				}
 				return ResponseEntity.status(HttpStatus.OK).body(approvalModel);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();;
 			logger.error("Execption occoured while executing fetchApprovalDetails", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}

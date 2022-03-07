@@ -18,7 +18,7 @@ import com.rumango.model.IcustApprovalDetailsModel;
 import com.rumango.service.IcustApprovalDetailsService;
 
 @RestController
-@RequestMapping("supervisor-apprstage-api")
+@RequestMapping("/supervisor-apprstage-api")
 public class IcustSupervisorApprovalStageController {
 
 	private static final Logger logger = Logger.getLogger(IcustSupervisorApprovalStageController.class);
@@ -45,6 +45,7 @@ public class IcustSupervisorApprovalStageController {
 		try {
 			return approvalDetailsService.fetchApprovalDetails(loanAccountId);
 		}catch (Exception e) {
+			e.printStackTrace();
 			logger.error("Execption occoured while executing fetchApprovalDetails", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
