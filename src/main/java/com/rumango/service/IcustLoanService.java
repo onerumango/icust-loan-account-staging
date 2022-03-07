@@ -2,6 +2,7 @@ package com.rumango.service;
 
 import org.springframework.http.ResponseEntity;
 
+import com.rumango.model.IcustLoanAssessmentDetailsModel;
 import com.rumango.model.IcustLoanInfoModel;
 
 public interface IcustLoanService {
@@ -13,6 +14,10 @@ public interface IcustLoanService {
 	ResponseEntity<?> fetchLoanDetailsById(Long id);
 
 	ResponseEntity<?> updateStatusApproveOrReject(IcustLoanInfoModel icustLoanInfoModel);
+
+	ResponseEntity<?> fetchAssessmentInfoByLoanAccId(Long loanAccountId);
+
+	ResponseEntity<?> updateApprovedLoanAmount(IcustLoanAssessmentDetailsModel assessmentModel);
 
 
 }

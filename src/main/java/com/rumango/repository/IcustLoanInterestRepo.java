@@ -13,5 +13,7 @@ public interface IcustLoanInterestRepo extends JpaRepository<IcustLoanInterestDe
 
 	List<IcustLoanInterestDetails> findByLoanAccountId(Long loanAccountId);
 
+	IcustLoanInterestDetails findByLoanAccountIdAndInterestType(Long loanAccountId, String interestType);
+
 
 }

@@ -15,8 +15,11 @@ import org.springframework.util.CollectionUtils;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustLoanInfo;
+import com.rumango.entity.IcustLoanInterestDetails;
+import com.rumango.model.IcustLoanAssessmentDetailsModel;
 import com.rumango.model.IcustLoanInfoModel;
 import com.rumango.repository.IcustLoanInfoRepo;
+import com.rumango.repository.IcustLoanInterestRepo;
 import com.rumango.service.IcustLoanService;
 
 @Service
@@ -25,6 +28,8 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 
 	@Autowired
 	IcustLoanInfoRepo icustLoanInfoRepo;
+	@Autowired
+	IcustLoanInterestRepo loanInterestRepo;
 
 	@Override
 	public ResponseEntity<?> upsertLoanDetails(IcustLoanInfoModel icustLoanInfoModel) {
@@ -115,4 +120,48 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 		}
 	}
 
+	@Override
+	public ResponseEntity<?> fetchAssessmentInfoByLoanAccId(Long loanAccountId) {
+		IcustLoanAssessmentDetailsModel assessmentModel = new IcustLoanAssessmentDetailsModel();
+		try {
+			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(loanAccountId);
+			if (loanObj.isPresent()) {
+				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndInterestType(loanAccountId,"Fixed Rate");
+				IcustLoanInfo loanInfo = loanObj.get();
+				assessmentModel.setRequestedLoanAmount(loanInfo.getLoanAmount());
+				assessmentModel.setLoanTenure(Integer.parseInt(loanInfo.getLoanTenure()));
+				if(loanInterestInfo!=null)
+					assessmentModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable().intValue());
+				
+				return ResponseEntity.status(HttpStatus.OK).body(assessmentModel);
+			} else {
+				logger.error("No  record exist for given id");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
+			}
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing fetchAssessmentInfoByLoanAccId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> updateApprovedLoanAmount(IcustLoanAssessmentDetailsModel assessmentModel) {
+		try {
+			IcustLoanInfo loanInfo = null;
+			if (assessmentModel.getLoanAccountId()==null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
+			else {
+				Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(Long.parseLong(assessmentModel.getLoanAccountId()));
+				if(loanObj.isPresent()) {
+					loanInfo = loanObj.get();
+					loanInfo.setApprovedLoanAmount(assessmentModel.getApprovedLoanAmount());
+					icustLoanInfoRepo.save(loanInfo);
+				}
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(loanInfo);
+		}catch (Exception e) {
+			logger.error("Execption occoured while executing updateApprovedLoanAmount", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
 }

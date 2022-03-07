@@ -1,6 +1,7 @@
 package com.rumango.controller;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.rumango.model.IcustAssetDetailsModel;
 import com.rumango.model.IcustCollateralMasterModel;
 import com.rumango.model.IcustFinancialDetailsModel;
 import com.rumango.model.IcustGuarantorDetailsModel;
+import com.rumango.model.IcustLoanAssessmentDetailsModel;
 import com.rumango.model.IcustLoanInfoModel;
 import com.rumango.model.IcustMandateMasterModel;
 import com.rumango.model.IcustVehicleDetailsModel;
@@ -265,7 +267,7 @@ public class IcustApplicationEntryStageController {
 	}
 	
 	@PostMapping(value="/upsertfinancialDetails", produces= MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> upsertfinancialDetails(@RequestBody IcustFinancialDetailsModel icustFinancialDetailsModel){
+	public ResponseEntity<?> upsertfinancialDetails(@RequestBody List<IcustFinancialDetailsModel> icustFinancialDetailsModel){
 		logger.info(MessageFormat.format("Execution Started for upsertfinancialDetails icustFinancialDetailsModel:{0}", icustFinancialDetailsModel));
 		try {
 			return financialDetailsService.upsertFinancialDetails(icustFinancialDetailsModel);
@@ -365,6 +367,33 @@ public class IcustApplicationEntryStageController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
 			logger.info("Execution completed for fetchGuarantorByLoanAccId");
+		}
+	}
+	
+	@GetMapping(value = "/fetchAssessmentInfoByLoanAccId")
+	public ResponseEntity<?> fetchAssessmentInfoByLoanAccId(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchAssessmentInfoByLoanAccId loanAccountId:{0}", loanAccountId));
+		try {
+			return icustLoanService.fetchAssessmentInfoByLoanAccId(loanAccountId);
+		}catch (Exception e) {
+			logger.error("Execption occoured while executing fetchAssessmentInfoByLoanAccId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for fetchAssessmentInfoByLoanAccId");
+		}
+	}
+	
+	@PutMapping(value = "updateApprovedLoanAmount", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateApprovedLoanAmount( @RequestBody IcustLoanAssessmentDetailsModel assessmentModel ) {
+		logger.info("Exectution started for updateApprovedLoanAmount: " + assessmentModel);
+		try {
+			logger.info(MessageFormat.format("Update approved loan amount for object: {0}", assessmentModel));
+			return icustLoanService.updateApprovedLoanAmount(assessmentModel);
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing updateApprovedLoanAmount", e);
+			throw e;
+		} finally {
+			logger.info("Execution completed for updateApprovedLoanAmount");
 		}
 	}
 }

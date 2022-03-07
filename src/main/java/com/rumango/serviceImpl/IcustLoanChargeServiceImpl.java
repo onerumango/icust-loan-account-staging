@@ -95,6 +95,7 @@ public class IcustLoanChargeServiceImpl implements IcustLoanChargeService{
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Details Found");
 			}
 		}catch (Exception e) {
+			
 			logger.error("Execption occure while fetchLoanChargeDetails",e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}

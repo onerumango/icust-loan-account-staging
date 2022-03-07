@@ -52,4 +52,5 @@ public class IcustLoanInfo implements Serializable{
 	@Column(name = "STATUS")
 	@Enumerated(EnumType.STRING)
 	private LoanAccStatusEnum status;
+	private Double approvedLoanAmount;
 }

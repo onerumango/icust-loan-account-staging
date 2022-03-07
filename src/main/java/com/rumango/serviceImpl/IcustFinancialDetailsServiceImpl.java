@@ -2,19 +2,26 @@ package com.rumango.serviceImpl;
 
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustFinancialDetails;
+import com.rumango.entity.IcustLaonChargeDetails;
 import com.rumango.model.IcustFinancialDetailsModel;
+import com.rumango.model.IcustLoanChargeModel;
 import com.rumango.repository.IcustFinancialDetailsRepo;
 import com.rumango.service.IcustFinancialDetailsService;
 
@@ -26,23 +33,35 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 	@Autowired
 	IcustFinancialDetailsRepo icustFinancialDetailsRepo;
 	
+	ModelMapper mapper = new ModelMapper();
+	
 	@Override
-	public ResponseEntity<?> upsertFinancialDetails(IcustFinancialDetailsModel icustFinancialDetailsModel) {
+	public ResponseEntity<?> upsertFinancialDetails(List<IcustFinancialDetailsModel> icustFinancialDetailsModel) {
+		
 		try {
-			if (icustFinancialDetailsModel.getLoanAccountId()==null)
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
-			else {
-				Optional<IcustFinancialDetails> financialObj = icustFinancialDetailsRepo
-						.findByLoanAccountId(icustFinancialDetailsModel.getLoanAccountId());
-				IcustFinancialDetails financialData = new Gson().fromJson(new Gson().toJson(icustFinancialDetailsModel),
-						IcustFinancialDetails.class);
-				if (financialObj.isPresent()) {
-					validateFinancialDetails(financialObj.get(),financialData);
-					return ResponseEntity.status(HttpStatus.OK).body(icustFinancialDetailsRepo.save(financialObj.get()));
-				} else {
-					return ResponseEntity.status(HttpStatus.OK).body(icustFinancialDetailsRepo.save(financialData));
+			List<IcustFinancialDetails> financialDetails = new LinkedList<>();
+			Iterator<IcustFinancialDetailsModel> iterator = icustFinancialDetailsModel.iterator();
+			Optional<IcustFinancialDetails> updateFinancialDetails = null;
+			while (iterator.hasNext()) {
+				IcustFinancialDetailsModel loanFinancialModel = (IcustFinancialDetailsModel) iterator.next();
+				if (loanFinancialModel.getLoanAccountId() == null)
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
+				else {
+					if (loanFinancialModel.getId() != null) {
+						updateFinancialDetails = icustFinancialDetailsRepo.findById(loanFinancialModel.getId());
+					}
+					IcustFinancialDetails financialData = new Gson().fromJson(new Gson().toJson(loanFinancialModel),
+							IcustFinancialDetails.class);
+					if (updateFinancialDetails != null && updateFinancialDetails.isPresent()) {
+						validateFinancialDetails(updateFinancialDetails.get(), financialData);
+						financialDetails.add(updateFinancialDetails.get());
+					} else {
+						financialDetails.add(mapper.map(loanFinancialModel, IcustFinancialDetails.class));
+					}
 				}
 			}
+			logger.info("Saving financial details " + financialDetails);
+			return ResponseEntity.status(HttpStatus.OK).body(icustFinancialDetailsRepo.saveAll(financialDetails));
 		} catch (Exception e) {
 			logger.error(MessageFormat.format("Exception occoured while upsertFinancialDetails", e.getMessage()), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -149,20 +168,33 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 	@Override
 	public ResponseEntity<?> fetchFinancialDetailsByLoanAccId(Long loanAccountId) {
 		try {
-			if (loanAccountId == null)
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
-			
-			Optional<IcustFinancialDetails> financialObj = icustFinancialDetailsRepo.findByLoanAccountId(loanAccountId);
-			if (financialObj.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(financialObj.get());
+			List<IcustFinancialDetails> financialList = icustFinancialDetailsRepo.findByLoanAccountId(loanAccountId);
+			if (!CollectionUtils.isEmpty(financialList)) {
+
+				return ResponseEntity.status(HttpStatus.OK).body(financialList);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
 			}
 		} catch (Exception e) {
-			logger.error("Execption occoured while executing fetchAssetDetails", e);
+			logger.error("Execption occoured while executing fetchFinancialDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
+//		try {
+//			if (loanAccountId == null)
+//				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
+//			
+//			Optional<IcustFinancialDetails> financialObj = icustFinancialDetailsRepo.findByLoanAccountId(loanAccountId);
+//			if (financialObj.isPresent()) {
+//				return ResponseEntity.status(HttpStatus.OK).body(financialObj.get());
+//			} else {
+//				logger.error("No  record exist for given id");
+//				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
+//			}
+//		} catch (Exception e) {
+//			logger.error("Execption occoured while executing fetchAssetDetails", e);
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//		}
 	}
 
 	@Override

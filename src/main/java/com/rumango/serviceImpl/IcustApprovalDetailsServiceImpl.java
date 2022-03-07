@@ -12,22 +12,34 @@ import org.springframework.stereotype.Service;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustApprovalDetails;
+import com.rumango.entity.IcustCustomerInfo;
+import com.rumango.entity.IcustLoanInfo;
+import com.rumango.entity.IcustLoanInterestDetails;
 import com.rumango.entity.IcustVehicleDetails;
 import com.rumango.model.IcustApprovalDetailsModel;
 import com.rumango.repository.IcustApprovalDetailsRepo;
+import com.rumango.repository.IcustCustomerInfoRepo;
+import com.rumango.repository.IcustLoanInfoRepo;
+import com.rumango.repository.IcustLoanInterestRepo;
 import com.rumango.service.IcustApprovalDetailsService;
 
 @Service
-public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsService{
+public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsService {
 	private static final Logger logger = Logger.getLogger(IcustApprovalDetailsServiceImpl.class);
 
 	@Autowired
 	IcustApprovalDetailsRepo approvalDetailsRepo;
-	
+	@Autowired
+	IcustLoanInfoRepo icustLoanInfoRepo;
+	@Autowired
+	IcustLoanInterestRepo loanInterestRepo;
+	@Autowired
+	IcustCustomerInfoRepo customerRepo;
+
 	@Override
 	public ResponseEntity<?> upsertApprovalDetails(IcustApprovalDetailsModel icustApprovalDetailsModel) {
 		try {
-			if (icustApprovalDetailsModel.getLoanAccountId()==null)
+			if (icustApprovalDetailsModel.getLoanAccountId() == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
 			else {
 				Optional<IcustApprovalDetails> approvalObj = approvalDetailsRepo
@@ -35,7 +47,7 @@ public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsServ
 				IcustApprovalDetails approvalData = new Gson().fromJson(new Gson().toJson(icustApprovalDetailsModel),
 						IcustApprovalDetails.class);
 				if (approvalObj.isPresent()) {
-					validateApprovalDetails(approvalObj.get(),approvalData);
+					validateApprovalDetails(approvalObj.get(), approvalData);
 					return ResponseEntity.status(HttpStatus.OK).body(approvalDetailsRepo.save(approvalObj.get()));
 				} else {
 					return ResponseEntity.status(HttpStatus.OK).body(approvalDetailsRepo.save(approvalData));
@@ -48,46 +60,61 @@ public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsServ
 	}
 
 	private void validateApprovalDetails(IcustApprovalDetails oldApproval, IcustApprovalDetails newApproval) {
-		
-		if(!Strings.isNullOrEmpty(newApproval.getApplicantName()))
+
+		if (!Strings.isNullOrEmpty(newApproval.getApplicantName()))
 			oldApproval.setApplicantName(newApproval.getApplicantName());
-		if(!Strings.isNullOrEmpty(newApproval.getAccountType()))
+		if (!Strings.isNullOrEmpty(newApproval.getAccountType()))
 			oldApproval.setAccountType(newApproval.getAccountType());
-		if(!Strings.isNullOrEmpty(newApproval.getAccountBranch()))
+		if (!Strings.isNullOrEmpty(newApproval.getAccountBranch()))
 			oldApproval.setAccountBranch(newApproval.getAccountBranch());
-		if(!Strings.isNullOrEmpty(newApproval.getProductCode()))
+		if (!Strings.isNullOrEmpty(newApproval.getProductCode()))
 			oldApproval.setProductCode(newApproval.getProductCode());
-		if(!Strings.isNullOrEmpty(newApproval.getProductName()))
+		if (!Strings.isNullOrEmpty(newApproval.getProductName()))
 			oldApproval.setProductName(newApproval.getProductName());
-		if(newApproval.getExistingValues()!=null)
+		if (newApproval.getExistingValues() != null)
 			oldApproval.setExistingValues(newApproval.getExistingValues());
-		if(newApproval.getApprovedLoanAccount()!=null)
+		if (newApproval.getApprovedLoanAccount() != null)
 			oldApproval.setApprovedLoanAccount(newApproval.getApprovedLoanAccount());
-		if(!Strings.isNullOrEmpty(newApproval.getLoanTenure()))
+		if (!Strings.isNullOrEmpty(newApproval.getLoanTenure()))
 			oldApproval.setLoanTenure(newApproval.getLoanTenure());
-		if(!Strings.isNullOrEmpty(newApproval.getInstallmentType()))
+		if (!Strings.isNullOrEmpty(newApproval.getInstallmentType()))
 			oldApproval.setInstallmentType(newApproval.getInstallmentType());
-		if(newApproval.getRateOfInterest()!=null)
-			oldApproval.setRateOfInterest(newApproval.getRateOfInterest());		
-		if(newApproval.getMargin()!=null)
+		if (newApproval.getRateOfInterest() != null)
+			oldApproval.setRateOfInterest(newApproval.getRateOfInterest());
+		if (newApproval.getMargin() != null)
 			oldApproval.setMargin(newApproval.getMargin());
-		if(newApproval.getEffectiveRate()!=null)
+		if (newApproval.getEffectiveRate() != null)
 			oldApproval.setEffectiveRate(newApproval.getEffectiveRate());
-		if(newApproval.getComponentConsidered()!=null)
+		if (newApproval.getComponentConsidered() != null)
 			oldApproval.setComponentConsidered(newApproval.getComponentConsidered());
-		if(!Strings.isNullOrEmpty(newApproval.getUserRecommendation()))
+		if (!Strings.isNullOrEmpty(newApproval.getUserRecommendation()))
 			oldApproval.setUserRecommendation(newApproval.getUserRecommendation());
 	}
 
 	@Override
 	public ResponseEntity<?> fetchApprovalDetails(Long loanAccountId) {
+		IcustApprovalDetailsModel approvalModel = new IcustApprovalDetailsModel();
 		try {
 			if (loanAccountId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
-			Optional<IcustApprovalDetails> approvalObj = approvalDetailsRepo.findByLoanAccountId(loanAccountId);
-			
-			if (approvalObj.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(approvalObj.get());
+			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(loanAccountId);
+
+			if (loanObj.isPresent()) {
+				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo
+						.findByLoanAccountIdAndInterestType(loanAccountId, "Fixed Rate");
+				Optional<IcustCustomerInfo> customerInfo = customerRepo.findById(loanObj.get().getCustomerId());
+				approvalModel.setApprovedLoanAccount(loanObj.get().getApprovedLoanAmount());
+				approvalModel.setLoanTenure(loanObj.get().getLoanTenure());
+				approvalModel.setAccountBranch(loanObj.get().getAccountBranch());
+				approvalModel.setAccountType(loanObj.get().getAccountType());
+				approvalModel.setApplicantName(customerInfo.get().getFirstName() + " "
+						+ customerInfo.get().getMiddleName() + " " + customerInfo.get().getLastName());
+				approvalModel.setProductName(loanObj.get().getBusinessProductName());
+				approvalModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable());
+				approvalModel.setMargin(loanInterestInfo.getMargin());
+				approvalModel.setEffectiveRate(loanInterestInfo.getEffectiveRate());
+
+				return ResponseEntity.status(HttpStatus.OK).body(approvalModel);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
