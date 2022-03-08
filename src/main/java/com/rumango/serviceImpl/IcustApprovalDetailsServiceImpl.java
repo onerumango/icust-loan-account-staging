@@ -15,12 +15,13 @@ import com.rumango.entity.IcustApprovalDetails;
 import com.rumango.entity.IcustCustomerInfo;
 import com.rumango.entity.IcustLoanInfo;
 import com.rumango.entity.IcustLoanInterestDetails;
-import com.rumango.entity.IcustVehicleDetails;
+import com.rumango.entity.IcustLoanRepaymentDetails;
 import com.rumango.model.IcustApprovalDetailsModel;
 import com.rumango.repository.IcustApprovalDetailsRepo;
 import com.rumango.repository.IcustCustomerInfoRepo;
 import com.rumango.repository.IcustLoanInfoRepo;
 import com.rumango.repository.IcustLoanInterestRepo;
+import com.rumango.repository.IcustLoanRepaymentRepo;
 import com.rumango.service.IcustApprovalDetailsService;
 
 @Service
@@ -35,6 +36,8 @@ public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsServ
 	IcustLoanInterestRepo loanInterestRepo;
 	@Autowired
 	IcustCustomerInfoRepo customerRepo;
+	@Autowired
+	IcustLoanRepaymentRepo repaymentRepo;
 
 	@Override
 	public ResponseEntity<?> upsertApprovalDetails(IcustApprovalDetailsModel icustApprovalDetailsModel) {
@@ -103,17 +106,23 @@ public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsServ
 				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo
 						.findByLoanAccountIdAndInterestType(loanAccountId, "Fixed Rate");
 				Optional<IcustCustomerInfo> customerInfo = customerRepo.findById(loanObj.get().getCustomerId());
+				Optional<IcustLoanRepaymentDetails> repaymentInfo = repaymentRepo.findByLoanAccountId(loanAccountId);
 				approvalModel.setApprovedLoanAccount(loanObj.get().getApprovedLoanAmount());
 				approvalModel.setLoanTenure(loanObj.get().getLoanTenure());
 				approvalModel.setAccountBranch(loanObj.get().getAccountBranch());
 				approvalModel.setAccountType(loanObj.get().getAccountType());
-				approvalModel.setApplicantName(customerInfo.get().getFirstName() + " "
-						+ customerInfo.get().getMiddleName() + " " + customerInfo.get().getLastName());
+				if(customerInfo.isPresent()) {
+					approvalModel.setApplicantName(customerInfo.get().getFirstName() + " "
+							+ customerInfo.get().getMiddleName() + " " + customerInfo.get().getLastName());
+				}
 				approvalModel.setProductName(loanObj.get().getBusinessProductName());
 				if(loanInterestInfo!=null) {
 					approvalModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable());
 					approvalModel.setMargin(loanInterestInfo.getMargin());
 					approvalModel.setEffectiveRate(loanInterestInfo.getEffectiveRate());
+				}
+				if(repaymentInfo.isPresent()) {
+					approvalModel.setInstallmentType(repaymentInfo.get().getTypeOfRepayment());
 				}
 				return ResponseEntity.status(HttpStatus.OK).body(approvalModel);
 			} else {

@@ -1,7 +1,6 @@
 package com.rumango.serviceImpl;
 
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.LogManager;
@@ -10,16 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
+import com.rumango.entity.IcustCustomerInfo;
 import com.rumango.entity.IcustLoanInfo;
 import com.rumango.entity.IcustLoanInterestDetails;
+import com.rumango.entity.IcustLoanRepaymentDetails;
 import com.rumango.model.IcustLoanAssessmentDetailsModel;
 import com.rumango.model.IcustLoanInfoModel;
+import com.rumango.model.IcustOfferIssueModel;
+import com.rumango.repository.IcustCustomerInfoRepo;
 import com.rumango.repository.IcustLoanInfoRepo;
 import com.rumango.repository.IcustLoanInterestRepo;
+import com.rumango.repository.IcustLoanRepaymentRepo;
 import com.rumango.service.IcustLoanService;
 
 @Service
@@ -30,7 +33,11 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 	IcustLoanInfoRepo icustLoanInfoRepo;
 	@Autowired
 	IcustLoanInterestRepo loanInterestRepo;
-
+	@Autowired
+	IcustCustomerInfoRepo customerRepo;
+	@Autowired
+	IcustLoanRepaymentRepo repaymentRepo;
+	
 	@Override
 	public ResponseEntity<?> upsertLoanDetails(IcustLoanInfoModel icustLoanInfoModel) {
 		try {
@@ -161,6 +168,46 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 			return ResponseEntity.status(HttpStatus.OK).body(loanInfo);
 		}catch (Exception e) {
 			logger.error("Execption occoured while executing updateApprovedLoanAmount", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> fetchOfferIssueInfoByLoanAccId(Long loanAccountId) {
+		IcustOfferIssueModel offerIssueModel = new IcustOfferIssueModel();
+		try {
+			if (loanAccountId == null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanId is Mandatory");
+			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(loanAccountId);
+
+			if (loanObj.isPresent()) {
+				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo
+						.findByLoanAccountIdAndInterestType(loanAccountId, "Fixed Rate");
+				Optional<IcustCustomerInfo> customerInfo = customerRepo.findById(loanObj.get().getCustomerId());
+				Optional<IcustLoanRepaymentDetails> repaymentInfo = repaymentRepo.findByLoanAccountId(loanAccountId);
+				
+				if(customerInfo.isPresent()) {
+					offerIssueModel.setApplicantName(customerInfo.get().getFirstName() + " "
+							+ customerInfo.get().getMiddleName() + " " + customerInfo.get().getLastName());
+				}
+				offerIssueModel.setApprovedLoanAmount(loanObj.get().getApprovedLoanAmount());
+				offerIssueModel.setLoanTenure(loanObj.get().getLoanTenure());
+				if(repaymentInfo.isPresent()) {
+					offerIssueModel.setInstallmentType(repaymentInfo.get().getTypeOfRepayment());
+					offerIssueModel.setInstallmentFrequency(repaymentInfo.get().getRepaymentFrequency());
+				}
+				if(loanInterestInfo!=null) {
+					offerIssueModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable());
+				}
+				
+				return ResponseEntity.status(HttpStatus.OK).body(offerIssueModel);
+			} else {
+				logger.error("No  record exist for given id");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();;
+			logger.error("Execption occoured while executing fetchApprovalDetails", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}

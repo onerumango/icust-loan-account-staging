@@ -15,9 +15,9 @@ public class IcustOfferIssueModel {
 	private String loanTenure;
 	private String installmentType;
 	private String installmentFrequency;
-	private Double rateOfInterest;
+	private Long rateOfInterest;
 	private Double principal;
-	private Double interest;
+	private Long interest;
 	private Double installmentAmount;
 	private Double charges;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd HH:mm:ss", timezone = "IST")

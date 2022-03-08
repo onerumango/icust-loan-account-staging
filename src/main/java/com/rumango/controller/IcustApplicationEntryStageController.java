@@ -35,7 +35,7 @@ import com.rumango.service.IcustMandateService;
 import com.rumango.service.IcustVehicleService;
 
 @RestController
-@RequestMapping("application-entrystage-api")
+@RequestMapping("/application-entrystage-api")
 public class IcustApplicationEntryStageController {
 	private static final Logger logger = Logger.getLogger(IcustApplicationEntryStageController.class);
 	
@@ -394,6 +394,19 @@ public class IcustApplicationEntryStageController {
 			throw e;
 		} finally {
 			logger.info("Execution completed for updateApprovedLoanAmount");
+		}
+	}
+	
+	@GetMapping(value = "/fetchOfferIssueInfoByLoanAccId")
+	public ResponseEntity<?> fetchOfferIssueInfoByLoanAccId(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchOfferIssueInfoByLoanAccId loanAccountId:{0}", loanAccountId));
+		try {
+			return icustLoanService.fetchOfferIssueInfoByLoanAccId(loanAccountId);
+		}catch (Exception e) {
+			logger.error("Execption occoured while executing fetchOfferIssueInfoByLoanAccId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for fetchOfferIssueInfoByLoanAccId");
 		}
 	}
 }
