@@ -32,8 +32,8 @@ public class IcustLoanInterestDetails {
 	private Long loanInterestId;
 	private Long loanAccountId;
 	private String interestType;
-	private Long interestRateApplicable;
-	private Long margin;
-	private Long effectiveRate;
+	private Double interestRateApplicable;
+	private Double margin;
+	private Double effectiveRate;
 
 }

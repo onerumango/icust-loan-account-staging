@@ -12,4 +12,6 @@ public interface IcustLoanRepaymentService {
 
 	ResponseEntity<?> fetchLoanRepaymentDetailById(Long loanAccountId);
 
+	ResponseEntity<?> fetchRepaymentScheduleInfo(IcustLoanRepaymentModel icustLoanRepaymentModel);
+
 }

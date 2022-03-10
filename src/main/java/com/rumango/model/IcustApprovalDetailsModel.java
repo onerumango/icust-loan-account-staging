@@ -15,9 +15,9 @@ public class IcustApprovalDetailsModel {
 	private Double approvedLoanAccount;
 	private String loanTenure;
 	private String installmentType;
-	private Long rateOfInterest;
-	private Long margin;
-	private Long effectiveRate;
+	private Double rateOfInterest;
+	private Double margin;
+	private Double effectiveRate;
 	private Double componentConsidered;
 	private String userRecommendation;
 

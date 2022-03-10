@@ -15,7 +15,7 @@ public class IcustOfferIssueModel {
 	private String loanTenure;
 	private String installmentType;
 	private String installmentFrequency;
-	private Long rateOfInterest;
+	private Double rateOfInterest;
 	private Double principal;
 	private Long interest;
 	private Double installmentAmount;

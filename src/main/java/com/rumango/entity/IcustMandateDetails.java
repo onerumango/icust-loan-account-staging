@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ICUST_ASSET_DETAILS")
+@Table(name = "ICUST_MANDATE_DETAILS")
 @Data
 @XmlRootElement
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })

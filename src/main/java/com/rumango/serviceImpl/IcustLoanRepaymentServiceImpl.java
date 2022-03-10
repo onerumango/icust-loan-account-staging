@@ -1,7 +1,9 @@
 package com.rumango.serviceImpl;
 
 import java.text.MessageFormat;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,11 +17,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.google.gson.Gson;
-import com.rumango.entity.IcustAssetDetails;
+import com.rumango.entity.IcustLoanInfo;
+import com.rumango.entity.IcustLoanInterestDetails;
 import com.rumango.entity.IcustLoanRepaymentDetails;
 import com.rumango.model.IcustLoanRepaymentModel;
+import com.rumango.model.IcustRepaymentScheduleInfoModel;
+import com.rumango.repository.IcustLoanInfoRepo;
+import com.rumango.repository.IcustLoanInterestRepo;
 import com.rumango.repository.IcustLoanRepaymentRepo;
 import com.rumango.service.IcustLoanRepaymentService;
+import com.rumango.service.IcustPaymentService;
 
 
 @Service
@@ -29,10 +36,15 @@ public class IcustLoanRepaymentServiceImpl implements IcustLoanRepaymentService{
 	
 	@Autowired
 	IcustLoanRepaymentRepo icustLoanRepaymentRepo;
+	@Autowired
+	IcustLoanInfoRepo icustLoanInfoRepo;
+	@Autowired
+	IcustLoanInterestRepo loanInterestRepo;
+	@Autowired
+	IcustPaymentService icustPaymentService;
 	
 	@Override
 	public ResponseEntity<?> upsertLoanRepaymentDeatils(IcustLoanRepaymentModel icustLoanRepaymentModel) {
-		// TODO Auto-generated method stub
 		
 		try {
 			if(icustLoanRepaymentModel.getLoanAccountId()==null) {
@@ -93,7 +105,6 @@ public class IcustLoanRepaymentServiceImpl implements IcustLoanRepaymentService{
 
 	@Override
 	public ResponseEntity<?> fetchLoanRepaymentDetails() {
-		// TODO Auto-generated method stub
 		try {
 			List<IcustLoanRepaymentDetails> list= icustLoanRepaymentRepo.findAll();
 			if(!CollectionUtils.isEmpty(list)) {
@@ -103,7 +114,6 @@ public class IcustLoanRepaymentServiceImpl implements IcustLoanRepaymentService{
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body(list);
 			}
 		}catch (Exception e) {
-			// TODO: handle exception
 			logger.error("Execption occure while fetchLoanRepaymentDetails");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
@@ -111,7 +121,6 @@ public class IcustLoanRepaymentServiceImpl implements IcustLoanRepaymentService{
 
 	@Override
 	public ResponseEntity<?> fetchLoanRepaymentDetailById(Long loanAccountId) {
-		// TODO Auto-generated method stub
 		try {
 			if(loanAccountId==null) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("loanAccountId is mandatory");
@@ -126,10 +135,83 @@ public class IcustLoanRepaymentServiceImpl implements IcustLoanRepaymentService{
 			}
 			
 		}catch (Exception e) {
-			// TODO: handle exception
 			logger.error("Execption occure while fetchLoanRepaymentDetailById");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
 
+	@Override
+	public ResponseEntity<?> fetchRepaymentScheduleInfo(IcustLoanRepaymentModel icustLoanRepaymentModel) {
+		try {
+			  List<IcustRepaymentScheduleInfoModel> repaymentList = null;
+			if(icustLoanRepaymentModel.getLoanAccountId()==null) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("loanAccountId is Mandotory");
+			}else {
+				Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(icustLoanRepaymentModel.getLoanAccountId());
+				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndInterestType(icustLoanRepaymentModel.getLoanAccountId(),"Fixed Rate");
+				if(loanObj.isPresent()) {
+					repaymentList  = calculatePaymentList(icustLoanRepaymentModel.getFirstRepaymentDate(), loanObj.get().getLoanAmount(),
+			        		icustLoanRepaymentModel.getLoanTenure(), 0, (loanInterestInfo!=null?loanInterestInfo.getInterestRateApplicable():0), 0);
+
+				}
+				return ResponseEntity.status(HttpStatus.OK).body(repaymentList);
+			}
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();;
+			logger.error(MessageFormat.format("Execption occcure while fetchRepaymentScheduleInfo", e.getMessage()),e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	private List<IcustRepaymentScheduleInfoModel> calculatePaymentList(Date firstRepaymentDate, Double loanAmount,
+			String loanTenure, int paymentType, Double interestRate, int k) {
+		  List<IcustRepaymentScheduleInfoModel> paymentList = new ArrayList<IcustRepaymentScheduleInfoModel>();
+	        Date loopDate = firstRepaymentDate;
+	        Double balance = loanAmount;
+	        Double accumulatedInterest = 0.0;
+	        for (int paymentNumber = 1; paymentNumber <= 12; paymentNumber++)
+	        {
+	            if (paymentType == 0)
+	            {
+	                loopDate = addOneMonth(loopDate);
+	            }
+	            Double principalPaid = loanAmount/12;
+	            Double interest = loanAmount*(interestRate /100);
+	            Double interestPaid =interest/12;
+//	            double monthlyPayment = loanAmount * monthlyInterestRate /
+//	                    (1 - 1 / Math.pow(1 + monthlyInterestRate, 12));
+//	            System.err.println("monthlyPayment::"+monthlyPayment);
+	            //Double principalPaid = icustPaymentService.principalPayment(icustPaymentService.getMonthlyInterestRate(interestRate), paymentNumber, 12, loanAmount, 0, 0);
+	            //Double interestPaid = icustPaymentService.interestPayment(icustPaymentService.getMonthlyInterestRate(interestRate), paymentNumber, 12, loanAmount, 0, 0);
+	          //  balance = balance + principalPaid;
+	           // accumulatedInterest += interestPaid;
+
+	            IcustRepaymentScheduleInfoModel schedule = new IcustRepaymentScheduleInfoModel();
+	            schedule.setPaymentNumber(paymentNumber);
+	            schedule.setPaymentDate(loopDate);
+	            schedule.setPrincipalPaid(principalPaid);
+	            schedule.setInterestPaid(interestPaid);
+	            paymentList.add(schedule);
+
+	            if (paymentType == 1)
+	            {
+	                loopDate = addOneMonth(loopDate);
+	            }
+	        }
+	        return paymentList;
+	}
+	
+	 private Date addOneMonth(Date date)
+	    {
+	        Calendar cal = Calendar.getInstance();
+	        cal.setTime(date);
+	        cal.add(Calendar.MONTH, 1);
+	        return cal.getTime();
+		 
+		
+	    }
+
+	
 }

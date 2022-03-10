@@ -69,4 +69,20 @@ public class IcustLaonRepaymentController {
 			logger.info("Exectuiion complete for fetchLoanRepaymentDetailById");
 		}
 	}
+	
+	@PostMapping(value="/fetchRepaymentScheduleInfo", produces= MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> fetchRepaymentScheduleInfo(@RequestBody IcustLoanRepaymentModel icustLoanRepaymentModel){
+		logger.info(MessageFormat.format("Execution Started for fetchRepaymentScheduleInfo icustLoanRepaymentModel:{0}",icustLoanRepaymentModel));
+		
+		try {
+			return service.fetchRepaymentScheduleInfo(icustLoanRepaymentModel);
+		}catch(Exception e){
+			logger.error("Execption occoured while executing fetchRepaymentScheduleInfo", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}finally{
+			logger.info("Execution complete for fetchRepaymentScheduleInfo");
+		}
+		
+	}
+	
 }
