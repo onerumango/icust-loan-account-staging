@@ -40,17 +40,23 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 	
 	@Override
 	public ResponseEntity<?> upsertLoanDetails(IcustLoanInfoModel icustLoanInfoModel) {
+		
+		Optional<IcustLoanInfo> loanObj = null;
+		IcustLoanInfo loanDetails = null;
 		try {
-			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(icustLoanInfoModel.getLoanAccountId());
 			IcustLoanInfo loanData = new Gson().fromJson(new Gson().toJson(icustLoanInfoModel), IcustLoanInfo.class);
-			if (loanObj.isPresent()) {
-				validateLoanDetails(loanObj.get(), loanData);
-				return ResponseEntity.status(HttpStatus.OK).body(icustLoanInfoRepo.save(loanObj.get()));
-			} else {
-				return ResponseEntity.status(HttpStatus.OK).body(icustLoanInfoRepo.save(loanData));
+			if (icustLoanInfoModel.getLoanAccountId() != null) {
+				loanObj = icustLoanInfoRepo.findById(icustLoanInfoModel.getLoanAccountId());
 			}
+			if (loanObj != null && loanObj.isPresent()) {
+				validateLoanDetails(loanObj.get(), loanData);
+				loanDetails = icustLoanInfoRepo.save(loanObj.get());
+			} else {
+				loanDetails = icustLoanInfoRepo.save(loanData);
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(loanDetails);
 		} catch (Exception e) {
-			logger.error(MessageFormat.format("Exception occoured while upsertFinancialDetails", e.getMessage()), e);
+			logger.error(MessageFormat.format("Exception occoured while upsertLoanDetails", e.getMessage()), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
