@@ -1,15 +1,21 @@
 package com.rumango.serviceImpl;
 
+import java.sql.Date;
 import java.util.Optional;
+
+import javax.persistence.Column;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.rumango.entity.IcustLoanLegalOpinionEntity;
+import com.rumango.enums.UnitMeasurementEnum;
 import com.rumango.model.IcustLoanLegalOpinionModel;
 import com.rumango.repository.IcustLoanLegalOpinionRepo;
 import com.rumango.service.IcustLoanLegalOpinionService;
@@ -27,6 +33,7 @@ public class IcustLoanLegalOpinionServiceImpl implements IcustLoanLegalOpinionSe
 	public ResponseEntity<?> saveOrUpdateLegalOpinion(IcustLoanLegalOpinionModel legalOpinionModel) {
 		Optional<IcustLoanLegalOpinionEntity> isLegalOpinionEntityPresent = null;
 		IcustLoanLegalOpinionEntity legalOpinionObj = null;
+		System.err.println("legalOpinionModel::"+legalOpinionModel);
 		try {
 			if (legalOpinionModel.getLoanAccountId() != null)
 				isLegalOpinionEntityPresent = legalOpinionRepo
@@ -37,13 +44,16 @@ public class IcustLoanLegalOpinionServiceImpl implements IcustLoanLegalOpinionSe
 			if (isLegalOpinionEntityPresent != null && isLegalOpinionEntityPresent.isPresent()) {
 				IcustLoanLegalOpinionEntity updateLegalOpinionObj = new Gson()
 						.fromJson(new Gson().toJson(legalOpinionModel), IcustLoanLegalOpinionEntity.class);
+				System.err.println("updateLegalOpinionObj::"+updateLegalOpinionObj);
 				validateLegalOpinionDetails(isLegalOpinionEntityPresent.get(), updateLegalOpinionObj);
 				legalOpinionObj = legalOpinionRepo.save(isLegalOpinionEntityPresent.get());
 			} else {
 				legalOpinionObj = new Gson().fromJson(new Gson().toJson(legalOpinionModel),
 						IcustLoanLegalOpinionEntity.class);
+				System.err.println("legalOpinionObj else::"+legalOpinionObj);
 				legalOpinionObj = legalOpinionRepo.save(legalOpinionObj);
 			}
+			System.err.println("legalOpinionObj return::"+legalOpinionObj);
 			return ResponseEntity.status(HttpStatus.OK).body(legalOpinionObj);
 		} catch (JsonSyntaxException e) {
 			e.printStackTrace();
@@ -51,9 +61,26 @@ public class IcustLoanLegalOpinionServiceImpl implements IcustLoanLegalOpinionSe
 		}
 	}
 
-	private void validateLegalOpinionDetails(IcustLoanLegalOpinionEntity icustLoanLegalOpinionEntity,
-			IcustLoanLegalOpinionEntity updateLegalOpinionObj) {
-		// TODO Auto-generated method stub
+	private void validateLegalOpinionDetails(IcustLoanLegalOpinionEntity oldLegalOpinion,
+			IcustLoanLegalOpinionEntity newLegalOpinion) {
+		if(newLegalOpinion.getAssetAreaInUnits()!=null)
+			oldLegalOpinion.setAssetAreaInUnits(newLegalOpinion.getAssetAreaInUnits());
+		if(newLegalOpinion.getAssetAreaSize()!=null)
+			oldLegalOpinion.setAssetAreaSize(newLegalOpinion.getAssetAreaSize());
+		if(!Strings.isNullOrEmpty(newLegalOpinion.getDescription()))
+			oldLegalOpinion.setDescription(newLegalOpinion.getDescription());
+		if(!Strings.isNullOrEmpty(newLegalOpinion.getIsDecisionFavorable()))
+			oldLegalOpinion.setIsDecisionFavorable(newLegalOpinion.getIsDecisionFavorable());
+		if(!Strings.isNullOrEmpty(newLegalOpinion.getMktValOfAsset()))
+			oldLegalOpinion.setMktValOfAsset(newLegalOpinion.getMktValOfAsset());
+		if(!Strings.isNullOrEmpty(newLegalOpinion.getLawyerName()))
+			oldLegalOpinion.setLawyerName(newLegalOpinion.getLawyerName());
+		if(!Strings.isNullOrEmpty(newLegalOpinion.getOpinion()))
+			oldLegalOpinion.setOpinion(newLegalOpinion.getOpinion());
+		if(newLegalOpinion.getOpinionDate()!=null)
+			oldLegalOpinion.setOpinionDate(newLegalOpinion.getOpinionDate());
+		if(newLegalOpinion.getValuationDate()!=null)
+			oldLegalOpinion.setValuationDate(newLegalOpinion.getValuationDate());
 
 	}
 
