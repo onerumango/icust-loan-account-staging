@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.rumango.entity.IcustLoanValuationOfAssetEntity;
@@ -51,10 +52,33 @@ public class IcustLoanValuationOfAssetServiceImpl implements IcustLoanValuationO
 		}
 	}
 
-	private void validateLoanValuationOfAssetDetails(IcustLoanValuationOfAssetEntity icustLoanValuationOfAssetEntity,
-			IcustLoanValuationOfAssetEntity updateValuationOfAssetObj) {
-		// TODO Auto-generated method stub
-
+	private void validateLoanValuationOfAssetDetails(IcustLoanValuationOfAssetEntity oldValuationOfAsset,
+			IcustLoanValuationOfAssetEntity newValuationOfAsset) {
+		if(newValuationOfAsset.getBankValuation()!=null)
+			oldValuationOfAsset.setBankValuation(newValuationOfAsset.getBankValuation());
+		if(!Strings.isNullOrEmpty(newValuationOfAsset.getAssetType()))
+			oldValuationOfAsset.setAssetType(newValuationOfAsset.getAssetType());
+		if(newValuationOfAsset.getPropertyAreaInUnits()!=null)
+			oldValuationOfAsset.setPropertyAreaInUnits(newValuationOfAsset.getPropertyAreaInUnits());
+		if(newValuationOfAsset.getPropertyAreaSize()!=null)
+			oldValuationOfAsset.setActualPropertyAreaSize(newValuationOfAsset.getPropertyAreaSize());
+		if(newValuationOfAsset.getBorrowersMktValOfAsset()!=null)
+			oldValuationOfAsset.setBorrowersMktValOfAsset(newValuationOfAsset.getBorrowersMktValOfAsset());
+		if(!Strings.isNullOrEmpty(newValuationOfAsset.getAssetValue()))
+			oldValuationOfAsset.setAssetValue(newValuationOfAsset.getAssetValue());
+		if(newValuationOfAsset.getValuationDate()!=null)
+			oldValuationOfAsset.setValuationDate(newValuationOfAsset.getValuationDate());
+		if(newValuationOfAsset.getActualPropertyAreaInUnits()!=null)
+			oldValuationOfAsset.setActualPropertyAreaInUnits(newValuationOfAsset.getActualPropertyAreaInUnits());
+		if(newValuationOfAsset.getActualPropertyAreaSize()!=null)
+			oldValuationOfAsset.setActualPropertyAreaSize(newValuationOfAsset.getActualPropertyAreaSize());
+		if(!Strings.isNullOrEmpty(newValuationOfAsset.getFaceValOfAsset()))
+			oldValuationOfAsset.setFaceValOfAsset(newValuationOfAsset.getFaceValOfAsset());
+		if(!Strings.isNullOrEmpty(newValuationOfAsset.getMktValOfAsset()))
+			oldValuationOfAsset.setMktValOfAsset(newValuationOfAsset.getMktValOfAsset());
+		if(newValuationOfAsset.getForcedSaleValue()!=null)
+			oldValuationOfAsset.setForcedSaleValue(newValuationOfAsset.getForcedSaleValue());
+		
 	}
 
 	@Override
