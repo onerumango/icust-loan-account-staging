@@ -20,4 +20,5 @@ public class IcustLoanInfoModel {
 	private String loanTenure;
 	private String purposeOfLoan;
 	private String status;
+	private String accountCurrency;
 }

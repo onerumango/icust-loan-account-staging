@@ -80,6 +80,8 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 			oldLoanInfo.setLoanTenure(newLoanInfo.getLoanTenure());
 		if (!Strings.isNullOrEmpty(newLoanInfo.getPurposeOfLoan()))
 			oldLoanInfo.setPurposeOfLoan(newLoanInfo.getPurposeOfLoan());
+		if (!Strings.isNullOrEmpty(newLoanInfo.getAccountCurrency()))
+			oldLoanInfo.setAccountCurrency(newLoanInfo.getAccountCurrency());
 
 	}
 

@@ -53,4 +53,5 @@ public class IcustLoanInfo implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private LoanAccStatusEnum status;
 	private Double approvedLoanAmount;
+	private String accountCurrency;
 }

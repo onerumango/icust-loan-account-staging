@@ -33,8 +33,9 @@ public class IcustMandateDetails implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mandate_details_id_Sequence")
 	@SequenceGenerator(name = "mandate_details_id_Sequence", sequenceName = "MANDATE_DETAILS_ID_SEQ")
 	private Long mandateDetailsId;
+	private Long mandateId;
 	private String applicantName;
 	private Double collateralShare;
 	private Double repaymentShare;
-	private Long mandateId;
+	
 }
