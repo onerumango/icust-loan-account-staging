@@ -62,6 +62,7 @@ public class IcustGuarantorServiceImpl implements IcustGuarantorService {
 				return ResponseEntity.status(HttpStatus.OK).body(guarantorModel);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(MessageFormat.format("Exception occoured while upsertGuarantorDetails", e.getMessage()), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
@@ -70,8 +71,26 @@ public class IcustGuarantorServiceImpl implements IcustGuarantorService {
 	private void validateGuarantorDetails(IcustGuarantorDetails oldGuarantor, IcustGuarantorDetails newGuarantor) {
 		if (!Strings.isNullOrEmpty(newGuarantor.getRelationWithCustomer()))
 			oldGuarantor.setRelationWithCustomer(newGuarantor.getRelationWithCustomer());
-		if (newGuarantor.getCustomerId() != null)
-			oldGuarantor.setCustomerId(newGuarantor.getCustomerId());
+		if(!Strings.isNullOrEmpty(newGuarantor.getBuilding()))
+			oldGuarantor.setBuilding(newGuarantor.getBuilding());
+		if(!Strings.isNullOrEmpty(newGuarantor.getStreet()))
+			oldGuarantor.setStreet(newGuarantor.getStreet());
+		if(!Strings.isNullOrEmpty(newGuarantor.getLocality()))
+			oldGuarantor.setLocality(newGuarantor.getLocality());
+		if(!Strings.isNullOrEmpty(newGuarantor.getCity()))
+			oldGuarantor.setCity(newGuarantor.getCity());
+		if(!Strings.isNullOrEmpty(newGuarantor.getState()))
+			oldGuarantor.setState(newGuarantor.getState());
+		if(!Strings.isNullOrEmpty(newGuarantor.getCountry()))
+			oldGuarantor.setCountry(newGuarantor.getCountry());
+		if(!Strings.isNullOrEmpty(newGuarantor.getZipCode()))
+			oldGuarantor.setZipCode(newGuarantor.getZipCode());
+		if(!Strings.isNullOrEmpty(newGuarantor.getMobileNumber()))
+			oldGuarantor.setMobileNumber(newGuarantor.getMobileNumber());
+		if(!Strings.isNullOrEmpty(newGuarantor.getPhoneNumber()))
+			oldGuarantor.setPhoneNumber(newGuarantor.getPhoneNumber());
+		if(!Strings.isNullOrEmpty(newGuarantor.getEmailAddress()))
+			oldGuarantor.setEmailAddress(newGuarantor.getEmailAddress());
 	}
 
 	@Override

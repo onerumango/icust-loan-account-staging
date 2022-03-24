@@ -1,5 +1,11 @@
 package com.rumango.model;
 
+import java.sql.Date;
+
+import javax.persistence.Column;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -7,5 +13,20 @@ public class IcustGuarantorDetailsModel {
 	private Long guarantorId;
 	private Long loanAccountId;
 	private String relationWithCustomer;
-	private IcustCustomerCreateModel customerInfo;
+	private String prefix;
+	private String firstName;
+	private String middleName;
+	private String lastName;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "IST")
+	private Date dateOfBirth;
+	private String building;
+	private String street;
+	private String locality;
+	private String city;
+	private String state;
+	private String country;
+	private String zipCode;
+	private String phoneNumber;
+	private String mobileNumber;
+	private String emailAddress;
 }

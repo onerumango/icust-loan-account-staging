@@ -1,6 +1,7 @@
 package com.rumango.entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -34,6 +36,20 @@ public class IcustGuarantorDetails implements Serializable{/**
 	private Long guarantorId;
 	private Long loanAccountId;
 	private String relationWithCustomer;
-	private Long customerId;
-
+	private String prefix;
+	private String firstName;
+	private String middleName;
+	private String lastName;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "IST")
+	private Date dateOfBirth;
+	private String building;
+	private String street;
+	private String locality;
+	private String city;
+	private String state;
+	private String country;
+	private String zipCode;
+	private String phoneNumber;
+	private String mobileNumber;
+	private String emailAddress;
 }
