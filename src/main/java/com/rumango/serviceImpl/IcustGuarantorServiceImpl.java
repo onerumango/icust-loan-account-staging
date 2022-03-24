@@ -44,22 +44,10 @@ public class IcustGuarantorServiceImpl implements IcustGuarantorService {
 						IcustGuarantorDetails.class);
 				if (guarantorObj.isPresent()) {
 					validateGuarantorDetails(guarantorObj.get(), guarantorData);
-					gurantorDetails = guarantorDetailsRepo.save(guarantorObj.get());
+					return ResponseEntity.status(HttpStatus.OK).body(guarantorDetailsRepo.save(guarantorObj.get()));
 				} else {
-					IcustCustomerInfo custInfo = new Gson().fromJson(
-							new Gson().toJson(icustGuarantorDetailsModel.getCustomerInfo()), IcustCustomerInfo.class);
-					IcustCustomerInfo saveObj = icustCustomerRepo.save(custInfo);
-					guarantorData.setCustomerId(saveObj.getCustomerId());
-					gurantorDetails = guarantorDetailsRepo.save(guarantorData);
+					return ResponseEntity.status(HttpStatus.OK).body(guarantorDetailsRepo.save(guarantorData));
 				}
-				IcustGuarantorDetailsModel guarantorModel =new Gson().fromJson(new Gson().toJson(gurantorDetails),
-						IcustGuarantorDetailsModel.class);
-				Optional<IcustCustomerInfo> custInfo = icustCustomerRepo.findByCustomerId(guarantorObj.get().getCustomerId());
-				if(custInfo.isPresent()) {
-					IcustCustomerCreateModel custModel =modelMapper.map(custInfo.get(), IcustCustomerCreateModel.class);
-					guarantorModel.setCustomerInfo(custModel);
-				}
-				return ResponseEntity.status(HttpStatus.OK).body(guarantorModel);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,15 +89,7 @@ public class IcustGuarantorServiceImpl implements IcustGuarantorService {
 
 			Optional<IcustGuarantorDetails> guarantorObj = guarantorDetailsRepo.findByLoanAccountId(loanAccountId);
 			if (guarantorObj.isPresent()) {
-				IcustGuarantorDetailsModel guarantorModel =new Gson().fromJson(new Gson().toJson(guarantorObj.get()),
-						IcustGuarantorDetailsModel.class);
-				Optional<IcustCustomerInfo> custInfo = icustCustomerRepo.findByCustomerId(guarantorObj.get().getCustomerId());
-				if(custInfo.isPresent()) {
-					System.err.println("customerinfo::"+custInfo.get());
-					IcustCustomerCreateModel custModel =modelMapper.map(custInfo.get(), IcustCustomerCreateModel.class);
-					guarantorModel.setCustomerInfo(custModel);
-				}
-				return ResponseEntity.status(HttpStatus.OK).body(guarantorModel);
+				return ResponseEntity.status(HttpStatus.OK).body(guarantorObj.get());
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
