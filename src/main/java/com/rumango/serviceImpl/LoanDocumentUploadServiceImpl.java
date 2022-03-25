@@ -3,19 +3,22 @@ package com.rumango.serviceImpl;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustLoanDocuments;
+import com.rumango.exception.FileNotFoundException;
 import com.rumango.exception.InternalServerException;
 import com.rumango.exception.StorageException;
 import com.rumango.model.IcustLoanDocumentsModel;
@@ -49,7 +53,7 @@ public class LoanDocumentUploadServiceImpl implements LoanDocumentUploadService 
 		IcustLoanDocumentsModel documentModel = null;
 		try {
 			if (!file.isEmpty()) {
-				String fileName = data.getLoanAccountId() + "_" + data.getDocumentName() + "_"
+				String fileName = data.getLoanAccountId() + "_"
 						+ String.valueOf(
 								new SimpleDateFormat("yyyyMMddHHmmss", Locale.ENGLISH).format(new java.util.Date()))
 						+ "_" + StringUtils.cleanPath(file.getOriginalFilename());
@@ -144,5 +148,24 @@ public class LoanDocumentUploadServiceImpl implements LoanDocumentUploadService 
 			logger.error(MessageFormat.format("Exception occoured while fetchLoanDocuments", e.getMessage()), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
+	}
+
+	@Override
+	public Resource loadAsResource(String fileName) {
+		try {
+			Path file = load(fileName);
+			Resource resource = new UrlResource(file.toUri());
+			if (resource.exists() || resource.isReadable()) {
+				return resource;
+			} else {
+				throw new FileNotFoundException("Could not read file: " + fileName);
+			}
+		} catch (MalformedURLException | FileNotFoundException e) {
+			throw new FileNotFoundException("Could not read file: " + e);
+		}
+	}
+	
+	public Path load(String filename) {
+		return Paths.get(uploadLocation).resolve(filename);
 	}
 }
