@@ -59,7 +59,7 @@ public class LoanDocumentUploadServiceImpl implements LoanDocumentUploadService 
 						+ "_" + StringUtils.cleanPath(file.getOriginalFilename());
 
 				docDownloadPath = ServletUriComponentsBuilder.fromCurrentContextPath()
-						.path("/rest/upload/downloadDocs/").queryParam("fileName", fileName).toUriString();
+						.path("/loan/upload/downloadDocs/").queryParam("fileName", fileName).toUriString();
 				storeLoanDocs(file, fileName);
 
 				IcustLoanDocuments loanDocs = new Gson().fromJson(new Gson().toJson(data),
