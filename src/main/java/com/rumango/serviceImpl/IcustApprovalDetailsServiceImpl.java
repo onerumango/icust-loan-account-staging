@@ -105,16 +105,20 @@ public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsServ
 			if (loanObj.isPresent()) {
 				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo
 						.findByLoanAccountIdAndInterestType(loanAccountId, "Fixed Rate");
-				Optional<IcustCustomerInfo> customerInfo = customerRepo.findById(loanObj.get().getCustomerId());
+				
 				Optional<IcustLoanRepaymentDetails> repaymentInfo = repaymentRepo.findByLoanAccountId(loanAccountId);
 				approvalModel.setApprovedLoanAccount(loanObj.get().getApprovedLoanAmount());
 				approvalModel.setLoanTenure(loanObj.get().getLoanTenure());
 				approvalModel.setAccountBranch(loanObj.get().getAccountBranch());
 				approvalModel.setAccountType(loanObj.get().getAccountType());
-				if(customerInfo.isPresent()) {
-					approvalModel.setApplicantName(customerInfo.get().getFirstName() + " "
-							+ customerInfo.get().getMiddleName() + " " + customerInfo.get().getLastName());
+				if(loanObj.get().getCustomerId()!=null) {
+					Optional<IcustCustomerInfo> customerInfo = customerRepo.findById(loanObj.get().getCustomerId());
+					if(customerInfo.isPresent()) {
+						approvalModel.setApplicantName(customerInfo.get().getFirstName() + " "
+								+ customerInfo.get().getMiddleName() + " " + customerInfo.get().getLastName());
+					}
 				}
+				
 				approvalModel.setProductName(loanObj.get().getBusinessProductName());
 				if(loanInterestInfo!=null) {
 					approvalModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable());
