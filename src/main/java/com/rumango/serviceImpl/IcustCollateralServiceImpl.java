@@ -13,6 +13,7 @@ import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustCollateralMaster;
 import com.rumango.model.IcustCollateralMasterModel;
+import com.rumango.model.IcustMandateMasterModel;
 import com.rumango.repository.IcustCollateralMasterRepo;
 import com.rumango.service.IcustCollateralService;
 
@@ -87,7 +88,9 @@ public class IcustCollateralServiceImpl implements IcustCollateralService{
 			
 			Optional<IcustCollateralMaster> collateralObj = collateralMasterRepo.findByLoanAccountId(loanAccountId);
 			if (collateralObj.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(collateralObj.get());
+				IcustCollateralMasterModel collateralInfo = new Gson().fromJson(new Gson().toJson(collateralObj.get()),
+						IcustCollateralMasterModel.class);
+				return ResponseEntity.status(HttpStatus.OK).body(collateralInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");

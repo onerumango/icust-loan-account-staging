@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustVehicleDetails;
+import com.rumango.model.IcustAssetDetailsModel;
 import com.rumango.model.IcustVehicleDetailsModel;
 import com.rumango.repository.IcustVehicleDetailsRepo;
 import com.rumango.service.IcustVehicleService;
@@ -103,7 +104,9 @@ public class IcustVehicleServiceImpl implements IcustVehicleService {
 			Optional<IcustVehicleDetails> vehicleObj = icustVehicleDetailsRepo.findByLoanAccountId(loanAccountId);
 			
 			if (vehicleObj.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(vehicleObj.get());
+				IcustVehicleDetailsModel vehicleInfo = new Gson().fromJson(new Gson().toJson(vehicleObj.get()),
+						IcustVehicleDetailsModel.class);
+				return ResponseEntity.status(HttpStatus.OK).body(vehicleInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");

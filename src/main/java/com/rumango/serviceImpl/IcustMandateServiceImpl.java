@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.google.gson.Gson;
 import com.rumango.entity.IcustMandateMaster;
+import com.rumango.model.IcustAdmissionDetailsModel;
 import com.rumango.model.IcustMandateMasterModel;
 import com.rumango.repository.IcustMandateMasterRepo;
 import com.rumango.service.IcustMandateService;
@@ -69,7 +70,9 @@ public class IcustMandateServiceImpl implements IcustMandateService{
 			
 			Optional<IcustMandateMaster> mandateObj = icustMandateMasterRepo.findByLoanAccountId(loanAccountId);
 			if (mandateObj.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(mandateObj);
+				IcustMandateMasterModel mandateInfo = new Gson().fromJson(new Gson().toJson(mandateObj.get()),
+						IcustMandateMasterModel.class);
+				return ResponseEntity.status(HttpStatus.OK).body(mandateInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");

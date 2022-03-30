@@ -16,6 +16,7 @@ import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustAdmissionDetails;
 import com.rumango.model.IcustAdmissionDetailsModel;
+import com.rumango.model.IcustVehicleDetailsModel;
 import com.rumango.repository.IcustAdmissionDetailsRepo;
 import com.rumango.service.IcustAdmissionService;
 
@@ -95,7 +96,9 @@ public class IcustAdmissionServiceImpl implements IcustAdmissionService {
 
 			Optional<IcustAdmissionDetails> admissionObj = icustAdmissionDetailsRepo.findByLoanAccountId(loanAccountId);
 			if (admissionObj.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(admissionObj.get());
+				IcustAdmissionDetailsModel admissionInfo = new Gson().fromJson(new Gson().toJson(admissionObj.get()),
+						IcustAdmissionDetailsModel.class);
+				return ResponseEntity.status(HttpStatus.OK).body(admissionInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");

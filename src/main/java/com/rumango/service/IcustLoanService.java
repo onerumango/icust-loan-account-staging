@@ -20,6 +20,4 @@ public interface IcustLoanService {
 	ResponseEntity<?> updateApprovedLoanAmount(IcustLoanAssessmentDetailsModel assessmentModel);
 
 	ResponseEntity<?> fetchOfferIssueInfoByLoanAccId(Long loanAccountId);
-
-
 }

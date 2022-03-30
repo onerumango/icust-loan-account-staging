@@ -16,6 +16,7 @@ import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustAssetDetails;
 import com.rumango.model.IcustAssetDetailsModel;
+import com.rumango.model.IcustLoanInfoModel;
 import com.rumango.repository.IcustAssetDetailsRepo;
 import com.rumango.service.IcustAssetService;
 
@@ -88,7 +89,9 @@ public class IcustAssetServiceImpl implements IcustAssetService{
 			
 			Optional<IcustAssetDetails> assetObj = icustAssetDetailsRepo.findByLoanAccountId(loanAccountId);
 			if (assetObj.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(assetObj.get());
+				IcustAssetDetailsModel assetInfo = new Gson().fromJson(new Gson().toJson(assetObj.get()),
+						IcustAssetDetailsModel.class);
+				return ResponseEntity.status(HttpStatus.OK).body(assetInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");

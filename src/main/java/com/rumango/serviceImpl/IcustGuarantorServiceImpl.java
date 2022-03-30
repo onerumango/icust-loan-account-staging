@@ -14,6 +14,7 @@ import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustCustomerInfo;
 import com.rumango.entity.IcustGuarantorDetails;
+import com.rumango.model.IcustCollateralMasterModel;
 import com.rumango.model.IcustCustomerCreateModel;
 import com.rumango.model.IcustGuarantorDetailsModel;
 import com.rumango.repository.IcustCustomerInfoRepo;
@@ -89,7 +90,9 @@ public class IcustGuarantorServiceImpl implements IcustGuarantorService {
 
 			Optional<IcustGuarantorDetails> guarantorObj = guarantorDetailsRepo.findByLoanAccountId(loanAccountId);
 			if (guarantorObj.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(guarantorObj.get());
+				IcustGuarantorDetailsModel guarantorInfo = new Gson().fromJson(new Gson().toJson(guarantorObj.get()),
+						IcustGuarantorDetailsModel.class);
+				return ResponseEntity.status(HttpStatus.OK).body(guarantorInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");

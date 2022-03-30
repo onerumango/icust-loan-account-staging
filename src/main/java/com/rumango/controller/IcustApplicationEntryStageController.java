@@ -26,6 +26,7 @@ import com.rumango.model.IcustLoanInfoModel;
 import com.rumango.model.IcustMandateMasterModel;
 import com.rumango.model.IcustVehicleDetailsModel;
 import com.rumango.service.IcustAdmissionService;
+import com.rumango.service.IcustApplicationEntryStageService;
 import com.rumango.service.IcustAssetService;
 import com.rumango.service.IcustCollateralService;
 import com.rumango.service.IcustFinancialDetailsService;
@@ -55,6 +56,8 @@ public class IcustApplicationEntryStageController {
 	IcustCollateralService icustCollateralService;
 	@Autowired
 	IcustGuarantorService guarantorService;
+	@Autowired
+	IcustApplicationEntryStageService entryStageService;
 	
 	@PostMapping(value="/upsertLoanDetails", produces= MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> upsertLoanDetails(@RequestBody IcustLoanInfoModel icustLoanInfoModel){
@@ -407,6 +410,19 @@ public class IcustApplicationEntryStageController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
 			logger.info("Execution completed for fetchOfferIssueInfoByLoanAccId");
+		}
+	}
+	
+	@GetMapping(value = "/fetchSummaryInfo")
+	public ResponseEntity<?> fetchSummaryInfo(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		logger.info(MessageFormat.format("Execution Started for fetchSummaryInfo loanAccountId:{0}", loanAccountId));
+		try {
+			return entryStageService.fetchSummaryInfo(loanAccountId);
+		}catch (Exception e) {
+			logger.error("Execption occoured while executing fetchSummaryInfo", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for fetchSummaryInfo");
 		}
 	}
 }

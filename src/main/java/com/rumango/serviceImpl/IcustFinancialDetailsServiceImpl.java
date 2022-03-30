@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import com.rumango.entity.IcustFinancialDetails;
 import com.rumango.entity.IcustLaonChargeDetails;
 import com.rumango.model.IcustFinancialDetailsModel;
 import com.rumango.model.IcustLoanChargeModel;
+import com.rumango.model.IcustMandateMasterModel;
 import com.rumango.repository.IcustFinancialDetailsRepo;
 import com.rumango.service.IcustFinancialDetailsService;
 
@@ -170,8 +172,8 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 		try {
 			List<IcustFinancialDetails> financialList = icustFinancialDetailsRepo.findByLoanAccountId(loanAccountId);
 			if (!CollectionUtils.isEmpty(financialList)) {
-
-				return ResponseEntity.status(HttpStatus.OK).body(financialList);
+				List<IcustFinancialDetailsModel> financialInfo = mapper.map(financialList, new TypeToken<List<IcustFinancialDetailsModel>>() {}.getType());
+				return ResponseEntity.status(HttpStatus.OK).body(financialInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
