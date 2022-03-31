@@ -12,7 +12,7 @@ public class IcustLoanAssessmentDetailsModel implements Serializable {
 	private Long assessmentId;
 	private String loanAccountId;
 	private Double requestedLoanAmount;
-	private Integer loanTenure;
+	private String loanTenure;
 	private Integer rateOfInterest;
 	private String systemRecommendation;
 	private String userRecommendation;

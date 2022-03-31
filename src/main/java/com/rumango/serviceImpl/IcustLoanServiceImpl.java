@@ -145,7 +145,7 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndInterestType(loanAccountId,"Fixed Rate");
 				IcustLoanInfo loanInfo = loanObj.get();
 				assessmentModel.setRequestedLoanAmount(loanInfo.getLoanAmount());
-				assessmentModel.setLoanTenure(Integer.parseInt(loanInfo.getLoanTenure()));
+				assessmentModel.setLoanTenure(loanInfo.getLoanTenure());
 				if(loanInterestInfo!=null)
 					assessmentModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable().intValue());
 				
@@ -155,6 +155,7 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();;
 			logger.error("Execption occoured while executing fetchAssessmentInfoByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}

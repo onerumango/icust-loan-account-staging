@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rumango.model.IcustLoanCreditRatingDetailsModel;
@@ -18,6 +19,7 @@ import com.rumango.model.IcustLoanLegalOpinionModel;
 import com.rumango.model.IcustLoanValuationOfAssetModel;
 import com.rumango.service.IcustLoanCreditRatingService;
 import com.rumango.service.IcustLoanLegalOpinionService;
+import com.rumango.service.IcustLoanUnderWritingStageService;
 import com.rumango.service.IcustLoanValuationOfAssetService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,9 @@ public class IcustLoanUnderWritingStageController {
 
 	@Autowired
 	private IcustLoanLegalOpinionService legalOpinionService;
+	
+	@Autowired
+	IcustLoanUnderWritingStageService underWritingStageService;
 
 	@PostMapping(value = "/saveOrUpdateCreditRating", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> saveOrUpdateCreditRating(
@@ -150,6 +155,19 @@ public class IcustLoanUnderWritingStageController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
 			log.info("Execution completed for getLegalOpinionById");
+		}
+	}
+	
+	@GetMapping(value = "/fetchSummaryInfo")
+	public ResponseEntity<?> fetchSummaryInfo(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+		log.info(MessageFormat.format("Execution Started for fetchSummaryInfo loanAccountId:{0}", loanAccountId));
+		try {
+			return underWritingStageService.fetchSummaryInfo(loanAccountId);
+		}catch (Exception e) {
+			log.error("Execption occoured while executing fetchSummaryInfo", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			log.info("Execution completed for fetchSummaryInfo");
 		}
 	}
 
