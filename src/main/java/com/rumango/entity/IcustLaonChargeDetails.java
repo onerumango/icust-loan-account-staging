@@ -34,7 +34,7 @@ public class IcustLaonChargeDetails implements Serializable{
 	
 	private Long chargeDetailsId;
 	private Long loanAccountId;
-	private String interestType;
+	private String intrestType;
 	private Double amout;
 	private Boolean waiver;
 

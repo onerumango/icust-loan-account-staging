@@ -141,13 +141,14 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 		IcustLoanAssessmentDetailsModel assessmentModel = new IcustLoanAssessmentDetailsModel();
 		try {
 			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(loanAccountId);
+			System.err.println("loanObj::"+loanObj.get());
 			if (loanObj.isPresent()) {
-				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndInterestType(loanAccountId,"Fixed Rate");
+				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndIntrestType(loanAccountId,"Fixed Rate");
 				IcustLoanInfo loanInfo = loanObj.get();
 				assessmentModel.setRequestedLoanAmount(loanInfo.getLoanAmount());
 				assessmentModel.setLoanTenure(loanInfo.getLoanTenure());
 				if(loanInterestInfo!=null)
-					assessmentModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable().intValue());
+					assessmentModel.setRateOfInterest(loanInterestInfo.getIntrestRateApplicable().intValue());
 				
 				return ResponseEntity.status(HttpStatus.OK).body(assessmentModel);
 			} else {
@@ -192,7 +193,7 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 
 			if (loanObj.isPresent()) {
 				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo
-						.findByLoanAccountIdAndInterestType(loanAccountId, "Fixed Rate");
+						.findByLoanAccountIdAndIntrestType(loanAccountId, "Fixed Rate");
 				Optional<IcustCustomerInfo> customerInfo = customerRepo.findById(loanObj.get().getCustomerId());
 				Optional<IcustLoanRepaymentDetails> repaymentInfo = repaymentRepo.findByLoanAccountId(loanAccountId);
 				
@@ -207,7 +208,7 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 					offerIssueModel.setInstallmentFrequency(repaymentInfo.get().getRepaymentFrequency());
 				}
 				if(loanInterestInfo!=null) {
-					offerIssueModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable());
+					offerIssueModel.setRateOfInterest(loanInterestInfo.getIntrestRateApplicable());
 				}
 				
 				return ResponseEntity.status(HttpStatus.OK).body(offerIssueModel);

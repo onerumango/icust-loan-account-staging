@@ -31,9 +31,9 @@ public class IcustLoanInterestDetails {
 	@SequenceGenerator(name = "loan_interest_details_id_sequence", sequenceName = "LOAN_INTEREST_DETAILS_SEQ")
 	private Long loanInterestId;
 	private Long loanAccountId;
-	private String interestType;
-	private Double interestRateApplicable;
-	private Double margin;
+	private String intrestType;
+	private Double intrestRateApplicable;
+	private Double marginIn;
 	private Double effectiveRate;
 
 }

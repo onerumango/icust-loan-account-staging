@@ -148,10 +148,10 @@ public class IcustLoanRepaymentServiceImpl implements IcustLoanRepaymentService{
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("loanAccountId is Mandotory");
 			}else {
 				Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(icustLoanRepaymentModel.getLoanAccountId());
-				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndInterestType(icustLoanRepaymentModel.getLoanAccountId(),"Fixed Rate");
+				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndIntrestType(icustLoanRepaymentModel.getLoanAccountId(),"Fixed Rate");
 				if(loanObj.isPresent()) {
 					repaymentList  = calculatePaymentList(icustLoanRepaymentModel.getFirstRepaymentDate(), loanObj.get().getLoanAmount(),
-			        		icustLoanRepaymentModel.getLoanTenure(), 0, (loanInterestInfo!=null?loanInterestInfo.getInterestRateApplicable():0), 0);
+			        		icustLoanRepaymentModel.getLoanTenure(), 0, (loanInterestInfo!=null?loanInterestInfo.getIntrestRateApplicable():0), 0);
 
 				}
 				return ResponseEntity.status(HttpStatus.OK).body(repaymentList);

@@ -70,12 +70,12 @@ public class IcustLoanInterestServiceImpl implements IcustLoanInterestService {
 			IcustLoanInterestDetails newInterestDetail) {
 		if (newInterestDetail.getLoanAccountId() != null)
 			oldInterestDetail.setLoanAccountId(newInterestDetail.getLoanAccountId());
-		if (!Strings.isNullOrEmpty(newInterestDetail.getInterestType()))
-			oldInterestDetail.setInterestType(newInterestDetail.getInterestType());
-		if (newInterestDetail.getInterestRateApplicable() != null)
-			oldInterestDetail.setInterestRateApplicable(newInterestDetail.getInterestRateApplicable());
-		if (newInterestDetail.getMargin() != null)
-			oldInterestDetail.setMargin(newInterestDetail.getMargin());
+		if (!Strings.isNullOrEmpty(newInterestDetail.getIntrestType()))
+			oldInterestDetail.setIntrestType(newInterestDetail.getIntrestType());
+		if (newInterestDetail.getIntrestRateApplicable() != null)
+			oldInterestDetail.setIntrestRateApplicable(newInterestDetail.getIntrestRateApplicable());
+		if (newInterestDetail.getMarginIn() != null)
+			oldInterestDetail.setMarginIn(newInterestDetail.getMarginIn());
 		if (newInterestDetail.getEffectiveRate() != null)
 			oldInterestDetail.setEffectiveRate(newInterestDetail.getEffectiveRate());
 	}

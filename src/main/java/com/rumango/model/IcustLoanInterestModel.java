@@ -6,8 +6,8 @@ import lombok.Data;
 public class IcustLoanInterestModel {
 	private Long loanInterestId;
 	private Long loanAccountId;
-	private String interestType;
-	private Long interestRateApplicable;
-	private Long margin;
+	private String intrestType;
+	private Long intrestRateApplicable;
+	private Long marginIn;
 	private Long effectiveRate;
 }

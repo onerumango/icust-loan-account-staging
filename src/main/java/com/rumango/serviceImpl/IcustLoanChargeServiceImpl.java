@@ -73,8 +73,8 @@ public class IcustLoanChargeServiceImpl implements IcustLoanChargeService{
 		if(newDetails.getLoanAccountId()!=null) {
 			oldDetails.setLoanAccountId(newDetails.getLoanAccountId());
 		}
-		if(!Strings.isNullOrEmpty(newDetails.getInterestType())) {
-			oldDetails.setInterestType(newDetails.getInterestType());
+		if(!Strings.isNullOrEmpty(newDetails.getIntrestType())) {
+			oldDetails.setIntrestType(newDetails.getIntrestType());
 		}
 		if(newDetails.getAmout()!=null) {
 			oldDetails.setAmout(newDetails.getAmout());

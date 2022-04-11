@@ -104,7 +104,7 @@ public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsServ
 
 			if (loanObj.isPresent()) {
 				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo
-						.findByLoanAccountIdAndInterestType(loanAccountId, "Fixed Rate");
+						.findByLoanAccountIdAndIntrestType(loanAccountId, "Fixed Rate");
 				
 				Optional<IcustLoanRepaymentDetails> repaymentInfo = repaymentRepo.findByLoanAccountId(loanAccountId);
 				approvalModel.setApprovedLoanAccount(loanObj.get().getApprovedLoanAmount());
@@ -121,8 +121,8 @@ public class IcustApprovalDetailsServiceImpl implements IcustApprovalDetailsServ
 				
 				approvalModel.setProductName(loanObj.get().getBusinessProductName());
 				if(loanInterestInfo!=null) {
-					approvalModel.setRateOfInterest(loanInterestInfo.getInterestRateApplicable());
-					approvalModel.setMargin(loanInterestInfo.getMargin());
+					approvalModel.setRateOfInterest(loanInterestInfo.getIntrestRateApplicable());
+					approvalModel.setMargin(loanInterestInfo.getMarginIn());
 					approvalModel.setEffectiveRate(loanInterestInfo.getEffectiveRate());
 				}
 				if(repaymentInfo.isPresent()) {
