@@ -282,11 +282,12 @@ public class IcustApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping(value = "/fetchFinancialDetailsByLoanAccId")
-	public ResponseEntity<?> fetchFinancialDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId){
+	@GetMapping(value = "/fetchFinancialDetails")
+	public ResponseEntity<?> fetchFinancialDetails(@RequestParam(value="loanAccountId" , required=false) Long loanAccountId,
+			@RequestParam(value="cardId" , required=false) Long cardId){
 		logger.info(MessageFormat.format("Execution Started for fetchFinancialDetailsByLoanAccId loanAccountId:{0}", loanAccountId));
 		try {
-			return financialDetailsService.fetchFinancialDetailsByLoanAccId(loanAccountId);
+			return financialDetailsService.fetchFinancialDetails(loanAccountId,cardId);
 		}catch (Exception e) {
 			logger.error("Execption occoured while executing fetchFinancialDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -295,7 +296,7 @@ public class IcustApplicationEntryStageController {
 		}
 	}
 	
-	@GetMapping(value = "/fetchFinancialInfoById")
+	@GetMapping(value = "/fetchFinancialInfoById",produces= MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> fetchFinancialInfoById(@RequestParam(value="id" , required=false) Long id){
 		logger.info(MessageFormat.format("Execution Started for fetchFinancialInfoById id:{0}", id));
 		try {

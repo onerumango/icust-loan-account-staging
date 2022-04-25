@@ -66,4 +66,7 @@ public class IcustFinancialDetailsModel {
 	private Long lastModifiedBy;
 	private Long loanAccountId;
 	private Long loggedInUser;
+	private String currentlyWorking;
+	private String accountType;
+	private Long cardId;
 }

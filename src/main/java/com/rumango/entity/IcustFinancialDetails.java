@@ -89,4 +89,6 @@ public class IcustFinancialDetails implements Serializable {
 	private Timestamp lastModifiedDate;
 	private Long lastModifiedBy;
 	private Long loanAccountId;
+	private Long cardId;
+	private String currentlyWorking;
 }

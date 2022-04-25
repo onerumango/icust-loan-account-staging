@@ -46,9 +46,16 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 			Optional<IcustFinancialDetails> updateFinancialDetails = null;
 			while (iterator.hasNext()) {
 				IcustFinancialDetailsModel loanFinancialModel = (IcustFinancialDetailsModel) iterator.next();
-				if (loanFinancialModel.getLoanAccountId() == null)
-					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
-				else {
+				if(loanFinancialModel.getAccountType().equalsIgnoreCase("loan")) {
+					if (loanFinancialModel.getLoanAccountId() == null)
+						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
+				} else if(loanFinancialModel.getAccountType().equalsIgnoreCase("cardOrigin")) {
+					System.err.println("inside cardOrigin");
+					if (loanFinancialModel.getCardId()== null)
+						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CardId is Mandatory");
+				}
+				//else {
+					
 					if (loanFinancialModel.getId() != null) {
 						updateFinancialDetails = icustFinancialDetailsRepo.findById(loanFinancialModel.getId());
 					}
@@ -58,9 +65,11 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 						validateFinancialDetails(updateFinancialDetails.get(), financialData);
 						financialDetails.add(updateFinancialDetails.get());
 					} else {
+						System.err.println("inside ielseee");
 						financialDetails.add(mapper.map(loanFinancialModel, IcustFinancialDetails.class));
+						System.err.println("inside financialDetails::"+financialDetails);
 					}
-				}
+				//}
 			}
 			logger.info("Saving financial details " + financialDetails);
 			return ResponseEntity.status(HttpStatus.OK).body(icustFinancialDetailsRepo.saveAll(financialDetails));
@@ -74,6 +83,8 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 			IcustFinancialDetails newFinancialDetails) {
 		if(newFinancialDetails.getLoanAccountId()!=null)
 			oldFinancialDetails.setLoanAccountId(newFinancialDetails.getLoanAccountId());
+		if(newFinancialDetails.getCardId()!=null)
+			oldFinancialDetails.setCardId(newFinancialDetails.getCardId());
 		if(!Strings.isNullOrEmpty(newFinancialDetails.getApplicantName()))
 			oldFinancialDetails.setApplicantName(newFinancialDetails.getApplicantName());
 		if(newFinancialDetails.getApplicantTotalExpense()!=null)
@@ -164,39 +175,9 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 			oldFinancialDetails.setTotalIncome(newFinancialDetails.getTotalIncome());
 		if(!Strings.isNullOrEmpty(newFinancialDetails.getAccountId()))
 			oldFinancialDetails.setAccountId(newFinancialDetails.getAccountId());
+		if(!Strings.isNullOrEmpty(newFinancialDetails.getCurrentlyWorking()))
+		oldFinancialDetails.setCurrentlyWorking(newFinancialDetails.getCurrentlyWorking());
 		oldFinancialDetails.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));
-	}
-
-	@Override
-	public ResponseEntity<?> fetchFinancialDetailsByLoanAccId(Long loanAccountId) {
-		try {
-			List<IcustFinancialDetails> financialList = icustFinancialDetailsRepo.findByLoanAccountId(loanAccountId);
-			if (!CollectionUtils.isEmpty(financialList)) {
-				List<IcustFinancialDetailsModel> financialInfo = mapper.map(financialList, new TypeToken<List<IcustFinancialDetailsModel>>() {}.getType());
-				return ResponseEntity.status(HttpStatus.OK).body(financialInfo);
-			} else {
-				logger.error("No  record exist for given id");
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
-			}
-		} catch (Exception e) {
-			logger.error("Execption occoured while executing fetchFinancialDetailsByLoanAccId", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-//		try {
-//			if (loanAccountId == null)
-//				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
-//			
-//			Optional<IcustFinancialDetails> financialObj = icustFinancialDetailsRepo.findByLoanAccountId(loanAccountId);
-//			if (financialObj.isPresent()) {
-//				return ResponseEntity.status(HttpStatus.OK).body(financialObj.get());
-//			} else {
-//				logger.error("No  record exist for given id");
-//				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
-//			}
-//		} catch (Exception e) {
-//			logger.error("Execption occoured while executing fetchAssetDetails", e);
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//		}
 	}
 
 	@Override
@@ -216,6 +197,31 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 			logger.error("Execption occoured while executing fetchAssetDetails", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
+	}
+
+	@Override
+	public ResponseEntity<?> fetchFinancialDetails(Long loanAccountId, Long cardId) {
+		List<IcustFinancialDetails> financialList = null;
+		try {
+			if(loanAccountId!=null) {
+				financialList = icustFinancialDetailsRepo.findByLoanAccountId(loanAccountId);
+			} else if(cardId!=null) {
+				logger.info("inside card id");
+				financialList = icustFinancialDetailsRepo.findByCardId(cardId);
+				logger.info("financialList::"+financialList);
+			}
+			if (!CollectionUtils.isEmpty(financialList)) {
+				List<IcustFinancialDetailsModel> financialInfo = mapper.map(financialList, new TypeToken<List<IcustFinancialDetailsModel>>() {}.getType());
+				return ResponseEntity.status(HttpStatus.OK).body(financialInfo);
+			} else {
+				logger.error("No  record exist for given id");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
+			}
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing fetchFinancialDetailsByLoanAccId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+//		
 	}
 
 }

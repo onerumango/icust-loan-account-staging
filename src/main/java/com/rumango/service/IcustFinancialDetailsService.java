@@ -10,8 +10,8 @@ public interface IcustFinancialDetailsService {
 
 	ResponseEntity<?> upsertFinancialDetails(List<IcustFinancialDetailsModel> icustFinancialDetailsModel);
 
-	ResponseEntity<?> fetchFinancialDetailsByLoanAccId(Long loanAccountId);
-
 	ResponseEntity<?> fetchFinancialInfoById(Long id);
+
+	ResponseEntity<?> fetchFinancialDetails(Long loanAccountId, Long cardId);
 
 }

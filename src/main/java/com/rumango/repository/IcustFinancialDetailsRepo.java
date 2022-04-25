@@ -12,5 +12,7 @@ public interface IcustFinancialDetailsRepo extends JpaRepository<IcustFinancialD
 
 	List<IcustFinancialDetails> findByLoanAccountId(Long loanAccountId);
 
+	List<IcustFinancialDetails> findByCardId(Long cardId);
+
 
 }
