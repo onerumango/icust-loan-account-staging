@@ -10,6 +10,6 @@ public interface IcustLoanCreditRatingService {
 	 
 	 ResponseEntity<?> getCreditRatingsById(Long id);
 	 
-	 ResponseEntity<?> getCreditRatingsByLoanAccountId(Long loanAccId);
+	 ResponseEntity<?> getCreditRatingsByLoanAccountId(Long loanAccId, Long cardId);
 
 }
