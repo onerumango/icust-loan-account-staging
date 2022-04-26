@@ -10,4 +10,6 @@ public interface IcustLoanCreditRatingRepo extends JpaRepository<IcustLoanCredit
 
 	Optional<IcustLoanCreditRatingDetails> findByLoanAccountId(Long loanAccId);
 
+	Optional<IcustLoanCreditRatingDetails> findByCardId(Long cardId);
+
 }
