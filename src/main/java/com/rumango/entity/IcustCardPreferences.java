@@ -28,11 +28,12 @@ public class IcustCardPreferences implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@Column(name = "CARD_ID")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "card_id_Sequence")
-	@SequenceGenerator(name = "card_id_Sequence", sequenceName = "CARD_ID_SEQ")
-	private Long cardId;
-	private Long customerId;
-	private Boolean existingCustomer;
-	private String cardType;
+	@Column(name = "PREFERENCE_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "preference_id_Sequence")
+	@SequenceGenerator(name = "preference_id_Sequence", sequenceName = "PREFERENCE_ID_SEQ")
+	private Long preferenceId;
+	private String limitType;
+	private Double dailyLimit;
+	private Long limitPerTransaction;
+
 }

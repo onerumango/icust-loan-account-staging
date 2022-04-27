@@ -5,8 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.rumango.entity.IcustCardInitiation;
 
-
 @Repository
-public interface IcustCardPreferencesRepo extends JpaRepository<IcustCardInitiation, Long>{
+public interface IcustCardInitiationRepo extends JpaRepository<IcustCardInitiation, Long>{
 
 }

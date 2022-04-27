@@ -74,6 +74,7 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 			logger.info("Saving financial details " + financialDetails);
 			return ResponseEntity.status(HttpStatus.OK).body(icustFinancialDetailsRepo.saveAll(financialDetails));
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(MessageFormat.format("Exception occoured while upsertFinancialDetails", e.getMessage()), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
