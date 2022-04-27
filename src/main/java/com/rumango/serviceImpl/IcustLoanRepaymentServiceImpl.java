@@ -101,6 +101,10 @@ public class IcustLoanRepaymentServiceImpl implements IcustLoanRepaymentService{
 			oldDetails.setBranchCode(newDetails.getBranchCode());
 		}
 		
+		if(!Strings.isEmpty(newDetails.getBankName())) {
+			oldDetails.setBankName(newDetails.getBankName());
+		}
+		
 	}
 
 	@Override

@@ -23,5 +23,6 @@ public class IcustLoanRepaymentModel {
 	private Long moraturioumPeriod;
 	private String customerAccount;
 	private String branchCode;
+	private String bankName;
 	
 }
