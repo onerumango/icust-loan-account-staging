@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustCardInitiation;
+import com.rumango.icust.entity.IcustAccount;
 import com.rumango.model.IcustCardInitiationModel;
 import com.rumango.repository.IcustCardInitiationRepo;
 import com.rumango.service.IcustCardInitiationService;
@@ -22,6 +24,8 @@ public class IcustCardInitiationServiceImpl implements IcustCardInitiationServic
 
 	@Autowired
 	IcustCardInitiationRepo cardInitiationRepo;
+	@Autowired
+	ModelMapper modelMapper;
 	@Override
 	public ResponseEntity<?> upsertCardInitiationDetails(IcustCardInitiationModel cardInitiationModel) {
 		Optional<IcustCardInitiation> initiationObj = null;
@@ -80,6 +84,25 @@ public class IcustCardInitiationServiceImpl implements IcustCardInitiationServic
 			}
 		} catch (Exception e) {
 			logger.error("Execption occoured while executing fetchCardInitiationByCardId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> updateStatusApproveOrReject(IcustCardInitiationModel cardInitiationModel) {
+		Optional<IcustCardInitiation> initiationOnj = null;
+		try {
+			initiationOnj = cardInitiationRepo.findById(cardInitiationModel.getCardId());
+			if(initiationOnj.isPresent()) {
+				IcustCardInitiation cardInitiation = modelMapper.map(cardInitiationModel, IcustCardInitiation.class);
+				logger.info("cardInitiation :: "+ cardInitiation);
+				return ResponseEntity.status(HttpStatus.OK).body(cardInitiationRepo.save(cardInitiation));
+			}else {
+				logger.error("No record exists for accountId");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No record exists given accountId");
+			}
+		} catch (Exception e) {
+			logger.error(MessageFormat.format("Exception occoured while updateStatusApproveOrReject", e.getMessage()), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
