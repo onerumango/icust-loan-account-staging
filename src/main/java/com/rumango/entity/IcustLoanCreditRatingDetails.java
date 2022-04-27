@@ -46,5 +46,10 @@ public class IcustLoanCreditRatingDetails implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "LOAN_ACC_ID")
 	private Set<AgencyRating> agencyRating;
+	
+	@Column(name = "CARD_ID")
+	private Long cardId;
+	
+	
 
 }

@@ -54,11 +54,12 @@ public class IcustLoanUnderWritingStageController {
 		}
 	}
 
-	@GetMapping(value = "/getCreditRatingByLoanId/{loanAccId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getCreditRatingsByLoanAccountId(@PathVariable("loanAccId") Long loanAccId) {
+	@GetMapping(value = "/fetchCreditRatingDetails", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getCreditRatingsByLoanAccountId(@RequestParam(value = "loanAccId", required = false) Long loanAccId,
+			@RequestParam(value = "cardId", required = false) Long cardId) {
 		log.info(MessageFormat.format("Exectution started for getCreditRatingsByLoanAccountId {1}", loanAccId));
 		try {
-			return creditRatingService.getCreditRatingsByLoanAccountId(loanAccId);
+			return creditRatingService.getCreditRatingsByLoanAccountId(loanAccId,cardId);
 		} catch (Exception e) {
 			log.error("Execption occoured while executing getCreditRatingsByLoanAccountId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

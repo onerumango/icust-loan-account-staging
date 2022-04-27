@@ -20,8 +20,9 @@ public class IcustLoanCreditRatingDetailsModel implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private Long loanAccountId;
-
 	private String customerName;
-
 	private Set<AgencyRatingModel> agencyRating;
+	private Long cardId;
+	private String accountType;
+	
 }

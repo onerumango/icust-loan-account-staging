@@ -30,10 +30,17 @@ public class IcustLoanCreditRatingServiceImpl implements IcustLoanCreditRatingSe
 		Optional<IcustLoanCreditRatingDetails> isCreditREntityPresent = null;
 		IcustLoanCreditRatingDetails creditRatingObj = null;
 		try {
-			if (creditRatingModel.getLoanAccountId() != null)
-				isCreditREntityPresent = creditRatingRepo.findByLoanAccountId(creditRatingModel.getLoanAccountId());
-			else
-				throw new RuntimeException("Loan Id is Required");
+			if(creditRatingModel.getAccountType().equalsIgnoreCase("loan")) {
+				if (creditRatingModel.getLoanAccountId() != null)
+					isCreditREntityPresent = creditRatingRepo.findByLoanAccountId(creditRatingModel.getLoanAccountId());
+				else
+					throw new RuntimeException("Loan Id is Required");
+			} else if(creditRatingModel.getAccountType().equalsIgnoreCase("cardOrigin")) {
+				if (creditRatingModel.getCardId() != null)
+					isCreditREntityPresent = creditRatingRepo.findByCardId(creditRatingModel.getCardId());
+				else
+					throw new RuntimeException("Card Id is Required");
+			}
 
 			if (isCreditREntityPresent != null && isCreditREntityPresent.isPresent()) {
 				IcustLoanCreditRatingDetails updateCreditRatingObj = new Gson()
@@ -61,19 +68,23 @@ public class IcustLoanCreditRatingServiceImpl implements IcustLoanCreditRatingSe
 			fromDb.setCustomerName(fromResponse.getCustomerName());
 
 		if (fromResponse.getAgencyRating() != null && !ObjectUtils.isEmpty(fromResponse.getAgencyRating())) {
-
+			fromDb.setAgencyRating(fromResponse.getAgencyRating());
 		}
+		if(fromResponse.getCardId()!=null)
+			fromDb.setCardId(fromResponse.getCardId());
 
 	}
 
 	@Override
-	public ResponseEntity<?> getCreditRatingsByLoanAccountId(Long loanAccId) {
+	public ResponseEntity<?> getCreditRatingsByLoanAccountId(Long loanAccId, Long cardId) {
 		Optional<IcustLoanCreditRatingDetails> isCreditREntityPresent = null;
 		try {
 			if (loanAccId != null)
 				isCreditREntityPresent = creditRatingRepo.findByLoanAccountId(loanAccId);
+			else if (cardId != null)
+				isCreditREntityPresent = creditRatingRepo.findByCardId(cardId);
 			else
-				throw new RuntimeException("Loan Id is Required");
+				throw new RuntimeException("Id is Required");
 
 			log.info("isCreditREntityPresent::"+ isCreditREntityPresent);
 			if (isCreditREntityPresent != null && isCreditREntityPresent.isPresent()) {
