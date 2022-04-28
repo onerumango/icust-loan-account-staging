@@ -44,18 +44,22 @@ public class IcustLoanInterestServiceImpl implements IcustLoanInterestService {
 				IcustLoanInterestModel icLoanInterestModel = (IcustLoanInterestModel) iterator.next();
 				if (icLoanInterestModel.getLoanAccountId() == null)
 					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LoanAccountId is Mandatory");
-				else {
-					if (icLoanInterestModel.getLoanInterestId() != null) {
-						updateInterestDetails = loanInterestRepo.findById(icLoanInterestModel.getLoanInterestId());
-					}
-					IcustLoanInterestDetails interestData = new Gson().fromJson(new Gson().toJson(icLoanInterestModel),
-							IcustLoanInterestDetails.class);
-					if (updateInterestDetails != null && updateInterestDetails.isPresent()) {
-						validateEntityDetails(updateInterestDetails.get(), interestData);
-						interestDetails.add(updateInterestDetails.get());
-					} else {
-						interestDetails.add(mapper.map(icLoanInterestModel, IcustLoanInterestDetails.class));
-					}
+				if (Strings.isNullOrEmpty(icLoanInterestModel.getIntrestType()))
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Interest Type is Mandatory");
+				if (icLoanInterestModel.getIntrestRateApplicable() == null)
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Interest rate applicable is Mandatory");
+				if (icLoanInterestModel.getEffectiveRate() == null)
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Effective rate is Mandatory");
+				if (icLoanInterestModel.getLoanInterestId() != null) {
+					updateInterestDetails = loanInterestRepo.findById(icLoanInterestModel.getLoanInterestId());
+				}
+				IcustLoanInterestDetails interestData = new Gson().fromJson(new Gson().toJson(icLoanInterestModel),
+						IcustLoanInterestDetails.class);
+				if (updateInterestDetails != null && updateInterestDetails.isPresent()) {
+					validateEntityDetails(updateInterestDetails.get(), interestData);
+					interestDetails.add(updateInterestDetails.get());
+				} else {
+					interestDetails.add(mapper.map(icLoanInterestModel, IcustLoanInterestDetails.class));
 				}
 			}
 			logger.info("Saving loanInterest details " + interestDetails);
