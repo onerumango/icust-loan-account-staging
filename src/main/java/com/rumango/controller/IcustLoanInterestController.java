@@ -74,8 +74,8 @@ public class IcustLoanInterestController {
 		}
 	}
 	
-	@PostMapping(value = "/upsertDetails",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> upsertDetails(
+	@PostMapping(value = "/upsertCardDetails",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> upsertCardDetails(
 			@RequestBody List<IcustCardInterestModel> icustCardInterestListModel) throws Exception {
 		logger.info(MessageFormat.format("Exectution started for upsertCardInterestDetails: {0}",
 				icustCardInterestListModel));
