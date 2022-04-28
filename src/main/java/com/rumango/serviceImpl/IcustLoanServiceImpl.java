@@ -143,8 +143,9 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(loanAccountId);
 			System.err.println("loanObj::"+loanObj.get());
 			if (loanObj.isPresent()) {
-				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndIntrestType(loanAccountId,"Fixed Rate");
 				IcustLoanInfo loanInfo = loanObj.get();
+				assessmentModel = new Gson().fromJson(new Gson().toJson(loanInfo), IcustLoanAssessmentDetailsModel.class);
+				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndIntrestType(loanAccountId,"Fixed Rate");
 				assessmentModel.setRequestedLoanAmount(loanInfo.getLoanAmount());
 				assessmentModel.setLoanTenure(loanInfo.getLoanTenure());
 				if(loanInterestInfo!=null)
