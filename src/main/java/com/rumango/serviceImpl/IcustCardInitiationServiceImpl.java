@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustCardInitiation;
-import com.rumango.icust.entity.IcustAccount;
 import com.rumango.model.IcustCardInitiationModel;
 import com.rumango.repository.IcustCardInitiationRepo;
 import com.rumango.service.IcustCardInitiationService;

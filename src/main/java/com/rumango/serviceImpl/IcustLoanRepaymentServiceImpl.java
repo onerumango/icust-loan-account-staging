@@ -147,21 +147,23 @@ public class IcustLoanRepaymentServiceImpl implements IcustLoanRepaymentService{
 	@Override
 	public ResponseEntity<?> fetchRepaymentScheduleInfo(IcustLoanRepaymentModel icustLoanRepaymentModel) {
 		try {
-			  List<IcustRepaymentScheduleInfoModel> repaymentList = null;
-			if(icustLoanRepaymentModel.getLoanAccountId()==null) {
+			List<IcustRepaymentScheduleInfoModel> repaymentList = null;
+			if (icustLoanRepaymentModel.getLoanAccountId() == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("loanAccountId is Mandotory");
-			}else {
-				Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(icustLoanRepaymentModel.getLoanAccountId());
-				IcustLoanInterestDetails loanInterestInfo = loanInterestRepo.findByLoanAccountIdAndIntrestType(icustLoanRepaymentModel.getLoanAccountId(),"Fixed Rate");
-				if(loanObj.isPresent()) {
-					repaymentList  = calculatePaymentList(icustLoanRepaymentModel.getFirstRepaymentDate(), loanObj.get().getLoanAmount(),
-			        		icustLoanRepaymentModel.getLoanTenure(), 0, (loanInterestInfo!=null?loanInterestInfo.getIntrestRateApplicable():0), 0);
+			if (icustLoanRepaymentModel.getFirstRepaymentDate() == null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("FirstRepaymentDate is Mandotory");
+			
+			Optional<IcustLoanInfo> loanObj = icustLoanInfoRepo.findById(icustLoanRepaymentModel.getLoanAccountId());
+			IcustLoanInterestDetails loanInterestInfo = loanInterestRepo
+					.findByLoanAccountIdAndIntrestType(icustLoanRepaymentModel.getLoanAccountId(), "Fixed Rate");
+			if (loanObj.isPresent()) {
+				repaymentList = calculatePaymentList(icustLoanRepaymentModel.getFirstRepaymentDate(),
+						loanObj.get().getLoanAmount(), icustLoanRepaymentModel.getLoanTenure(), 0,
+						(loanInterestInfo != null ? loanInterestInfo.getIntrestRateApplicable() : 0), 0);
 
-				}
-				return ResponseEntity.status(HttpStatus.OK).body(repaymentList);
 			}
-			
-			
+			return ResponseEntity.status(HttpStatus.OK).body(repaymentList);
+
 		}catch(Exception e) {
 			e.printStackTrace();;
 			logger.error(MessageFormat.format("Execption occcure while fetchRepaymentScheduleInfo", e.getMessage()),e);
@@ -172,7 +174,7 @@ public class IcustLoanRepaymentServiceImpl implements IcustLoanRepaymentService{
 	private List<IcustRepaymentScheduleInfoModel> calculatePaymentList(Date firstRepaymentDate, Double loanAmount,
 			String loanTenure, int paymentType, Double interestRate, int k) {
 		  List<IcustRepaymentScheduleInfoModel> paymentList = new ArrayList<IcustRepaymentScheduleInfoModel>();
-	        Date loopDate = firstRepaymentDate;
+	        Date loopDate = firstRepaymentDate!=null?firstRepaymentDate:new Date();
 	        Double balance = loanAmount;
 	        Double accumulatedInterest = 0.0;
 	        for (int paymentNumber = 1; paymentNumber <= 12; paymentNumber++)
