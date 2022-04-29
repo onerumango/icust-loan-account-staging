@@ -1,5 +1,7 @@
 package com.rumango.controller;
 
+import java.util.List;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rumango.model.IcustCardChargeModel;
 import com.rumango.model.IcustLoanChargeListModel;
-import com.rumango.model.IcustLoanChargeModel;
+import com.rumango.service.IcustCardChargeService;
 import com.rumango.service.IcustLoanChargeService;
 
 
@@ -27,13 +30,15 @@ public class IcustLoanChargeController {
 	@Autowired
 	IcustLoanChargeService service;
 	
+	@Autowired
+	IcustCardChargeService cardService;
+	
 	@PostMapping(value="/upsertLoanChargeDetails", produces= MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> upsertLoanChargeDetails(@RequestBody IcustLoanChargeListModel icustLoanChargeListModel){
 		try {
 			logger.info("Execution starts for upsertLoanChargeDetails");
 			return service.upsertLoanChargeDetails(icustLoanChargeListModel);
 		}catch (Exception e) {
-			// TODO: handle exception
 			logger.error("Execption occure while upsertLoanChargeDetails",e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}finally {
@@ -46,7 +51,6 @@ public class IcustLoanChargeController {
 		try {
 			return service.fetchLoanChargeDetails();
 		}catch (Exception e) {
-			// TODO: handle exception
 			logger.error("Execption occure while fetchLoanChargeDetails",e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}finally {
@@ -61,11 +65,50 @@ public class IcustLoanChargeController {
 		try {
 			return service.fetchLoanChargeDetailsById(loanAccoutId);
 		}catch (Exception e) {
-			// TODO: handle exception
 			logger.error("Execption occure while fetchLoanChargeDetailsById",e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}finally {
 			logger.info("Execution complete for fetchLoanChargeDetailsById");
+		}
+		
+	}
+	
+	@PostMapping(value="/upsertCardChargeDetails", produces= MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> upsertCardChargeDetails(@RequestBody List<IcustCardChargeModel> icustCardChargeModel){
+		try {
+			logger.info("Execution starts for upsertCardChargeDetails");
+			return cardService.upsertCardChargeDetails(icustCardChargeModel);
+		}catch (Exception e) {
+			logger.error("Execption occure while upsertCardChargeDetails",e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}finally {
+			logger.info("Execution complete for upsertCardChargeDetails");
+		}
+	}
+
+	@GetMapping(value= "/fetchCardChargeDetails")
+	public ResponseEntity<?> fetchCardChargeDetails(){
+		try {
+			return cardService.fetchCardChargeDetails();
+		}catch (Exception e) {
+			logger.error("Execption occure while fetchCardChargeDetails",e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}finally {
+			logger.info("Execution complete for fetchCardChargeDetails");
+			
+		}
+	}
+	
+	@GetMapping(value = "/fetchCardChargeDetailsById")
+	public ResponseEntity<?> fetchCardChargeDetailsById(@RequestParam (value="cardAccountId", required = false) Long cardAccoutId){
+		
+		try {
+			return cardService.fetchCardChargeDetailsById(cardAccoutId);
+		}catch (Exception e) {
+			logger.error("Execption occure while fetchCardChargeDetailsById",e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}finally {
+			logger.info("Execution complete for fetchCardChargeDetailsById");
 		}
 		
 	}
