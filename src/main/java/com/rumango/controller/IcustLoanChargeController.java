@@ -100,10 +100,10 @@ public class IcustLoanChargeController {
 	}
 	
 	@GetMapping(value = "/fetchCardChargeDetailsById")
-	public ResponseEntity<?> fetchCardChargeDetailsById(@RequestParam (value="cardAccountId", required = false) Long cardAccoutId){
+	public ResponseEntity<?> fetchCardChargeDetailsById(@RequestParam (value="cardId", required = false) Long cardId){
 		
 		try {
-			return cardService.fetchCardChargeDetailsById(cardAccoutId);
+			return cardService.fetchCardChargeDetailsById(cardId);
 		}catch (Exception e) {
 			logger.error("Execption occure while fetchCardChargeDetailsById",e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
