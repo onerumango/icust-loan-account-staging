@@ -7,6 +7,6 @@ public class IcustCardChargeModel {
 	private Long chargeDetailsId;
 	private Long cardId;
 	private String intrestType;
-	private Double amout;
+	private Double amount;
 	private Boolean waiver;
 }

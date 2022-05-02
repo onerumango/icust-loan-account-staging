@@ -49,6 +49,7 @@ public class IcustCardChargeServiceImpl implements IcustCardChargeService {
 					IcustCardChargeDetails chargeData = new Gson().fromJson(new Gson().toJson(cardChargeModel),
 							IcustCardChargeDetails.class);
 					if (updateChargeDetails != null && updateChargeDetails.isPresent()) {
+						logger.info(updateChargeDetails.get());
 						validatorChargeDetails(updateChargeDetails.get(), chargeData);
 						chargeDetails.add(updateChargeDetails.get());
 					} else {
@@ -71,8 +72,10 @@ public class IcustCardChargeServiceImpl implements IcustCardChargeService {
 		if(!Strings.isNullOrEmpty(newDetails.getIntrestType())) {
 			oldDetails.setIntrestType(newDetails.getIntrestType());
 		}
-		if(newDetails.getAmount()!=null) {
+		if(newDetails.getAmount()!=0.0) {
+			logger.info(newDetails.getAmount());
 			oldDetails.setAmount(newDetails.getAmount());
+			logger.info(oldDetails.getAmount());
 		}
 		if(newDetails.getWaiver()!=null) {
 			oldDetails.setWaiver(newDetails.getWaiver());
@@ -97,9 +100,9 @@ public class IcustCardChargeServiceImpl implements IcustCardChargeService {
 	}
 
 	@Override
-	public ResponseEntity<?> fetchCardChargeDetailsById(Long cardAccoutId) {
+	public ResponseEntity<?> fetchCardChargeDetailsById(Long cardId) {
 		try {
-			List<IcustCardChargeDetails> chargeList = icustCardChargeRepo.findByCardId(cardAccoutId);
+			List<IcustCardChargeDetails> chargeList = icustCardChargeRepo.findByCardId(cardId);
 			if (!CollectionUtils.isEmpty(chargeList)) {
 
 				return ResponseEntity.status(HttpStatus.OK).body(chargeList);

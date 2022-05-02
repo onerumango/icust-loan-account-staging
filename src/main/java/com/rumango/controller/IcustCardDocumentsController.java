@@ -20,31 +20,31 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
-import com.rumango.model.IcustLoanDocumentsModel;
-import com.rumango.service.LoanDocumentUploadService;
-
+import com.rumango.model.IcustCardDocumentsModel;
+import com.rumango.service.IcustCardDocumentsService;
 
 @RestController
-@RequestMapping("/loan/upload")
-public class LoanDocumentUploadController {
-	private static final Logger logger = LogManager.getLogger(LoanDocumentUploadController.class);
+@RequestMapping("/cardDoc")
+public class IcustCardDocumentsController {
+
+private static final Logger logger = LogManager.getLogger(IcustCardDocumentsController.class);
 	
 	@Autowired
-	LoanDocumentUploadService uploadService;
+	IcustCardDocumentsService uploadService;
 	
-	@PostMapping(value = "uploadLoanDocs", produces = MediaType.APPLICATION_JSON_VALUE, consumes = { "multipart/*",
+	@PostMapping(value = "/uploadCardDocs", produces = MediaType.APPLICATION_JSON_VALUE, consumes = { "multipart/*",
 			"application/x-www-form-urlencoded", "application/json" })
-	public ResponseEntity<?> uploadLoanDocs(@RequestParam("file") MultipartFile file, @RequestParam("data") String data)
+	public ResponseEntity<?> uploadCardDocs(@RequestParam("file") MultipartFile file, @RequestParam("data") String data)
 			throws IOException, java.io.FileNotFoundException {
-		logger.info(MessageFormat.format("Execution started for uploadLoanDocs for data ", data));
+		logger.info(MessageFormat.format("Execution started for uploadCardDocs for data ", data));
 		try {
-			IcustLoanDocumentsModel model = new Gson().fromJson(data, IcustLoanDocumentsModel.class);
-			return uploadService.uploadLoanDocs(file,model);
+			IcustCardDocumentsModel model = new Gson().fromJson(data, IcustCardDocumentsModel.class);
+			return uploadService.uploadCardDocs(file,model);
 		} catch (Exception e) {
-			logger.error("Execption occoured while executing uploadLoanDocs", e);
+			logger.error("Execption occoured while executing uploadCardDocs", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for uploadLoanDocs");
+			logger.info("Execution completed for uploadCardDocs");
 		}
 	}
 	
@@ -64,18 +64,19 @@ public class LoanDocumentUploadController {
 				.body(resource);
 	}
 	
-	@GetMapping(value="/fetchLoanDocuments", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> fetchLoanDocuments (@RequestParam(value = "loanAccountId", required = true) Long loanAccountId,
+	@GetMapping(value="/fetchCardDocuments", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> fetchCardDocuments (@RequestParam(value = "cardId", required = true) Long cardId,
 			@RequestParam(value = "screenType", required = true) Integer screenType){
 		logger.info(MessageFormat.format(
-				"Exectution started for fetchLoanDocuments for documentType::", screenType));
+				"Exectution started for fetchCardDocuments for documentType::", screenType));
 		try {
-			return uploadService.fetchLoanDocuments(loanAccountId,screenType);
+			return uploadService.fetchCardDocuments(cardId,screenType);
 		} catch (Exception e) {
-			logger.error("Execption occoured while executing fetchLoanDocuments", e);
+			logger.error("Execption occoured while executing fetchCardDocuments", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		} finally {
-			logger.info("Execution completed for fetchLoanDocuments");
+			logger.info("Execution completed for fetchCardDocuments");
 		}
 	}
+	
 }
