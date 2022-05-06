@@ -67,8 +67,6 @@ public class IcustCardInitiationServiceImpl implements IcustCardInitiationServic
 			dataFromDb.setAffinityProgram(newObj.getAffinityProgram());
 		if(!Strings.isNullOrEmpty(newObj.getNameOnCard()))
 			dataFromDb.setNameOnCard(newObj.getNameOnCard());
-		if(newObj.getCardPreferences()!=null)
-			dataFromDb.setCardPreferences(newObj.getCardPreferences());
 	}
 
 	@Override
