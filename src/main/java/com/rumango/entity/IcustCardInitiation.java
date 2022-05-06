@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rumango.enums.CardInitiationStatus;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,10 +51,9 @@ public class IcustCardInitiation implements Serializable{
 	private String affinityProgram;
 	private String nameOnCard;
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonIgnore
-	@JoinColumn(name = "CARD_ID")
-	List<IcustCardPreferences> cardPreferences;
+	@Column(name = "STATUS")
+	@Enumerated(EnumType.STRING)
+	private CardInitiationStatus status;
 	
 	
 }

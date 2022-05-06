@@ -53,7 +53,7 @@ public class IcustCardInitiationController {
 		}
 	}
 	
-	@PutMapping("/updateStatus")
+	@PutMapping(value="/updateStatus" , produces= MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateStatusApproveOrReject(@RequestBody IcustCardInitiationModel cardInitiationModel) {
 		logger.info("Exectution started for updateStatusApproveOrReject: " + cardInitiationModel.getCardId());
 		try {

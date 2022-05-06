@@ -16,5 +16,5 @@ public class IcustCardInitiationModel {
 	private String employmentType;
 	private String affinityProgram;
 	private String nameOnCard;
-	List<IcustCardPreferencesModel> cardPreferences;
+	private String status;
 }

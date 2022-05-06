@@ -32,6 +32,7 @@ public class IcustCardPreferences implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "preference_id_Sequence")
 	@SequenceGenerator(name = "preference_id_Sequence", sequenceName = "PREFERENCE_ID_SEQ")
 	private Long preferenceId;
+	private Long cardId;
 	private String limitType;
 	private Double dailyLimit;
 	private Long limitPerTransaction;
