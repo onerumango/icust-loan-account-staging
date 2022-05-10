@@ -44,7 +44,7 @@ public class IcustCustomerInfo implements Serializable {
 	@Id
 	@Column(name = "CUSTOMER_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
-	@SequenceGenerator(name = "id_Sequence", sequenceName = "CUSTOMER_ID_SEQ")
+	@SequenceGenerator(name = "id_Sequence", sequenceName = "CUSTOMER_ID_SEQ", initialValue = 10000, allocationSize = 1)
 	private Long customerId;
 
 	@Column(name = "CUSTOMER_TYPE_ID")
