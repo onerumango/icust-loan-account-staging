@@ -12,4 +12,6 @@ public interface IcustCardPreferencesService {
 
 	ResponseEntity<?> upsertCardPreferenceDetails(List<IcustCardPreferencesModel> cardPreferencesModel);
 
+	ResponseEntity<?> deleteCardPreference(Long id);
+
 }

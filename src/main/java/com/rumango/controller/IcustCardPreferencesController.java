@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,5 +52,18 @@ public class IcustCardPreferencesController {
 		} finally {
 			logger.info("Execution completed for fetchCardPreferenceByCardAccId");
 		}
+	}
+	
+	@DeleteMapping(value="/deleteCardPreference", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> deleteCardPreference (@RequestParam(value = "id") Long id){
+		try {
+			return cardPreferencesService.deleteCardPreference(id);
+		}catch(Exception e){
+			logger.error("Execption occoured while executing deleteCardPreference", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}finally {
+			logger.info("Execution completed for deleteCardPreference");
+		}
+		
 	}
 }

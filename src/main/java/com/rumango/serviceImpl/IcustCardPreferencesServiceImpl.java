@@ -18,6 +18,7 @@ import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustCardPreferences;
 import com.rumango.model.IcustCardPreferencesModel;
+import com.rumango.model.IcustResponseModel;
 import com.rumango.repository.IcustCardPreferencesRepo;
 import com.rumango.service.IcustCardPreferencesService;
 
@@ -85,6 +86,27 @@ public class IcustCardPreferencesServiceImpl implements IcustCardPreferencesServ
 			}
 		} catch (Exception e) {
 			logger.error("Execption occoured while executing fetchCardPreferenceByCardId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> deleteCardPreference(Long id) {
+		IcustResponseModel resp = new IcustResponseModel();
+		try {
+			Optional<IcustCardPreferences> currencyPairObj = cardPreferencesRepo.findById(id);
+			if (currencyPairObj.isPresent()) {
+				cardPreferencesRepo.deleteById(id);
+				resp.setStatus(200);
+				resp.setMessage("Record Deleted successfully");
+				return ResponseEntity.status(HttpStatus.OK).body(resp);
+			} else {
+				resp.setStatus(204);
+				resp.setMessage("No record exist for given id");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body(resp);
+			}
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing deleteCardPreference", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
