@@ -56,10 +56,10 @@ private static final Logger logger = LogManager.getLogger(IcustCardAssessmentCon
 	}
 	
 	@GetMapping(value = "/fetchCardAssessmentById", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> fetchCardAssessmentById (@RequestParam(value = "cardAccountId") Long cardAccountId){
+	public ResponseEntity<?> fetchCardAssessmentById (@RequestParam(value = "cardId") Long cardId){
 		logger.info("Exectution started for fetchCardAssessmentById");
 		try {
-			return assessmentService.fetchCardAssessmentById(cardAccountId);
+			return assessmentService.fetchCardAssessmentById(cardId);
 		} catch (Exception e) {
 			logger.error("Execption occoured while executing fetchCardAssessmentById", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

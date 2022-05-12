@@ -72,7 +72,7 @@ public class IcustCardApprovalDetailServiceImpl implements IcustCardApprovalDeta
 		try {
 			if (cardId == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CardId is Mandatory");
-			Optional<IcustCardApprovalDetails> cardObj = approvalDetailsRepo.findById(cardId);
+			Optional<IcustCardApprovalDetails> cardObj = approvalDetailsRepo.findByCardId(cardId);
 
 			if (cardObj.isPresent()) {
 				IcustCardApprovalModel approvalData = new Gson().fromJson(new Gson().toJson(cardObj.get()),
