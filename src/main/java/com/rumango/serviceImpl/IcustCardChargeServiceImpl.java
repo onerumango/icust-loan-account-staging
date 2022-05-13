@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustCardChargeDetails;
+import com.rumango.model.IcustCardChargeListModel;
 import com.rumango.model.IcustCardChargeModel;
 import com.rumango.repository.IcustCardChargeRepo;
 import com.rumango.service.IcustCardChargeService;
@@ -33,10 +34,10 @@ public class IcustCardChargeServiceImpl implements IcustCardChargeService {
 	ModelMapper mapper = new ModelMapper();
 	
 	@Override
-	public ResponseEntity<?> upsertCardChargeDetails(List<IcustCardChargeModel> icustCardChargeModel) {
+	public ResponseEntity<?> upsertCardChargeDetails(IcustCardChargeListModel icustCardChargeModel) {
 		try {
 			List<IcustCardChargeDetails> chargeDetails = new LinkedList<>();
-			Iterator<IcustCardChargeModel> iterator = icustCardChargeModel.iterator();
+			Iterator<IcustCardChargeModel> iterator = icustCardChargeModel.getChargeInfo().iterator();
 			Optional<IcustCardChargeDetails> updateChargeDetails = null;
 			while (iterator.hasNext()) {
 				IcustCardChargeModel cardChargeModel = (IcustCardChargeModel) iterator.next();
