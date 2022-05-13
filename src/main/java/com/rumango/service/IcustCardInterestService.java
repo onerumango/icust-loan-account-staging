@@ -1,16 +1,15 @@
 package com.rumango.service;
 
-import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.rumango.model.IcustCardInterestModel;
+import com.rumango.model.IcustCardInterestListModel;
 
 @Service
 public interface IcustCardInterestService {
 
-	ResponseEntity<?> upsertDetails(List<IcustCardInterestModel> cardInterestModel);
+	ResponseEntity<?> upsertDetails(IcustCardInterestListModel cardInterestModel);
 
 	ResponseEntity<?> fetchCardInterestDetails();
 

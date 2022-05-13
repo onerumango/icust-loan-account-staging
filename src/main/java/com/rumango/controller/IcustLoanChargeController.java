@@ -1,7 +1,5 @@
 package com.rumango.controller;
 
-import java.util.List;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rumango.model.IcustCardChargeModel;
+import com.rumango.model.IcustCardChargeListModel;
 import com.rumango.model.IcustLoanChargeListModel;
 import com.rumango.service.IcustCardChargeService;
 import com.rumango.service.IcustLoanChargeService;
@@ -74,7 +72,7 @@ public class IcustLoanChargeController {
 	}
 	
 	@PostMapping(value="/upsertCardChargeDetails", produces= MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> upsertCardChargeDetails(@RequestBody List<IcustCardChargeModel> icustCardChargeModel){
+	public ResponseEntity<?> upsertCardChargeDetails(@RequestBody IcustCardChargeListModel icustCardChargeModel){
 		try {
 			logger.info("Execution starts for upsertCardChargeDetails");
 			return cardService.upsertCardChargeDetails(icustCardChargeModel);

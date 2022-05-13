@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustCardInterestDetails;
+import com.rumango.model.IcustCardInterestListModel;
 import com.rumango.model.IcustCardInterestModel;
 import com.rumango.repository.IcustCardInterestRepo;
 import com.rumango.service.IcustCardInterestService;
@@ -33,10 +34,10 @@ public class IcustCardInterestServiceImpl implements IcustCardInterestService {
 	ModelMapper mapper = new ModelMapper();
 
 	@Override
-	public ResponseEntity<?> upsertDetails(List<IcustCardInterestModel> cardInterestModel) {
+	public ResponseEntity<?> upsertDetails(IcustCardInterestListModel cardInterestModel) {
 		try {
 			List<IcustCardInterestDetails> interestDetails = new LinkedList<>();
-			Iterator<IcustCardInterestModel> iterator = cardInterestModel.iterator();
+			Iterator<IcustCardInterestModel> iterator = cardInterestModel.getInterestInfo().iterator();
 			Optional<IcustCardInterestDetails> updateInterestDetails = null;
 			while (iterator.hasNext()) {
 				IcustCardInterestModel icCardInterestModel = (IcustCardInterestModel) iterator.next();
