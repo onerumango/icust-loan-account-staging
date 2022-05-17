@@ -1,6 +1,7 @@
 package com.rumango.entity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -18,6 +19,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.lang.NonNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.rumango.enums.CardInitiationStatus;
@@ -50,6 +54,9 @@ public class IcustCardInitiation implements Serializable{
 	private String employmentType;
 	private String affinityProgram;
 	private String nameOnCard;
+	@NonNull
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MMM-dd HH:mm:ss", timezone = "IST")
+	private Timestamp createdTime;
 	
 	@Column(name = "STATUS")
 	@Enumerated(EnumType.STRING)

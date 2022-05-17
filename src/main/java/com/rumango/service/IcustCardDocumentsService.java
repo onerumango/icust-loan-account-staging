@@ -12,7 +12,7 @@ public interface IcustCardDocumentsService {
 
 	ResponseEntity<?> uploadCardDocs(MultipartFile file, IcustCardDocumentsModel model);
 
-	ResponseEntity<?> fetchCardDocuments(Long cardId, Integer screenType);
+	ResponseEntity<?> fetchCardDocuments(Long cardId, String screenType);
 
 	Resource loadAsResource(String fileName);
 }

@@ -219,6 +219,7 @@ public class IcustFinancialDetailsServiceImpl implements IcustFinancialDetailsSe
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("Execption occoured while executing fetchFinancialDetailsByLoanAccId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}

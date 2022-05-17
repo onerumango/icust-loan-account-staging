@@ -16,6 +16,8 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -34,6 +36,7 @@ import com.rumango.exception.FileNotFoundException;
 import com.rumango.exception.InternalServerException;
 import com.rumango.exception.StorageException;
 import com.rumango.model.IcustCardDocumentsModel;
+import com.rumango.model.IcustCardPreferencesModel;
 import com.rumango.repository.IcustCardDocumentsRepo;
 import com.rumango.service.IcustCardDocumentsService;
 
@@ -46,6 +49,8 @@ public class IcustCardDocumentsServiceImpl implements IcustCardDocumentsService 
 	
 	@Autowired
 	IcustCardDocumentsRepo icustCardDocumentsRepo;
+	@Autowired
+	ModelMapper mapper;
 	
 	@Override
 	public ResponseEntity<?> uploadCardDocs(MultipartFile file, IcustCardDocumentsModel data) {
@@ -113,12 +118,12 @@ public class IcustCardDocumentsServiceImpl implements IcustCardDocumentsService 
 	}
 
 	@Override
-	public ResponseEntity<?> fetchCardDocuments(Long cardId, Integer screenType) {
+	public ResponseEntity<?> fetchCardDocuments(Long cardId, String screenType) {
 		List<IcustCardDocuments> documentList = new ArrayList<>();
 		List<IcustCardDocuments> cardDocuments = null;
 		try {
 			
-			cardDocuments = icustCardDocumentsRepo.findByCardIdAndScreenType(cardId, screenType);
+			cardDocuments = icustCardDocumentsRepo.findByCardIdAndScreenType(cardId, Integer.valueOf(screenType));
 
 			if (!CollectionUtils.isEmpty(cardDocuments)) {
 				for (IcustCardDocuments corporateDocs : cardDocuments) {
@@ -129,8 +134,8 @@ public class IcustCardDocumentsServiceImpl implements IcustCardDocumentsService 
 						documentList.add(corporateDocs);
 					}
 				}
-
-				return ResponseEntity.status(HttpStatus.OK).body(documentList);
+				List<IcustCardDocumentsModel> docInfo = mapper.map(documentList, new TypeToken<List<IcustCardDocumentsModel>>() {}.getType());
+				return ResponseEntity.status(HttpStatus.OK).body(docInfo);
 			} else {
 				logger.error("No record exists for given search");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No record exists for given serach");

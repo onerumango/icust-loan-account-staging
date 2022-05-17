@@ -1,0 +1,291 @@
+package com.rumango.serviceImpl;
+
+import static org.springframework.data.jpa.domain.Specification.where;
+
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.criteria.Root;
+
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.apache.log4j.Logger;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import com.rumango.constants.DataConstants;
+import com.rumango.entity.IcustCardInitiation;
+import com.rumango.entity.IcustCustomerDocuments;
+import com.rumango.entity.IcustCustomerInfo;
+import com.rumango.entity.IcustLoanInfo;
+import com.rumango.model.CardTaskSummaryDataModel;
+import com.rumango.model.IcustAccountServicesModel;
+import com.rumango.model.IcustAdmissionDetailsModel;
+import com.rumango.model.IcustApprovalDetailsModel;
+import com.rumango.model.IcustAssetDetailsModel;
+import com.rumango.model.IcustCollateralMasterModel;
+import com.rumango.model.IcustFinancialDetailsModel;
+import com.rumango.model.IcustGuarantorDetailsModel;
+import com.rumango.model.IcustLoanAccountSummaryModel;
+import com.rumango.model.IcustLoanAssessmentDetailsModel;
+import com.rumango.model.IcustLoanChargeModel;
+import com.rumango.model.IcustLoanCreditRatingDetailsModel;
+import com.rumango.model.IcustLoanDisbursementModel;
+import com.rumango.model.IcustLoanInfoModel;
+import com.rumango.model.IcustLoanInterestModel;
+import com.rumango.model.IcustLoanLegalOpinionModel;
+import com.rumango.model.IcustLoanRepaymentModel;
+import com.rumango.model.IcustLoanValuationOfAssetModel;
+import com.rumango.model.IcustMandateDetailsModel;
+import com.rumango.model.IcustOfferIssueModel;
+import com.rumango.model.IcustVehicleDetailsModel;
+import com.rumango.model.LoanTaskSummaryDataModel;
+import com.rumango.model.LoanTaskSummaryModel;
+import com.rumango.model.CardTaskSummaryModel;
+import com.rumango.repository.CustomerDocumentsRepo;
+import com.rumango.repository.IcustCustomerInfoRepo;
+import com.rumango.repository.IcustLoanInfoRepo;
+import com.rumango.service.IcustAccountServicesService;
+import com.rumango.service.IcustAdmissionService;
+import com.rumango.service.IcustApprovalDetailsService;
+import com.rumango.service.IcustAssetService;
+import com.rumango.service.IcustCollateralService;
+import com.rumango.service.IcustFinancialDetailsService;
+import com.rumango.service.IcustGuarantorService;
+import com.rumango.service.IcustLoanAssessmentService;
+import com.rumango.service.IcustLoanChargeService;
+import com.rumango.service.IcustLoanCreditRatingService;
+import com.rumango.service.IcustLoanDisbursementService;
+import com.rumango.service.IcustLoanInterestService;
+import com.rumango.service.IcustLoanLegalOpinionService;
+import com.rumango.service.IcustLoanRepaymentService;
+import com.rumango.service.IcustLoanService;
+import com.rumango.service.IcustLoanTaskSummaryService;
+import com.rumango.service.IcustLoanValuationOfAssetService;
+import com.rumango.service.IcustMandateService;
+import com.rumango.service.IcustOfferAcceptOrRejectService;
+import com.rumango.service.IcustOfferIssueService;
+import com.rumango.service.IcustVehicleService;
+
+@Service
+public class IcustLoanTaskSummaryServiceImpl implements IcustLoanTaskSummaryService {
+	private static final Logger logger = Logger.getLogger(IcustLoanTaskSummaryServiceImpl.class);
+
+	@Autowired
+	private IcustLoanService icustLoanService;
+	@Autowired
+	IcustAssetService icustAssetService;
+	@Autowired
+	IcustVehicleService icustVehicleService;
+	@Autowired
+	IcustAdmissionService icustAdmissionService;
+	@Autowired
+	IcustMandateService icustMandateService;
+	@Autowired
+	IcustFinancialDetailsService financialDetailsService;
+	@Autowired
+	IcustCollateralService icustCollateralService;
+	@Autowired
+	IcustGuarantorService guarantorService;
+	@Autowired
+	IcustLoanInterestService service;
+	@Autowired
+	IcustLoanDisbursementService disbursementService;
+	@Autowired
+	IcustLoanRepaymentService repaymentService;
+	@Autowired
+	IcustLoanInterestService interestService;
+	@Autowired
+	IcustLoanChargeService chargeService;
+	@Autowired
+	IcustAccountServicesService accountServicesService;
+	@Autowired
+	ModelMapper mapper;
+	@Autowired
+	private IcustLoanCreditRatingService creditRatingService;
+	@Autowired
+	private IcustLoanValuationOfAssetService loanValuationOfAssetService;
+	@Autowired
+	private IcustLoanLegalOpinionService legalOpinionService;
+	@Autowired
+	private IcustLoanAssessmentService assessmentService;
+	@Autowired
+	IcustApprovalDetailsService approvalDetailsService;
+	@Autowired
+	IcustOfferIssueService icustOfferIssueService;
+	@Autowired
+	IcustOfferAcceptOrRejectService OfferAcceptOrRejectService;
+	@Autowired
+	IcustLoanInfoRepo loanRepo;
+	@Autowired
+	IcustCustomerInfoRepo customerRepo;
+	@Autowired
+	CustomerDocumentsRepo documentRepo;
+
+	@Override
+	public ResponseEntity<?> fetchTaskSummaryInfo(Long loanAccountId) {
+		IcustLoanAccountSummaryModel summaryInfo = new IcustLoanAccountSummaryModel();
+		try {
+			if (loanAccountId != null) {
+				summaryInfo.setLoanDetailsInfo(mapper.map(icustLoanService.fetchLoanDetailsByLoanAccId(loanAccountId).getBody(), IcustLoanInfoModel.class));
+				summaryInfo.setAssessInfo(mapper.map(icustAssetService.fetchAssetDetailsByLoanAccId(loanAccountId).getBody(), IcustAssetDetailsModel.class));
+				summaryInfo.setVehicleInfo(mapper.map(icustVehicleService.fetchVehicleDetailsByLoanAccId(loanAccountId).getBody(), IcustVehicleDetailsModel.class));
+				summaryInfo.setAdmissionInfo(mapper.map(icustAdmissionService.fetchAdmissionDetailsByLoanAccId(loanAccountId).getBody(), IcustAdmissionDetailsModel.class));
+				summaryInfo.setMandateInfo(mapper.map(icustMandateService.fetchMandateDetailsByLoanAccId(loanAccountId).getBody(), IcustMandateDetailsModel.class));
+				summaryInfo.setFinancialInfo((List<IcustFinancialDetailsModel>)financialDetailsService.fetchFinancialDetails(loanAccountId,null).getBody());
+				summaryInfo.setCollateralInfo(mapper.map(icustCollateralService.fetchCollateralByLoanAccountId(loanAccountId).getBody(), IcustCollateralMasterModel.class));
+				summaryInfo.setGuarantorInfo(mapper.map(guarantorService.fetchGuarantorByLoanAccId(loanAccountId).getBody(), IcustGuarantorDetailsModel.class));
+				
+				summaryInfo.setInterestInfo((List<IcustLoanInterestModel>) service.fetchLoanInterestById(loanAccountId).getBody());
+				summaryInfo.setDisbursementInfo(mapper.map(disbursementService.fetchLoanDisbursementById(loanAccountId).getBody(), IcustLoanDisbursementModel.class));
+				summaryInfo.setRepaymentInfo(mapper.map(repaymentService.fetchLoanRepaymentDetailById(loanAccountId).getBody(), IcustLoanRepaymentModel.class));
+				summaryInfo.setChargeInfo((List<IcustLoanChargeModel>) chargeService.fetchLoanChargeDetailsById(loanAccountId).getBody());
+				summaryInfo.setAccountServiceInfo(mapper.map(accountServicesService.fetchAccountServicesByLoanAccountId(loanAccountId).getBody(), IcustAccountServicesModel.class));
+				
+				summaryInfo.setCreditRatingInfo(mapper.map(creditRatingService.getCreditRatingsByLoanAccountId(loanAccountId,null).getBody(), IcustLoanCreditRatingDetailsModel.class));
+				summaryInfo.setValAssetInfo((IcustLoanValuationOfAssetModel) loanValuationOfAssetService.getValuationOfAssetByLoanAccountId(loanAccountId).getBody());
+				summaryInfo.setLegalOpionInfo((IcustLoanLegalOpinionModel) legalOpinionService.getLegalOpinionByLoanAccountId(loanAccountId).getBody());
+				summaryInfo.setAssessmentInfo((IcustLoanAssessmentDetailsModel) icustLoanService.fetchAssessmentInfoByLoanAccId(loanAccountId).getBody());
+				summaryInfo.setApprovalInfo((IcustApprovalDetailsModel) approvalDetailsService.fetchApprovalDetails(loanAccountId).getBody());
+				summaryInfo.setOfferIssueInfo(mapper.map(icustOfferIssueService.fetchOfferIssueByLoanAccountId(loanAccountId).getBody(), IcustOfferIssueModel.class));
+				
+				return ResponseEntity.status(HttpStatus.OK).body(summaryInfo);
+			} else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("LoanAccountId is mandatory");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Execption occoured while executing fetchTaskSummaryInfo", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> fetchTaskSummaryDetails(String status, Integer page, Integer size, String customerId,
+			Long loanAccountId, String customerName) {
+		Page<IcustLoanInfo> loanInfo = null;
+		LoanTaskSummaryModel taskSum = new LoanTaskSummaryModel();
+		LoanTaskSummaryDataModel tDModel = null;
+		Page<IcustCustomerInfo> customerInfoObject =null;
+		try {
+
+			if (customerName == null) {
+				loanInfo = loanRepo.findAll(where(getLoanInfoSpecification(status, customerId, loanAccountId)),
+						PageRequest.of(page, size,
+								Sort.by("createdTime").descending()));
+				if (!CollectionUtils.isEmpty(loanInfo.getContent())) {
+					for (IcustLoanInfo loan : loanInfo) {
+
+						tDModel = new LoanTaskSummaryDataModel();
+
+						if (loan.getCustomerId()!=null) {
+							Optional<IcustCustomerInfo> customerInfo = customerRepo
+									.findById(loan.getCustomerId());
+							if (customerInfo.isPresent()) {
+								Optional<IcustCustomerDocuments> custDoc = documentRepo.findByCustomerIdAndDocumentType(
+										loan.getCustomerId(), DataConstants.PROFILEIMAGE);
+								if (custDoc.isPresent()) {
+									tDModel.setProfileImage(custDoc.get().getFileUrl() != null ? custDoc.get().getFileUrl()
+											: "not_available");
+								} else {
+									tDModel.setProfileImage("not_available");
+								}
+								tDModel.setPrefix(customerInfo.get().getPrefix());
+								tDModel.setCifNumber(customerInfo.get().getCifNumber());
+								tDModel.setFirstName(customerInfo.get().getFirstName());
+								tDModel.setMiddleName(customerInfo.get().getMiddleName());
+								tDModel.setLastName(customerInfo.get().getLastName());
+							}
+						}
+						tDModel.setLoanAccountId(loan.getLoanAccountId());
+						tDModel.setCustomerId(loan.getCustomerId());
+						tDModel.setAccountType(loan.getAccountType());
+						tDModel.setApplicationDate(loan.getApplicationDate());
+						tDModel.setAccountBranch(loan.getAccountBranch());
+						tDModel.setBusinessProductName(loan.getBusinessProductName());
+						tDModel.setStatus(loan.getStatus().toString());
+						taskSum.getLoanList().add(tDModel);
+					}
+
+					taskSum.setNoOfElements(loanInfo.getNumberOfElements());
+					taskSum.setTotalNoOfElements(loanInfo.getTotalElements());
+					taskSum.setTotalPages(loanInfo.getTotalPages());
+
+					return ResponseEntity.status(HttpStatus.OK).body(taskSum);
+				}else {
+					logger.error("No data found in the table");
+					return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Data found");
+				}
+			} else {
+				customerInfoObject = customerRepo.findAll(
+						where(getCustomerInfoSpecification(customerName, "and")),
+						PageRequest.of(page, size, Sort.by("createdTime").descending()));
+
+				if(customerInfoObject !=null && !customerInfoObject.isEmpty()) {
+					
+					for (IcustCustomerInfo customerInfo : customerInfoObject) {
+						List<IcustLoanInfo> loanList=loanRepo.findByCustomerId(customerInfo.getCustomerId());
+						tDModel = new LoanTaskSummaryDataModel();
+						Optional<IcustCustomerDocuments> custDoc = documentRepo.findByCustomerIdAndDocumentType(
+								Long.parseLong(customerInfo.getCustomerId().toString()), DataConstants.PROFILEIMAGE);
+						if (custDoc.isPresent()) {
+							tDModel.setProfileImage(custDoc.get().getFileUrl() != null ? custDoc.get().getFileUrl()
+									: "not_available");
+						} else {
+							tDModel.setProfileImage("not_available");
+						}
+						tDModel.setPrefix(customerInfo.getPrefix());
+						tDModel.setCifNumber(customerInfo.getCifNumber());
+						tDModel.setFirstName(customerInfo.getFirstName());
+						tDModel.setMiddleName(customerInfo.getMiddleName());
+						tDModel.setLastName(customerInfo.getLastName());
+						if(loanList !=null && !loanList.isEmpty()) {
+							LoanTaskSummaryDataModel tasModel = null;
+							for (IcustLoanInfo loansInfo : loanList) {
+								tasModel = mapper.map(loansInfo, LoanTaskSummaryDataModel.class);
+							}
+							taskSum.getLoanList().add(tasModel);
+						}else {
+							logger.error("No card data found in the table");
+						}
+					}
+					taskSum.setNoOfElements(customerInfoObject.getNumberOfElements());
+					taskSum.setTotalNoOfElements(customerInfoObject.getTotalElements());
+					taskSum.setTotalPages(customerInfoObject.getTotalPages());
+
+					return ResponseEntity.status(HttpStatus.OK).body(taskSum);
+				}else {
+					logger.error("No data found in the table");
+					return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Data found");
+				}
+			}
+
+			
+
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing getCustAccountSummaryByAccountId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	private Specification getCustomerInfoSpecification(String customerName, String condition) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Specification<IcustLoanInfo> getLoanInfoSpecification(String status, String customerId, Long loanAccountId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

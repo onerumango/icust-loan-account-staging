@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.rumango.entity.IcustCardChargeDetails;
 import com.rumango.model.IcustCardChargeListModel;
 import com.rumango.model.IcustCardChargeModel;
+import com.rumango.model.IcustCardDocumentsModel;
 import com.rumango.repository.IcustCardChargeRepo;
 import com.rumango.service.IcustCardChargeService;
 
@@ -105,8 +107,8 @@ public class IcustCardChargeServiceImpl implements IcustCardChargeService {
 		try {
 			List<IcustCardChargeDetails> chargeList = icustCardChargeRepo.findByCardId(cardId);
 			if (!CollectionUtils.isEmpty(chargeList)) {
-
-				return ResponseEntity.status(HttpStatus.OK).body(chargeList);
+				List<IcustCardChargeModel> chargeInfo = mapper.map(chargeList, new TypeToken<List<IcustCardChargeModel>>() {}.getType());
+				return ResponseEntity.status(HttpStatus.OK).body(chargeInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");

@@ -48,6 +48,7 @@ public class IcustCustomerAddress implements Serializable
 	
 	@Column(name = "COUNTRY")
 	private String country;
+	private Long cityId;
 	
 	@Column(name = "RESIDENCE_TYPE")
 	private String residenceType;

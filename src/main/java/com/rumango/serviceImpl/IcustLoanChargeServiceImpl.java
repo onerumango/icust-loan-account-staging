@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 //import org.apache.logging.log4j.util.Strings;
 //import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,8 +107,8 @@ public class IcustLoanChargeServiceImpl implements IcustLoanChargeService{
 		try {
 			List<IcustLaonChargeDetails> chargeList = icustLoanChargeRepo.findByLoanAccountId(loanAccoutId);
 			if (!CollectionUtils.isEmpty(chargeList)) {
-
-				return ResponseEntity.status(HttpStatus.OK).body(chargeList);
+				List<IcustLoanChargeModel> chargeInfo = mapper.map(chargeList, new TypeToken<List<IcustLoanChargeModel>>() {}.getType());
+				return ResponseEntity.status(HttpStatus.OK).body(chargeInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");

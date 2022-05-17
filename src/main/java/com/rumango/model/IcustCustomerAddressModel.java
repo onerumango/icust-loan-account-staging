@@ -9,6 +9,7 @@ public class IcustCustomerAddressModel {
 	private String address1;
 	private String address2;
 	private String city;
+	private Long cityId;
 	private String state;
 	private String country;
 	private String residenceType;

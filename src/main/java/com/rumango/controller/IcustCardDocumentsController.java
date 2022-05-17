@@ -66,7 +66,7 @@ private static final Logger logger = LogManager.getLogger(IcustCardDocumentsCont
 	
 	@GetMapping(value="/fetchCardDocuments", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> fetchCardDocuments (@RequestParam(value = "cardId", required = true) Long cardId,
-			@RequestParam(value = "screenType", required = true) Integer screenType){
+			@RequestParam(value = "screenType", required = true) String screenType){
 		logger.info(MessageFormat.format(
 				"Exectution started for fetchCardDocuments for documentType::", screenType));
 		try {

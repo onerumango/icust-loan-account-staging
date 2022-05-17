@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.rumango.entity.IcustCardPreferences;
 import com.rumango.model.IcustCardPreferencesModel;
+import com.rumango.model.IcustLoanInterestModel;
 import com.rumango.model.IcustResponseModel;
 import com.rumango.repository.IcustCardPreferencesRepo;
 import com.rumango.service.IcustCardPreferencesService;
@@ -77,9 +79,10 @@ public class IcustCardPreferencesServiceImpl implements IcustCardPreferencesServ
 	@Override
 	public ResponseEntity<?> fetchCardPreferenceByCardId(Long cardId) {
 		try {
-			List<IcustCardPreferences> cardPreferenceInfo = cardPreferencesRepo.findByCardId(cardId);
-			if (!CollectionUtils.isEmpty(cardPreferenceInfo)) {
-				return ResponseEntity.status(HttpStatus.OK).body(cardPreferenceInfo);
+			List<IcustCardPreferences> cardPreferenceList = cardPreferencesRepo.findByCardId(cardId);
+			if (!CollectionUtils.isEmpty(cardPreferenceList)) {
+				List<IcustCardPreferencesModel> preferenceInfo = mapper.map(cardPreferenceList, new TypeToken<List<IcustCardPreferencesModel>>() {}.getType());
+				return ResponseEntity.status(HttpStatus.OK).body(preferenceInfo);
 			} else {
 				logger.error("No  record exist for given id");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No record exist for given id");
