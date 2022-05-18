@@ -278,31 +278,7 @@ public class IcustCardTaskSummaryServiceImpl implements IcustCardTaskSummaryServ
 		};
 	}
 	
-	@SuppressWarnings("serial")
-	private Specification getCustomerInfoSpecificationForChatBot(Long customerId, String kycReference,
-			String condition) {
-		return new Specification<IcustCustomerInfo>() {
-			@Override
-			public Predicate toPredicate(Root<IcustCustomerInfo> customerInfo, CriteriaQuery<?> cq,
-					CriteriaBuilder cb) {
-				List<Predicate> predicateList = new ArrayList<Predicate>();
-
-				if (customerId != null) {
-					predicateList.add(cb.equal(customerInfo.get("customerId"), customerId));
-				}
-				if (!Strings.isNullOrEmpty(kycReference)) {
-					predicateList.add(cb.equal(customerInfo.get("kycReference"), kycReference));
-				}
-
-				if (!Strings.isNullOrEmpty(condition) && "and".equals(condition))
-					return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
-				else if (!Strings.isNullOrEmpty(condition) && "or".equals(condition))
-					return cb.or(predicateList.toArray(new Predicate[predicateList.size()]));
-				else
-					return null;
-			}
-		};
-	}
+	
 
 
 }

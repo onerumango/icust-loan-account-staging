@@ -2,7 +2,9 @@ package com.rumango.serviceImpl;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import javax.persistence.criteria.Root;
 
@@ -24,11 +26,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.google.common.base.Strings;
 import com.rumango.constants.DataConstants;
 import com.rumango.entity.IcustCardInitiation;
 import com.rumango.entity.IcustCustomerDocuments;
 import com.rumango.entity.IcustCustomerInfo;
 import com.rumango.entity.IcustLoanInfo;
+import com.rumango.enums.CardInitiationStatus;
+import com.rumango.enums.LoanAccStatusEnum;
 import com.rumango.model.CardTaskSummaryDataModel;
 import com.rumango.model.IcustAccountServicesModel;
 import com.rumango.model.IcustAdmissionDetailsModel;
@@ -280,12 +285,63 @@ public class IcustLoanTaskSummaryServiceImpl implements IcustLoanTaskSummaryServ
 	}
 
 	private Specification getCustomerInfoSpecification(String customerName, String condition) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		return new Specification<IcustCustomerInfo>() {
+			@Override
+			public Predicate toPredicate(Root<IcustCustomerInfo> customerInfo, CriteriaQuery<?> cq,
+					CriteriaBuilder cb) {
+				List<Predicate> predicateList = new ArrayList<Predicate>();
 
+				if (!Strings.isNullOrEmpty(customerName)) {
+					String[] split = customerName.split(" ");
+					int idx = customerName.lastIndexOf(' ');
+					if (idx == -1) {
+						predicateList.add(cb.like(cb.lower(customerInfo.get("firstName")),
+								customerName.toLowerCase(Locale.getDefault()) + "%"));
+					} else if (split.length == 3) {
+						predicateList.add(cb.like(cb.lower(customerInfo.get("firstName")),
+								split[0].toLowerCase(Locale.getDefault()) + "%"));
+						predicateList.add(cb.like(cb.lower(customerInfo.get("middleName")),
+								split[1].toLowerCase(Locale.getDefault()) + "%"));
+						predicateList.add(cb.like(cb.lower(customerInfo.get("lastName")),
+								customerName.substring(idx + 1).toLowerCase(Locale.getDefault()) + "%"));
+					} else {
+						predicateList.add(cb.like(cb.lower(customerInfo.get("firstName")),
+								customerName.substring(0, idx).toLowerCase(Locale.getDefault()) + "%"));
+						predicateList.add(cb.like(cb.lower(customerInfo.get("lastName")),
+								customerName.substring(idx + 1).toLowerCase(Locale.getDefault()) + "%"));
+					}
+				}
+
+				if (!Strings.isNullOrEmpty(condition) && "and".equals(condition))
+					return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+				else if (!Strings.isNullOrEmpty(condition) && "or".equals(condition))
+					return cb.or(predicateList.toArray(new Predicate[predicateList.size()]));
+				else
+					return null;
+			}
+		};
+	}
+	
+	@SuppressWarnings("serial")
 	private Specification<IcustLoanInfo> getLoanInfoSpecification(String status, String customerId, Long loanAccountId) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Specification<IcustLoanInfo>() {
+			@Override
+			public Predicate toPredicate(Root<IcustLoanInfo> loanInfo, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+				List<Predicate> predicateList = new ArrayList<Predicate>();
+
+				if (loanAccountId != null) {
+					predicateList.add(cb.equal(loanInfo.get("loanAccountId"), loanAccountId));
+				}
+				if (!Strings.isNullOrEmpty(customerId)) {
+					predicateList.add(cb.equal(loanInfo.get("customerId"), customerId));
+				}
+				if (!Strings.isNullOrEmpty(status)) {
+					predicateList.add(cb.equal(loanInfo.get("status"),
+							LoanAccStatusEnum.valueOf(status.toUpperCase(Locale.getDefault()))));
+				}
+
+				return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+			}
+		};
 	}
 }
