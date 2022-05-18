@@ -14,4 +14,6 @@ public interface IcustCardDocumentsRepo extends JpaRepository<IcustCardDocuments
 	Optional<IcustCardDocuments> findByCardIdAndScreenType(Long cardId, String screenType);
 
 	List<IcustCardDocuments> findByCardIdAndScreenType(Long cardId, Integer screenType);
+
+	List<IcustCardDocuments> findByCardId(Long cardId);
 }

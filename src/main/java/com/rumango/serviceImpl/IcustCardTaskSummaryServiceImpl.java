@@ -128,7 +128,7 @@ public class IcustCardTaskSummaryServiceImpl implements IcustCardTaskSummaryServ
 					summaryInfo.setPreferenceInfo(preferenceInfo);
 				}
 				List<IcustCardDocuments> documentList = new ArrayList<>();
-				List<IcustCardDocuments> cardDocuments = icustCardDocumentsRepo.findByCardIdAndScreenType(cardId, Integer.valueOf("cardOrigin"));
+				List<IcustCardDocuments> cardDocuments = icustCardDocumentsRepo.findByCardId(cardId);
 
 					if (!CollectionUtils.isEmpty(cardDocuments)) {
 						for (IcustCardDocuments corporateDocs : cardDocuments) {
