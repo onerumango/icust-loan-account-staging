@@ -12,8 +12,8 @@ public class IcustCardOriginSummaryModel {
 	
 	private List<IcustCardDocumentsModel> documentInfo;
 	
-	private List<IcustLoanInterestModel> interestInfo;
-	private List<IcustLoanChargeModel> chargeInfo;
+	private List<IcustCardInterestModel> interestInfo;
+	private List<IcustCardChargeModel> chargeInfo;
 	
 	private IcustLoanCreditRatingDetailsModel creditRatingInfo;
 	

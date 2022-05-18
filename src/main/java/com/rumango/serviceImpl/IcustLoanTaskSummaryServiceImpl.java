@@ -16,6 +16,7 @@ import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,11 +28,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.google.common.base.Strings;
+import com.google.gson.Gson;
 import com.rumango.constants.DataConstants;
 import com.rumango.entity.IcustCardInitiation;
 import com.rumango.entity.IcustCustomerDocuments;
 import com.rumango.entity.IcustCustomerInfo;
+import com.rumango.entity.IcustFinancialDetails;
+import com.rumango.entity.IcustLaonChargeDetails;
 import com.rumango.entity.IcustLoanInfo;
+import com.rumango.entity.IcustLoanInterestDetails;
+import com.rumango.entity.IcustLoanValuationOfAssetEntity;
 import com.rumango.enums.CardInitiationStatus;
 import com.rumango.enums.LoanAccStatusEnum;
 import com.rumango.model.CardTaskSummaryDataModel;
@@ -60,7 +66,11 @@ import com.rumango.model.LoanTaskSummaryModel;
 import com.rumango.model.CardTaskSummaryModel;
 import com.rumango.repository.CustomerDocumentsRepo;
 import com.rumango.repository.IcustCustomerInfoRepo;
+import com.rumango.repository.IcustFinancialDetailsRepo;
+import com.rumango.repository.IcustLoanChargeRepo;
 import com.rumango.repository.IcustLoanInfoRepo;
+import com.rumango.repository.IcustLoanInterestRepo;
+import com.rumango.repository.IcustLoanValuationOfAssetRepo;
 import com.rumango.service.IcustAccountServicesService;
 import com.rumango.service.IcustAdmissionService;
 import com.rumango.service.IcustApprovalDetailsService;
@@ -137,7 +147,16 @@ public class IcustLoanTaskSummaryServiceImpl implements IcustLoanTaskSummaryServ
 	IcustCustomerInfoRepo customerRepo;
 	@Autowired
 	CustomerDocumentsRepo documentRepo;
+	@Autowired
+	IcustFinancialDetailsRepo icustFinancialDetailsRepo;
+	@Autowired
+	IcustLoanInterestRepo loanInterestRepo;
+	@Autowired
+	IcustLoanChargeRepo icustLoanChargeRepo;
+	@Autowired
+	private IcustLoanValuationOfAssetRepo loanValuationOfAssetRepo;
 
+	
 	@Override
 	public ResponseEntity<?> fetchTaskSummaryInfo(Long loanAccountId) {
 		IcustLoanAccountSummaryModel summaryInfo = new IcustLoanAccountSummaryModel();
@@ -148,18 +167,39 @@ public class IcustLoanTaskSummaryServiceImpl implements IcustLoanTaskSummaryServ
 				summaryInfo.setVehicleInfo(mapper.map(icustVehicleService.fetchVehicleDetailsByLoanAccId(loanAccountId).getBody(), IcustVehicleDetailsModel.class));
 				summaryInfo.setAdmissionInfo(mapper.map(icustAdmissionService.fetchAdmissionDetailsByLoanAccId(loanAccountId).getBody(), IcustAdmissionDetailsModel.class));
 				summaryInfo.setMandateInfo(mapper.map(icustMandateService.fetchMandateDetailsByLoanAccId(loanAccountId).getBody(), IcustMandateDetailsModel.class));
-				summaryInfo.setFinancialInfo((List<IcustFinancialDetailsModel>)financialDetailsService.fetchFinancialDetails(loanAccountId,null).getBody());
+				
+				List<IcustFinancialDetails> financialList = icustFinancialDetailsRepo.findByLoanAccountId(loanAccountId);
+				if (!CollectionUtils.isEmpty(financialList)) {
+					List<IcustFinancialDetailsModel> financialInfo = mapper.map(financialList, new TypeToken<List<IcustFinancialDetailsModel>>() {}.getType());
+					summaryInfo.setFinancialInfo(financialInfo);
+				}
+					
 				summaryInfo.setCollateralInfo(mapper.map(icustCollateralService.fetchCollateralByLoanAccountId(loanAccountId).getBody(), IcustCollateralMasterModel.class));
 				summaryInfo.setGuarantorInfo(mapper.map(guarantorService.fetchGuarantorByLoanAccId(loanAccountId).getBody(), IcustGuarantorDetailsModel.class));
 				
-				summaryInfo.setInterestInfo((List<IcustLoanInterestModel>) service.fetchLoanInterestById(loanAccountId).getBody());
+				List<IcustLoanInterestDetails> loanInterestList = loanInterestRepo.findByLoanAccountId(loanAccountId);
+				if (!CollectionUtils.isEmpty(loanInterestList)) {
+					List<IcustLoanInterestModel> interestInfo = mapper.map(loanInterestList, new TypeToken<List<IcustLoanInterestModel>>() {}.getType());
+					summaryInfo.setInterestInfo(interestInfo);
+				}
 				summaryInfo.setDisbursementInfo(mapper.map(disbursementService.fetchLoanDisbursementById(loanAccountId).getBody(), IcustLoanDisbursementModel.class));
 				summaryInfo.setRepaymentInfo(mapper.map(repaymentService.fetchLoanRepaymentDetailById(loanAccountId).getBody(), IcustLoanRepaymentModel.class));
-				summaryInfo.setChargeInfo((List<IcustLoanChargeModel>) chargeService.fetchLoanChargeDetailsById(loanAccountId).getBody());
+				List<IcustLaonChargeDetails> chargeList = icustLoanChargeRepo.findByLoanAccountId(loanAccountId);
+				if (!CollectionUtils.isEmpty(chargeList)) {
+					List<IcustLoanChargeModel> chargeInfo = mapper.map(chargeList, new TypeToken<List<IcustLoanChargeModel>>() {}.getType());
+					summaryInfo.setChargeInfo(chargeInfo);
+				}
 				summaryInfo.setAccountServiceInfo(mapper.map(accountServicesService.fetchAccountServicesByLoanAccountId(loanAccountId).getBody(), IcustAccountServicesModel.class));
 				
 				summaryInfo.setCreditRatingInfo(mapper.map(creditRatingService.getCreditRatingsByLoanAccountId(loanAccountId,null).getBody(), IcustLoanCreditRatingDetailsModel.class));
-				summaryInfo.setValAssetInfo((IcustLoanValuationOfAssetModel) loanValuationOfAssetService.getValuationOfAssetByLoanAccountId(loanAccountId).getBody());
+				Optional<IcustLoanValuationOfAssetEntity> isValuationOfAssetEntityPresent  = loanValuationOfAssetRepo.findByLoanAccountId(loanAccountId);
+
+					if (isValuationOfAssetEntityPresent.isPresent()) {
+						IcustLoanValuationOfAssetModel valuationOfAssetObj = new Gson().fromJson(new Gson().toJson(isValuationOfAssetEntityPresent.get()),
+								IcustLoanValuationOfAssetModel.class);
+						summaryInfo.setValAssetInfo(valuationOfAssetObj);
+					}
+						
 				summaryInfo.setLegalOpionInfo((IcustLoanLegalOpinionModel) legalOpinionService.getLegalOpinionByLoanAccountId(loanAccountId).getBody());
 				summaryInfo.setAssessmentInfo((IcustLoanAssessmentDetailsModel) icustLoanService.fetchAssessmentInfoByLoanAccId(loanAccountId).getBody());
 				summaryInfo.setApprovalInfo((IcustApprovalDetailsModel) approvalDetailsService.fetchApprovalDetails(loanAccountId).getBody());

@@ -14,6 +14,7 @@ import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,14 +27,22 @@ import org.springframework.util.CollectionUtils;
 
 import com.google.common.base.Strings;
 import com.rumango.constants.DataConstants;
+import com.rumango.entity.IcustCardChargeDetails;
+import com.rumango.entity.IcustCardDocuments;
 import com.rumango.entity.IcustCardInitiation;
+import com.rumango.entity.IcustCardInterestDetails;
+import com.rumango.entity.IcustCardPreferences;
 import com.rumango.entity.IcustCustomerDocuments;
 import com.rumango.entity.IcustCustomerInfo;
+import com.rumango.entity.IcustFinancialDetails;
 import com.rumango.enums.CardInitiationStatus;
 import com.rumango.model.CardTaskSummaryDataModel;
 import com.rumango.model.IcustCardApprovalModel;
 import com.rumango.model.IcustCardAssessmentModel;
+import com.rumango.model.IcustCardChargeModel;
+import com.rumango.model.IcustCardDocumentsModel;
 import com.rumango.model.IcustCardInitiationModel;
+import com.rumango.model.IcustCardInterestModel;
 import com.rumango.model.IcustCardOriginSummaryModel;
 import com.rumango.model.IcustCardPreferencesModel;
 import com.rumango.model.IcustFinancialDetailsModel;
@@ -42,8 +51,13 @@ import com.rumango.model.IcustLoanCreditRatingDetailsModel;
 import com.rumango.model.IcustLoanInterestModel;
 import com.rumango.model.CardTaskSummaryModel;
 import com.rumango.repository.CustomerDocumentsRepo;
+import com.rumango.repository.IcustCardChargeRepo;
+import com.rumango.repository.IcustCardDocumentsRepo;
 import com.rumango.repository.IcustCardInitiationRepo;
+import com.rumango.repository.IcustCardInterestRepo;
+import com.rumango.repository.IcustCardPreferencesRepo;
 import com.rumango.repository.IcustCustomerInfoRepo;
+import com.rumango.repository.IcustFinancialDetailsRepo;
 import com.rumango.service.IcustCardApprovalDetailService;
 import com.rumango.service.IcustCardAssessmentService;
 import com.rumango.service.IcustCardChargeService;
@@ -86,17 +100,59 @@ public class IcustCardTaskSummaryServiceImpl implements IcustCardTaskSummaryServ
 	IcustCustomerInfoRepo customerRepo;
 	@Autowired
 	CustomerDocumentsRepo documentRepo;
+	@Autowired
+	IcustFinancialDetailsRepo icustFinancialDetailsRepo;
+	@Autowired
+	IcustCardPreferencesRepo cardPreferencesRepo;
+	@Autowired
+	IcustCardDocumentsRepo icustCardDocumentsRepo;
+	@Autowired
+	IcustCardInterestRepo cardInterestRepo;
+	@Autowired
+	IcustCardChargeRepo icustCardChargeRepo;
+	
 	@Override
 	public ResponseEntity<?> fetchTaskSummaryInfo(Long cardId) {
 		IcustCardOriginSummaryModel summaryInfo = new IcustCardOriginSummaryModel();
 		try {
 			if (cardId != null) {
 				summaryInfo.setInitiationInfo(mapper.map(cardInitiationService.fetchCardInitiationByCardId(cardId).getBody(), IcustCardInitiationModel.class));
-				summaryInfo.setFinancialInfo((List<IcustFinancialDetailsModel>) financialDetailsService.fetchFinancialDetails(null,cardId).getBody());
-				summaryInfo.setPreferenceInfo((List<IcustCardPreferencesModel>) cardPreferencesService.fetchCardPreferenceByCardId(cardId).getBody());
-				//summaryInfo.setDocumentInfo((List<IcustCardDocumentsModel>) uploadService.fetchCardDocuments(cardId,"cardOrigin").getBody());
-				summaryInfo.setInterestInfo((List<IcustLoanInterestModel>) cardService.fetchCardInterestById(cardId).getBody());
-				summaryInfo.setChargeInfo((List<IcustLoanChargeModel>) cardChargeService.fetchCardChargeDetailsById(cardId).getBody());
+				List<IcustFinancialDetails> financialList = icustFinancialDetailsRepo.findByCardId(cardId);
+				if (!CollectionUtils.isEmpty(financialList)) {
+					List<IcustFinancialDetailsModel> financialInfo = mapper.map(financialList, new TypeToken<List<IcustFinancialDetailsModel>>() {}.getType());
+					summaryInfo.setFinancialInfo(financialInfo);
+				}
+				List<IcustCardPreferences> cardPreferenceList = cardPreferencesRepo.findByCardId(cardId);
+				if (!CollectionUtils.isEmpty(cardPreferenceList)) {
+					List<IcustCardPreferencesModel> preferenceInfo = mapper.map(cardPreferenceList, new TypeToken<List<IcustCardPreferencesModel>>() {}.getType());
+					summaryInfo.setPreferenceInfo(preferenceInfo);
+				}
+				List<IcustCardDocuments> documentList = new ArrayList<>();
+				List<IcustCardDocuments> cardDocuments = icustCardDocumentsRepo.findByCardIdAndScreenType(cardId, Integer.valueOf("cardOrigin"));
+
+					if (!CollectionUtils.isEmpty(cardDocuments)) {
+						for (IcustCardDocuments corporateDocs : cardDocuments) {
+							if (Strings.isNullOrEmpty(corporateDocs.getFileUrl())) {
+								corporateDocs.setFileUrl("not_available");
+								documentList.add(corporateDocs);
+							} else {
+								documentList.add(corporateDocs);
+							}
+						}
+						List<IcustCardDocumentsModel> docInfo = mapper.map(documentList, new TypeToken<List<IcustCardDocumentsModel>>() {}.getType());
+						summaryInfo.setDocumentInfo(docInfo);
+					}
+				
+					List<IcustCardInterestDetails> cardInterestList = cardInterestRepo.findByCardId(cardId);
+					if (!CollectionUtils.isEmpty(cardInterestList)) {
+						List<IcustCardInterestModel> interestInfo = mapper.map(cardInterestList, new TypeToken<List<IcustCardInterestModel>>() {}.getType());
+						summaryInfo.setInterestInfo(interestInfo);
+					}
+					List<IcustCardChargeDetails> chargeList = icustCardChargeRepo.findByCardId(cardId);
+					if (!CollectionUtils.isEmpty(chargeList)) {
+						List<IcustCardChargeModel> chargeInfo = mapper.map(chargeList, new TypeToken<List<IcustCardChargeModel>>() {}.getType());
+						summaryInfo.setChargeInfo(chargeInfo);
+					}
 				summaryInfo.setCreditRatingInfo(mapper.map(creditRatingService.getCreditRatingsByLoanAccountId(null,cardId).getBody(), IcustLoanCreditRatingDetailsModel.class));
 				summaryInfo.setAssessmentInfo(mapper.map(assessmentService.fetchCardAssessmentById(cardId).getBody(), IcustCardAssessmentModel.class));
 				summaryInfo.setApprovalInfo((IcustCardApprovalModel) cardApprovalService.fetchApprovalDetails(cardId).getBody());
