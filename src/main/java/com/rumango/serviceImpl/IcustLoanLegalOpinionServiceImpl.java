@@ -130,7 +130,7 @@ public class IcustLoanLegalOpinionServiceImpl implements IcustLoanLegalOpinionSe
 						.body("No record exists for Loan Id :: " + loanAccId);
 			}
 		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
 		}
 	}
