@@ -199,11 +199,42 @@ public class IcustLoanTaskSummaryServiceImpl implements IcustLoanTaskSummaryServ
 								IcustLoanValuationOfAssetModel.class);
 						summaryInfo.setValAssetInfo(valuationOfAssetObj);
 					}
-						
-				summaryInfo.setLegalOpionInfo((IcustLoanLegalOpinionModel) legalOpinionService.getLegalOpinionByLoanAccountId(loanAccountId).getBody());
-				summaryInfo.setAssessmentInfo((IcustLoanAssessmentDetailsModel) icustLoanService.fetchAssessmentInfoByLoanAccId(loanAccountId).getBody());
-				summaryInfo.setApprovalInfo((IcustApprovalDetailsModel) approvalDetailsService.fetchApprovalDetails(loanAccountId).getBody());
-				summaryInfo.setOfferIssueInfo(mapper.map(icustOfferIssueService.fetchOfferIssueByLoanAccountId(loanAccountId).getBody(), IcustOfferIssueModel.class));
+					
+
+				
+
+				Object isLegalAccPresent = legalOpinionService.getLegalOpinionByLoanAccountId(loanAccountId).getBody();
+
+				if( isLegalAccPresent instanceof String ) {
+				  logger.info("No legal opinion record exists for Loan Id");
+				}else {
+					summaryInfo.setLegalOpionInfo((IcustLoanLegalOpinionModel) legalOpinionService.getLegalOpinionByLoanAccountId(loanAccountId).getBody());
+				}
+				
+				Object isAssessmentInfoPresent = legalOpinionService.getLegalOpinionByLoanAccountId(loanAccountId).getBody();
+
+				if( isAssessmentInfoPresent instanceof String ) {
+				  logger.info("No AssessmentInfo record exists for Loan Id");
+				}else {
+					summaryInfo.setAssessmentInfo((IcustLoanAssessmentDetailsModel) icustLoanService.fetchAssessmentInfoByLoanAccId(loanAccountId).getBody());
+				}
+				
+				Object isApprovalDetailsPresent = legalOpinionService.getLegalOpinionByLoanAccountId(loanAccountId).getBody();
+
+				if( isApprovalDetailsPresent instanceof String ) {
+				  logger.info("No ApprovalDetailsPresent record exists for Loan Id");
+				}else {
+					summaryInfo.setApprovalInfo((IcustApprovalDetailsModel) approvalDetailsService.fetchApprovalDetails(loanAccountId).getBody());
+				}
+				
+				Object isOfferIssuePresent = legalOpinionService.getLegalOpinionByLoanAccountId(loanAccountId).getBody();
+
+				if( isOfferIssuePresent instanceof String ) {
+				  logger.info("No OfferIssuePresentrecord exists for Loan Id");
+				}else {
+					summaryInfo.setOfferIssueInfo(mapper.map(icustOfferIssueService.fetchOfferIssueByLoanAccountId(loanAccountId).getBody(), IcustOfferIssueModel.class));
+				}
+				
 				
 				return ResponseEntity.status(HttpStatus.OK).body(summaryInfo);
 			} else {
