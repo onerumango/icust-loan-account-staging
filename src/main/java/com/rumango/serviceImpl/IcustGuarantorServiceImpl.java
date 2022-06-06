@@ -60,12 +60,10 @@ public class IcustGuarantorServiceImpl implements IcustGuarantorService {
 	private void validateGuarantorDetails(IcustGuarantorDetails oldGuarantor, IcustGuarantorDetails newGuarantor) {
 		if (!Strings.isNullOrEmpty(newGuarantor.getRelationWithCustomer()))
 			oldGuarantor.setRelationWithCustomer(newGuarantor.getRelationWithCustomer());
-		if(!Strings.isNullOrEmpty(newGuarantor.getBuilding()))
-			oldGuarantor.setBuilding(newGuarantor.getBuilding());
-		if(!Strings.isNullOrEmpty(newGuarantor.getStreet()))
-			oldGuarantor.setStreet(newGuarantor.getStreet());
-		if(!Strings.isNullOrEmpty(newGuarantor.getLocality()))
-			oldGuarantor.setLocality(newGuarantor.getLocality());
+		if(!Strings.isNullOrEmpty(newGuarantor.getAddress1()))
+			oldGuarantor.setAddress1(newGuarantor.getAddress1());
+		if(!Strings.isNullOrEmpty(newGuarantor.getAddress2()))
+			oldGuarantor.setAddress2(newGuarantor.getAddress2());
 		if(!Strings.isNullOrEmpty(newGuarantor.getCity()))
 			oldGuarantor.setCity(newGuarantor.getCity());
 		if(!Strings.isNullOrEmpty(newGuarantor.getState()))
@@ -80,6 +78,8 @@ public class IcustGuarantorServiceImpl implements IcustGuarantorService {
 			oldGuarantor.setPhoneNumber(newGuarantor.getPhoneNumber());
 		if(!Strings.isNullOrEmpty(newGuarantor.getEmailAddress()))
 			oldGuarantor.setEmailAddress(newGuarantor.getEmailAddress());
+		if(newGuarantor.getCifNumber()!=null)
+			oldGuarantor.setCifNumber(newGuarantor.getCifNumber());
 	}
 
 	@Override

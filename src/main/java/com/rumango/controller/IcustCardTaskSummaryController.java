@@ -56,4 +56,17 @@ public class IcustCardTaskSummaryController {
 			logger.info("Execution completed for fetchTaskSummaryDetails ");
 		}
 	}
+	
+	@GetMapping(value = "/fetchApplnEntrySummaryInfo")
+	public ResponseEntity<?> fetchApplnEntrySummaryInfo(@RequestParam(value = "cardId", required = false) Long cardId) {
+		logger.info(MessageFormat.format("Execution Started for fetchApplnEntrySummaryInfo cardId:{0}", cardId));
+		try {
+			return summaryService.fetchApplnEntrySummaryInfo(cardId);
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing fetchApplnEntrySummaryInfo", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for fetchApplnEntrySummaryInfo");
+		}
+	}
 }

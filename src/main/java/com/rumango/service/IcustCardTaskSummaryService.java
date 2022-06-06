@@ -9,4 +9,6 @@ public interface IcustCardTaskSummaryService {
 	ResponseEntity<?> fetchTaskSummaryDetails(String status, Integer page, Integer size, String customerId,
 			Long loanAccountId, String customerName);
 
+	ResponseEntity<?> fetchApplnEntrySummaryInfo(Long cardId);
+
 }

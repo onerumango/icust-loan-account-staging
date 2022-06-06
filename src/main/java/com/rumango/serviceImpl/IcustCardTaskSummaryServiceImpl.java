@@ -43,6 +43,7 @@ import com.rumango.model.IcustCardChargeModel;
 import com.rumango.model.IcustCardDocumentsModel;
 import com.rumango.model.IcustCardInitiationModel;
 import com.rumango.model.IcustCardInterestModel;
+import com.rumango.model.IcustCardOriginApplnModel;
 import com.rumango.model.IcustCardOriginSummaryModel;
 import com.rumango.model.IcustCardPreferencesModel;
 import com.rumango.model.IcustFinancialDetailsModel;
@@ -332,6 +333,34 @@ public class IcustCardTaskSummaryServiceImpl implements IcustCardTaskSummaryServ
 				return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
 			}
 		};
+	}
+
+	@Override
+	public ResponseEntity<?> fetchApplnEntrySummaryInfo(Long cardId) {
+		IcustCardOriginApplnModel model = new IcustCardOriginApplnModel();
+		try {
+			if (cardId != null) {
+				model.setInitiationInfo(mapper.map(cardInitiationService.fetchCardInitiationByCardId(cardId).getBody(), IcustCardInitiationModel.class));
+				List<IcustFinancialDetails> financialList = icustFinancialDetailsRepo.findByCardId(cardId);
+				if (!CollectionUtils.isEmpty(financialList)) {
+					List<IcustFinancialDetailsModel> financialInfo = mapper.map(financialList, new TypeToken<List<IcustFinancialDetailsModel>>() {}.getType());
+					model.setFinancialInfo(financialInfo);
+				}
+				List<IcustCardPreferences> cardPreferenceList = cardPreferencesRepo.findByCardId(cardId);
+				if (!CollectionUtils.isEmpty(cardPreferenceList)) {
+					List<IcustCardPreferencesModel> preferenceInfo = mapper.map(cardPreferenceList, new TypeToken<List<IcustCardPreferencesModel>>() {}.getType());
+					model.setPreferenceInfo(preferenceInfo);
+				}
+				
+				return ResponseEntity.status(HttpStatus.OK).body(model);
+			} else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("CardId is mandatory");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Execption occoured while executing fetchApplnEntrySummaryInfo", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
 	}
 	
 	

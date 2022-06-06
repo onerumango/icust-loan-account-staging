@@ -42,9 +42,6 @@ public class IcustGuarantorDetails implements Serializable{/**
 	private String lastName;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "IST")
 	private Date dateOfBirth;
-	private String building;
-	private String street;
-	private String locality;
 	private String city;
 	private String state;
 	private String country;
@@ -52,4 +49,7 @@ public class IcustGuarantorDetails implements Serializable{/**
 	private String phoneNumber;
 	private String mobileNumber;
 	private String emailAddress;
+	private Long cifNumber;
+	private String address1;
+	private String address2;
 }
