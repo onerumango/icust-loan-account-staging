@@ -65,4 +65,17 @@ public class IcustCardInitiationController {
 			logger.info("Execution completed for updateStatusApproveOrReject");
 		}
 	}
+	
+	@GetMapping(value = "/fetchApprovalInfoByCardId" ,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> fetchApprovalInfoByCardId(@RequestParam(value="cardId" , required=false) Long cardId){
+		logger.info(MessageFormat.format("Execution Started for fetchCardInitiationByCardAccId cardId:{0}", cardId));
+		try {
+			return cardInitiationService.fetchApprovalInfoByCardId(cardId);
+		}catch (Exception e) {
+			logger.error("Execption occoured while executing fetchApprovalInfoByCardId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		} finally {
+			logger.info("Execution completed for fetchApprovalInfoByCardId");
+		}
+	}
 }

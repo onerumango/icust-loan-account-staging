@@ -67,7 +67,12 @@ public class IcustCardInitiationServiceImpl implements IcustCardInitiationServic
 			dataFromDb.setAffinityProgram(newObj.getAffinityProgram());
 		if(!Strings.isNullOrEmpty(newObj.getNameOnCard()))
 			dataFromDb.setNameOnCard(newObj.getNameOnCard());
-	}
+		if(!Strings.isNullOrEmpty(newObj.getKycStatus()))
+			dataFromDb.setKycStatus(newObj.getKycStatus());
+		if(!Strings.isNullOrEmpty(newObj.getKycReference()))
+			dataFromDb.setKycReference(newObj.getKycReference());
+		
+		}
 
 	@Override
 	public ResponseEntity<?> fetchCardInitiationByCardId(Long cardId) {
@@ -100,6 +105,22 @@ public class IcustCardInitiationServiceImpl implements IcustCardInitiationServic
 			}
 		} catch (Exception e) {
 			logger.error(MessageFormat.format("Exception occoured while updateStatusApproveOrReject", e.getMessage()), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> fetchApprovalInfoByCardId(Long cardId) {
+		try {
+			Optional<IcustCardInitiation> initiationOnj = cardInitiationRepo.findById(cardId);
+			if (initiationOnj.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(initiationOnj.get());
+			} else {
+				logger.error("No  record exist for given id");
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No  record exist for given id");
+			}
+		} catch (Exception e) {
+			logger.error("Execption occoured while executing fetchApprovalInfoByCardId", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}

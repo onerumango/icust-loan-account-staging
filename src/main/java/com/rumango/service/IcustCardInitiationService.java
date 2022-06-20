@@ -12,4 +12,6 @@ public interface IcustCardInitiationService {
 
 	ResponseEntity<?> updateStatusApproveOrReject(IcustCardInitiationModel cardInitiationModel);
 
+	ResponseEntity<?> fetchApprovalInfoByCardId(Long cardId);
+
 }

@@ -16,6 +16,7 @@ import com.rumango.entity.IcustCustomerInfo;
 import com.rumango.entity.IcustLoanInfo;
 import com.rumango.entity.IcustLoanInterestDetails;
 import com.rumango.entity.IcustLoanRepaymentDetails;
+import com.rumango.enums.LoanAccStatusEnum;
 import com.rumango.model.IcustApplEntryStageSummaryModel;
 import com.rumango.model.IcustLoanAssessmentDetailsModel;
 import com.rumango.model.IcustLoanInfoModel;
@@ -124,8 +125,8 @@ public class IcustLoanServiceImpl implements IcustLoanService {
 		try {
 			loanInfo = icustLoanInfoRepo.findById(icustLoanInfoModel.getLoanAccountId());
 			if(loanInfo.isPresent()) {
-				IcustLoanInfo loanObj = new Gson().fromJson(new Gson().toJson(icustLoanInfoModel), IcustLoanInfo.class);
-				return ResponseEntity.status(HttpStatus.OK).body(icustLoanInfoRepo.save(loanObj));
+				loanInfo.get().setStatus(LoanAccStatusEnum.valueOf(icustLoanInfoModel.getStatus()));	
+				return ResponseEntity.status(HttpStatus.OK).body(icustLoanInfoRepo.save(loanInfo.get()));
 			}else {
 				logger.error("No record exists for accountId");
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No record exists given LoanAccountId");

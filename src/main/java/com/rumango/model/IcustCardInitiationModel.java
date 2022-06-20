@@ -1,6 +1,5 @@
 package com.rumango.model;
 
-import java.util.List;
 
 import lombok.Data;
 
@@ -17,4 +16,6 @@ public class IcustCardInitiationModel {
 	private String affinityProgram;
 	private String nameOnCard;
 	private String status;
+	private String kycStatus;
+	private String kycReference;
 }
