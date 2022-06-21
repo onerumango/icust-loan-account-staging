@@ -36,4 +36,5 @@ public class IcustCustomerCreateModel {
 	private Timestamp modifiedTime;
 	private Boolean existingCustomer;
 	private Boolean primaryCustomer;
+	private String birthCountry;
 }

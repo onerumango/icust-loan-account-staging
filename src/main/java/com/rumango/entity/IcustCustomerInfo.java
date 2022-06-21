@@ -124,6 +124,7 @@ public class IcustCustomerInfo implements Serializable {
 
 	private Boolean existingCustomer;
 	private Boolean primaryCustomer;
+	private String birthCountry;
 
 	
 }
